@@ -1,0 +1,15 @@
+# Despliegue en Render (Blueprint). Demo pública en línea de BASAL.
+# La interfaz ya va compilada en frontend/dist (recompilar con `npm run build` antes de cada push).
+services:
+  - type: web
+    name: basal
+    runtime: python
+    plan: free
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: cd backend && uvicorn basal.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      - key: BASAL_PUBLIC
+        value: "1"

@@ -1,0 +1,795 @@
+{
+  "generado": "2026-11-14 15:23",
+  "protocolo": {
+    "semillas_ajuste": [
+      1000,
+      1019
+    ],
+    "semillas_evaluacion": [
+      2000,
+      2039
+    ],
+    "misiones_evaluacion": 40,
+    "astronautas_por_mision": 4,
+    "dias_por_mision": 120,
+    "intensidad_eventos": "uniforme 0,5–1,5",
+    "restriccion_ajuste": "episodios falsos 'actuar' <= 1.0 por 30 días-astronauta"
+  },
+  "parametros": {
+    "window": 14,
+    "min_periods": 7,
+    "yellow": 2.5,
+    "red": 4.5,
+    "persist": 3,
+    "exclude_alerts": true,
+    "use_initial": true,
+    "fixed": {
+      "rhr": 71.0,
+      "hrv": 18.454,
+      "sleep": 5.479,
+      "dose": 0.52,
+      "pvt": 5.0,
+      "mood": 5.5
+    },
+    "origen": "ajustado con semillas 1000–1019 (20 misiones)"
+  },
+  "metodos": {
+    "A_vigilar": "Individual · vigilar (amarillo o rojo)",
+    "A_actuar": "Individual · actuar (rojo)",
+    "B_fijo": "Referencia poblacional fija"
+  },
+  "escenarios": {
+    "A": "Estabilidad fisiológica",
+    "B": "Fatiga progresiva",
+    "C": "Estrés fisiológico",
+    "D": "Exposición ambiental (evento solar)",
+    "E": "Cambio conductual",
+    "G": "Datos incompletos"
+  },
+  "ajuste": [
+    {
+      "yellow": 2.0,
+      "red": 3.0,
+      "vigilar": {
+        "eventos": 145,
+        "detectados": 145,
+        "sensibilidad_pct": 100.0,
+        "retraso_medio_dias": 0.86,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 55.7,
+        "episodios_falsos_por_30_dias": 6.31
+      },
+      "actuar": {
+        "eventos": 145,
+        "detectados": 145,
+        "sensibilidad_pct": 100.0,
+        "retraso_medio_dias": 2.43,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 24.8,
+        "episodios_falsos_por_30_dias": 4.23
+      },
+      "cumple_restriccion": false
+    },
+    {
+      "yellow": 2.0,
+      "red": 3.5,
+      "vigilar": {
+        "eventos": 145,
+        "detectados": 145,
+        "sensibilidad_pct": 100.0,
+        "retraso_medio_dias": 0.86,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 55.7,
+        "episodios_falsos_por_30_dias": 6.31
+      },
+      "actuar": {
+        "eventos": 145,
+        "detectados": 145,
+        "sensibilidad_pct": 100.0,
+        "retraso_medio_dias": 3.06,
+        "retraso_mediano_dias": 1.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 17.2,
+        "episodios_falsos_por_30_dias": 3.0
+      },
+      "cumple_restriccion": false
+    },
+    {
+      "yellow": 2.0,
+      "red": 4.0,
+      "vigilar": {
+        "eventos": 145,
+        "detectados": 145,
+        "sensibilidad_pct": 100.0,
+        "retraso_medio_dias": 0.86,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 55.7,
+        "episodios_falsos_por_30_dias": 6.31
+      },
+      "actuar": {
+        "eventos": 145,
+        "detectados": 144,
+        "sensibilidad_pct": 99.3,
+        "retraso_medio_dias": 3.22,
+        "retraso_mediano_dias": 1.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 13.9,
+        "episodios_falsos_por_30_dias": 2.36
+      },
+      "cumple_restriccion": false
+    },
+    {
+      "yellow": 2.0,
+      "red": 4.5,
+      "vigilar": {
+        "eventos": 145,
+        "detectados": 145,
+        "sensibilidad_pct": 100.0,
+        "retraso_medio_dias": 0.86,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 55.7,
+        "episodios_falsos_por_30_dias": 6.31
+      },
+      "actuar": {
+        "eventos": 145,
+        "detectados": 144,
+        "sensibilidad_pct": 99.3,
+        "retraso_medio_dias": 3.58,
+        "retraso_mediano_dias": 1.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 11.3,
+        "episodios_falsos_por_30_dias": 1.91
+      },
+      "cumple_restriccion": false
+    },
+    {
+      "yellow": 2.5,
+      "red": 3.0,
+      "vigilar": {
+        "eventos": 145,
+        "detectados": 145,
+        "sensibilidad_pct": 100.0,
+        "retraso_medio_dias": 1.89,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 28.3,
+        "episodios_falsos_por_30_dias": 5.08
+      },
+      "actuar": {
+        "eventos": 145,
+        "detectados": 143,
+        "sensibilidad_pct": 98.6,
+        "retraso_medio_dias": 2.44,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 16.8,
+        "episodios_falsos_por_30_dias": 3.43
+      },
+      "cumple_restriccion": false
+    },
+    {
+      "yellow": 2.5,
+      "red": 3.5,
+      "vigilar": {
+        "eventos": 145,
+        "detectados": 145,
+        "sensibilidad_pct": 100.0,
+        "retraso_medio_dias": 1.89,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 28.3,
+        "episodios_falsos_por_30_dias": 5.08
+      },
+      "actuar": {
+        "eventos": 145,
+        "detectados": 143,
+        "sensibilidad_pct": 98.6,
+        "retraso_medio_dias": 3.5,
+        "retraso_mediano_dias": 1.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 9.6,
+        "episodios_falsos_por_30_dias": 2.08
+      },
+      "cumple_restriccion": false
+    },
+    {
+      "yellow": 2.5,
+      "red": 4.0,
+      "vigilar": {
+        "eventos": 145,
+        "detectados": 145,
+        "sensibilidad_pct": 100.0,
+        "retraso_medio_dias": 1.89,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 28.3,
+        "episodios_falsos_por_30_dias": 5.08
+      },
+      "actuar": {
+        "eventos": 145,
+        "detectados": 141,
+        "sensibilidad_pct": 97.2,
+        "retraso_medio_dias": 3.65,
+        "retraso_mediano_dias": 1.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 6.6,
+        "episodios_falsos_por_30_dias": 1.38
+      },
+      "cumple_restriccion": false
+    },
+    {
+      "yellow": 2.5,
+      "red": 4.5,
+      "vigilar": {
+        "eventos": 145,
+        "detectados": 145,
+        "sensibilidad_pct": 100.0,
+        "retraso_medio_dias": 1.89,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 28.3,
+        "episodios_falsos_por_30_dias": 5.08
+      },
+      "actuar": {
+        "eventos": 145,
+        "detectados": 138,
+        "sensibilidad_pct": 95.2,
+        "retraso_medio_dias": 4.03,
+        "retraso_mediano_dias": 1.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 4.2,
+        "episodios_falsos_por_30_dias": 0.86
+      },
+      "cumple_restriccion": true
+    },
+    {
+      "yellow": 3.0,
+      "red": 3.5,
+      "vigilar": {
+        "eventos": 145,
+        "detectados": 143,
+        "sensibilidad_pct": 98.6,
+        "retraso_medio_dias": 2.41,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 14.9,
+        "episodios_falsos_por_30_dias": 3.17
+      },
+      "actuar": {
+        "eventos": 145,
+        "detectados": 143,
+        "sensibilidad_pct": 98.6,
+        "retraso_medio_dias": 3.55,
+        "retraso_mediano_dias": 1.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 8.1,
+        "episodios_falsos_por_30_dias": 1.82
+      },
+      "cumple_restriccion": false
+    },
+    {
+      "yellow": 3.0,
+      "red": 4.0,
+      "vigilar": {
+        "eventos": 145,
+        "detectados": 143,
+        "sensibilidad_pct": 98.6,
+        "retraso_medio_dias": 2.41,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 14.9,
+        "episodios_falsos_por_30_dias": 3.17
+      },
+      "actuar": {
+        "eventos": 145,
+        "detectados": 139,
+        "sensibilidad_pct": 95.9,
+        "retraso_medio_dias": 3.71,
+        "retraso_mediano_dias": 1.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 5.1,
+        "episodios_falsos_por_30_dias": 1.11
+      },
+      "cumple_restriccion": false
+    },
+    {
+      "yellow": 3.0,
+      "red": 4.5,
+      "vigilar": {
+        "eventos": 145,
+        "detectados": 143,
+        "sensibilidad_pct": 98.6,
+        "retraso_medio_dias": 2.41,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 14.9,
+        "episodios_falsos_por_30_dias": 3.17
+      },
+      "actuar": {
+        "eventos": 145,
+        "detectados": 131,
+        "sensibilidad_pct": 90.3,
+        "retraso_medio_dias": 4.15,
+        "retraso_mediano_dias": 1.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 2.9,
+        "episodios_falsos_por_30_dias": 0.61
+      },
+      "cumple_restriccion": true
+    }
+  ],
+  "evaluacion": {
+    "global": {
+      "A_vigilar": {
+        "eventos": 279,
+        "detectados": 279,
+        "sensibilidad_pct": 100.0,
+        "retraso_medio_dias": 1.53,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 12176,
+        "falsas_alarmas_dias_pct": 26.8,
+        "episodios_falsos_por_30_dias": 5.04
+      },
+      "A_actuar": {
+        "eventos": 279,
+        "detectados": 276,
+        "sensibilidad_pct": 98.9,
+        "retraso_medio_dias": 4.34,
+        "retraso_mediano_dias": 1.0,
+        "dias_sanos": 12176,
+        "falsas_alarmas_dias_pct": 3.5,
+        "episodios_falsos_por_30_dias": 0.78
+      },
+      "B_fijo": {
+        "eventos": 279,
+        "detectados": 248,
+        "sensibilidad_pct": 88.9,
+        "retraso_medio_dias": 3.16,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 12176,
+        "falsas_alarmas_dias_pct": 13.4,
+        "episodios_falsos_por_30_dias": 1.87
+      }
+    },
+    "por_escenario": {
+      "A_vigilar": {
+        "B": {
+          "eventos": 58,
+          "detectados": 58,
+          "sensibilidad_pct": 100.0,
+          "retraso_medio_dias": 2.12,
+          "retraso_mediano_dias": 2.0
+        },
+        "C": {
+          "eventos": 55,
+          "detectados": 55,
+          "sensibilidad_pct": 100.0,
+          "retraso_medio_dias": 0.25,
+          "retraso_mediano_dias": 0.0
+        },
+        "D": {
+          "eventos": 112,
+          "detectados": 112,
+          "sensibilidad_pct": 100.0,
+          "retraso_medio_dias": 0.0,
+          "retraso_mediano_dias": 0.0
+        },
+        "E": {
+          "eventos": 54,
+          "detectados": 54,
+          "sensibilidad_pct": 100.0,
+          "retraso_medio_dias": 5.39,
+          "retraso_mediano_dias": 4.5
+        }
+      },
+      "A_actuar": {
+        "B": {
+          "eventos": 58,
+          "detectados": 57,
+          "sensibilidad_pct": 98.3,
+          "retraso_medio_dias": 5.56,
+          "retraso_mediano_dias": 5.0
+        },
+        "C": {
+          "eventos": 55,
+          "detectados": 55,
+          "sensibilidad_pct": 100.0,
+          "retraso_medio_dias": 1.05,
+          "retraso_mediano_dias": 1.0
+        },
+        "D": {
+          "eventos": 112,
+          "detectados": 112,
+          "sensibilidad_pct": 100.0,
+          "retraso_medio_dias": 0.0,
+          "retraso_mediano_dias": 0.0
+        },
+        "E": {
+          "eventos": 54,
+          "detectados": 52,
+          "sensibilidad_pct": 96.3,
+          "retraso_medio_dias": 15.81,
+          "retraso_mediano_dias": 17.0
+        }
+      },
+      "B_fijo": {
+        "B": {
+          "eventos": 58,
+          "detectados": 58,
+          "sensibilidad_pct": 100.0,
+          "retraso_medio_dias": 4.28,
+          "retraso_mediano_dias": 4.0
+        },
+        "C": {
+          "eventos": 55,
+          "detectados": 27,
+          "sensibilidad_pct": 49.1,
+          "retraso_medio_dias": 1.15,
+          "retraso_mediano_dias": 1.0
+        },
+        "D": {
+          "eventos": 112,
+          "detectados": 112,
+          "sensibilidad_pct": 100.0,
+          "retraso_medio_dias": 0.0,
+          "retraso_mediano_dias": 0.0
+        },
+        "E": {
+          "eventos": 54,
+          "detectados": 51,
+          "sensibilidad_pct": 94.4,
+          "retraso_medio_dias": 9.9,
+          "retraso_mediano_dias": 9.0
+        }
+      }
+    },
+    "por_indicador": {
+      "A_vigilar": {
+        "rhr": {
+          "eventos_que_lo_afectan": 55,
+          "sensibilidad_pct": 98.2,
+          "falsas_alarmas_dias_pct": 5.62
+        },
+        "hrv": {
+          "eventos_que_lo_afectan": 55,
+          "sensibilidad_pct": 98.2,
+          "falsas_alarmas_dias_pct": 6.55
+        },
+        "sleep": {
+          "eventos_que_lo_afectan": 58,
+          "sensibilidad_pct": 100.0,
+          "falsas_alarmas_dias_pct": 6.15
+        },
+        "dose": {
+          "eventos_que_lo_afectan": 112,
+          "sensibilidad_pct": 100.0,
+          "falsas_alarmas_dias_pct": 4.71
+        },
+        "pvt": {
+          "eventos_que_lo_afectan": 112,
+          "sensibilidad_pct": 100.0,
+          "falsas_alarmas_dias_pct": 5.27
+        },
+        "mood": {
+          "eventos_que_lo_afectan": 112,
+          "sensibilidad_pct": 79.5,
+          "falsas_alarmas_dias_pct": 2.18
+        }
+      },
+      "A_actuar": {
+        "rhr": {
+          "eventos_que_lo_afectan": 55,
+          "sensibilidad_pct": 96.4,
+          "falsas_alarmas_dias_pct": 0.6
+        },
+        "hrv": {
+          "eventos_que_lo_afectan": 55,
+          "sensibilidad_pct": 83.6,
+          "falsas_alarmas_dias_pct": 1.22
+        },
+        "sleep": {
+          "eventos_que_lo_afectan": 58,
+          "sensibilidad_pct": 89.7,
+          "falsas_alarmas_dias_pct": 0.83
+        },
+        "dose": {
+          "eventos_que_lo_afectan": 112,
+          "sensibilidad_pct": 100.0,
+          "falsas_alarmas_dias_pct": 0.4
+        },
+        "pvt": {
+          "eventos_que_lo_afectan": 112,
+          "sensibilidad_pct": 75.9,
+          "falsas_alarmas_dias_pct": 0.42
+        },
+        "mood": {
+          "eventos_que_lo_afectan": 112,
+          "sensibilidad_pct": 50.0,
+          "falsas_alarmas_dias_pct": 0.05
+        }
+      },
+      "B_fijo": {
+        "rhr": {
+          "eventos_que_lo_afectan": 55,
+          "sensibilidad_pct": 41.8,
+          "falsas_alarmas_dias_pct": 6.51
+        },
+        "hrv": {
+          "eventos_que_lo_afectan": 55,
+          "sensibilidad_pct": 14.5,
+          "falsas_alarmas_dias_pct": 1.43
+        },
+        "sleep": {
+          "eventos_que_lo_afectan": 58,
+          "sensibilidad_pct": 87.9,
+          "falsas_alarmas_dias_pct": 1.68
+        },
+        "dose": {
+          "eventos_que_lo_afectan": 112,
+          "sensibilidad_pct": 100.0,
+          "falsas_alarmas_dias_pct": 1.91
+        },
+        "pvt": {
+          "eventos_que_lo_afectan": 112,
+          "sensibilidad_pct": 93.8,
+          "falsas_alarmas_dias_pct": 1.87
+        },
+        "mood": {
+          "eventos_que_lo_afectan": 112,
+          "sensibilidad_pct": 54.5,
+          "falsas_alarmas_dias_pct": 0.56
+        }
+      }
+    },
+    "anticipacion": {
+      "A_vigilar": {
+        "eventos_detectados_por_ambos": 248,
+        "anticipacion_media_dias": 1.49,
+        "A_antes_que_B": 74,
+        "mismo_dia": 164,
+        "B_antes_que_A": 10,
+        "solo_A_detecta": 31,
+        "solo_B_detecta": 0
+      },
+      "A_actuar": {
+        "eventos_detectados_por_ambos": 245,
+        "anticipacion_media_dias": -1.44,
+        "A_antes_que_B": 33,
+        "mismo_dia": 142,
+        "B_antes_que_A": 70,
+        "solo_A_detecta": 31,
+        "solo_B_detecta": 3
+      }
+    }
+  },
+  "ablacion": {
+    "completo": {
+      "A_vigilar": {
+        "eventos": 279,
+        "detectados": 279,
+        "sensibilidad_pct": 100.0,
+        "retraso_medio_dias": 1.53,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 12176,
+        "falsas_alarmas_dias_pct": 26.8,
+        "episodios_falsos_por_30_dias": 5.04
+      },
+      "A_actuar": {
+        "eventos": 279,
+        "detectados": 276,
+        "sensibilidad_pct": 98.9,
+        "retraso_medio_dias": 4.34,
+        "retraso_mediano_dias": 1.0,
+        "dias_sanos": 12176,
+        "falsas_alarmas_dias_pct": 3.5,
+        "episodios_falsos_por_30_dias": 0.78
+      }
+    },
+    "sin_excluir_alertas": {
+      "A_vigilar": {
+        "eventos": 279,
+        "detectados": 279,
+        "sensibilidad_pct": 100.0,
+        "retraso_medio_dias": 1.59,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 12176,
+        "falsas_alarmas_dias_pct": 24.4,
+        "episodios_falsos_por_30_dias": 4.83
+      },
+      "A_actuar": {
+        "eventos": 279,
+        "detectados": 273,
+        "sensibilidad_pct": 97.8,
+        "retraso_medio_dias": 4.46,
+        "retraso_mediano_dias": 1.0,
+        "dias_sanos": 12176,
+        "falsas_alarmas_dias_pct": 2.7,
+        "episodios_falsos_por_30_dias": 0.63
+      }
+    },
+    "sin_linea_inicial": {
+      "A_vigilar": {
+        "eventos": 279,
+        "detectados": 276,
+        "sensibilidad_pct": 98.9,
+        "retraso_medio_dias": 2.13,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 12176,
+        "falsas_alarmas_dias_pct": 17.5,
+        "episodios_falsos_por_30_dias": 3.77
+      },
+      "A_actuar": {
+        "eventos": 279,
+        "detectados": 229,
+        "sensibilidad_pct": 82.1,
+        "retraso_medio_dias": 3.11,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 12176,
+        "falsas_alarmas_dias_pct": 1.8,
+        "episodios_falsos_por_30_dias": 0.42
+      }
+    },
+    "solo_ventana_movil": {
+      "A_vigilar": {
+        "eventos": 279,
+        "detectados": 275,
+        "sensibilidad_pct": 98.6,
+        "retraso_medio_dias": 2.15,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 12176,
+        "falsas_alarmas_dias_pct": 14.3,
+        "episodios_falsos_por_30_dias": 3.38
+      },
+      "A_actuar": {
+        "eventos": 279,
+        "detectados": 215,
+        "sensibilidad_pct": 77.1,
+        "retraso_medio_dias": 3.1,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 12176,
+        "falsas_alarmas_dias_pct": 1.0,
+        "episodios_falsos_por_30_dias": 0.25
+      }
+    }
+  },
+  "heterogeneidad": [
+    {
+      "heterogeneidad": 0.25,
+      "A_vigilar": {
+        "eventos": 149,
+        "detectados": 149,
+        "sensibilidad_pct": 100.0,
+        "retraso_medio_dias": 1.35,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6076,
+        "falsas_alarmas_dias_pct": 27.5,
+        "episodios_falsos_por_30_dias": 5.14
+      },
+      "A_actuar": {
+        "eventos": 149,
+        "detectados": 148,
+        "sensibilidad_pct": 99.3,
+        "retraso_medio_dias": 3.32,
+        "retraso_mediano_dias": 1.0,
+        "dias_sanos": 6076,
+        "falsas_alarmas_dias_pct": 3.1,
+        "episodios_falsos_por_30_dias": 0.74
+      },
+      "B_fijo": {
+        "eventos": 149,
+        "detectados": 149,
+        "sensibilidad_pct": 100.0,
+        "retraso_medio_dias": 2.13,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6076,
+        "falsas_alarmas_dias_pct": 8.7,
+        "episodios_falsos_por_30_dias": 2.16
+      }
+    },
+    {
+      "heterogeneidad": 0.5,
+      "A_vigilar": {
+        "eventos": 149,
+        "detectados": 149,
+        "sensibilidad_pct": 100.0,
+        "retraso_medio_dias": 1.48,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6084,
+        "falsas_alarmas_dias_pct": 26.4,
+        "episodios_falsos_por_30_dias": 5.16
+      },
+      "A_actuar": {
+        "eventos": 149,
+        "detectados": 144,
+        "sensibilidad_pct": 96.6,
+        "retraso_medio_dias": 3.47,
+        "retraso_mediano_dias": 1.0,
+        "dias_sanos": 6084,
+        "falsas_alarmas_dias_pct": 3.3,
+        "episodios_falsos_por_30_dias": 0.76
+      },
+      "B_fijo": {
+        "eventos": 149,
+        "detectados": 145,
+        "sensibilidad_pct": 97.3,
+        "retraso_medio_dias": 2.34,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6084,
+        "falsas_alarmas_dias_pct": 11.6,
+        "episodios_falsos_por_30_dias": 2.23
+      }
+    },
+    {
+      "heterogeneidad": 1.0,
+      "A_vigilar": {
+        "eventos": 149,
+        "detectados": 149,
+        "sensibilidad_pct": 100.0,
+        "retraso_medio_dias": 1.34,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6053,
+        "falsas_alarmas_dias_pct": 26.6,
+        "episodios_falsos_por_30_dias": 5.15
+      },
+      "A_actuar": {
+        "eventos": 149,
+        "detectados": 147,
+        "sensibilidad_pct": 98.7,
+        "retraso_medio_dias": 3.99,
+        "retraso_mediano_dias": 1.0,
+        "dias_sanos": 6053,
+        "falsas_alarmas_dias_pct": 2.7,
+        "episodios_falsos_por_30_dias": 0.65
+      },
+      "B_fijo": {
+        "eventos": 149,
+        "detectados": 130,
+        "sensibilidad_pct": 87.2,
+        "retraso_medio_dias": 2.32,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6053,
+        "falsas_alarmas_dias_pct": 13.9,
+        "episodios_falsos_por_30_dias": 2.08
+      }
+    },
+    {
+      "heterogeneidad": 2.0,
+      "A_vigilar": {
+        "eventos": 149,
+        "detectados": 148,
+        "sensibilidad_pct": 99.3,
+        "retraso_medio_dias": 1.49,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6101,
+        "falsas_alarmas_dias_pct": 25.4,
+        "episodios_falsos_por_30_dias": 4.85
+      },
+      "A_actuar": {
+        "eventos": 149,
+        "detectados": 144,
+        "sensibilidad_pct": 96.6,
+        "retraso_medio_dias": 3.63,
+        "retraso_mediano_dias": 1.0,
+        "dias_sanos": 6101,
+        "falsas_alarmas_dias_pct": 3.1,
+        "episodios_falsos_por_30_dias": 0.66
+      },
+      "B_fijo": {
+        "eventos": 149,
+        "detectados": 117,
+        "sensibilidad_pct": 78.5,
+        "retraso_medio_dias": 3.01,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6101,
+        "falsas_alarmas_dias_pct": 8.8,
+        "episodios_falsos_por_30_dias": 1.71
+      }
+    }
+  ],
+  "segundos": 187.7
+}

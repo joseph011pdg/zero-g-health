@@ -1,0 +1,57 @@
+{
+  "_nota": "Orientaciones de SEGUIMIENTO, conservadoras e informativas. No son diagnósticos ni prescripciones. Toda alerta roja incluye notificar al oficial médico y seguir los protocolos autorizados de la misión. Las reglas combinadas se evalúan primero.",
+  "combinadas": [
+    {
+      "id": "estres_fisiologico",
+      "requiere": {"rhr": "amarillo", "hrv": "amarillo"},
+      "titulo": "Patrón de estrés fisiológico (FC en reposo ↑ y variabilidad ↓)",
+      "mensaje": "La FC en reposo subió y la variabilidad cardíaca bajó a la vez respecto a lo habitual para esta persona. Este patrón se ha observado antes de síntomas de infección en estudios con wearables, pero también aparece con estrés, mala recuperación o carga de ejercicio. No es un diagnóstico.",
+      "acciones": ["Registrar síntomas (temperatura, malestar, piel) en el check-in", "Moderar la intensidad del ejercicio de hoy si el plan de misión lo permite", "Repetir la medición en 24 h"],
+      "evidencia": ["mishra2020", "crucian2018"]
+    },
+    {
+      "id": "fatiga",
+      "requiere": {"sleep": "amarillo", "pvt": "amarillo"},
+      "titulo": "Fatiga: sueño más corto y más errores de atención",
+      "mensaje": "Durmió menos de lo habitual y aumentaron los errores en la prueba de vigilancia psicomotora. La privación de sueño reduce el desempeño en la PVT.",
+      "acciones": ["Valorar posponer tareas críticas que exijan atención sostenida", "Priorizar el periodo de descanso de esta noche", "Repetir la prueba PVT-B mañana"],
+      "evidencia": ["basner2011", "basner2014"]
+    },
+    {
+      "id": "conductual",
+      "requiere": {"mood": "amarillo", "pvt": "amarillo"},
+      "titulo": "Cambio conductual: ánimo más bajo y peor desempeño cognitivo",
+      "mensaje": "El autorreporte de ánimo y la prueba de vigilancia empeoraron a la vez respecto a lo habitual. En Mars-520 se observaron cambios conductuales y de sueño muy distintos entre tripulantes.",
+      "acciones": ["Conversación de seguimiento con el oficial médico o un compañero de confianza", "Mantener rutinas de ejercicio, sueño y contacto con la familia (diferido)", "Repetir check-in y PVT-B mañana"],
+      "evidencia": ["basner2014"]
+    }
+  ],
+  "individuales": {
+    "rhr": {
+      "amarillo": {"titulo": "FC en reposo por encima de lo habitual", "acciones": ["Hidratación y descanso; evitar comparar con otros tripulantes", "Repetir la medición en 24 h"], "evidencia": ["mishra2020"]},
+      "rojo": {"titulo": "FC en reposo muy por encima de lo habitual", "acciones": ["Registrar síntomas en el check-in", "Moderar el esfuerzo físico hasta la revisión médica"], "evidencia": ["mishra2020", "garrett2019"]}
+    },
+    "hrv": {
+      "amarillo": {"titulo": "Variabilidad cardíaca más baja de lo habitual", "acciones": ["Priorizar la recuperación: sueño y pausas", "Repetir la medición mañana"], "evidencia": ["mishra2020"]},
+      "rojo": {"titulo": "Variabilidad cardíaca muy baja para esta persona", "acciones": ["Revisar carga de trabajo y ejercicio con el oficial médico", "Repetir la medición mañana"], "evidencia": ["mishra2020", "crucian2018"]}
+    },
+    "sleep": {
+      "amarillo": {"titulo": "Durmió menos de lo habitual", "acciones": ["Revisar horario, luz y ruido en el periodo de descanso", "Vigilar el sueño de la próxima noche"], "evidencia": ["basner2014", "watson2015"]},
+      "rojo": {"titulo": "Sueño muy reducido para esta persona", "acciones": ["Valorar posponer tareas críticas", "Coordinar con la tripulación un periodo de descanso"], "evidencia": ["basner2014", "basner2011"]}
+    },
+    "dose": {
+      "amarillo": {"titulo": "Tasa de dosis de radiación más alta de lo habitual", "acciones": ["Verificar la lectura del dosímetro y la ubicación habitual", "Consultar el estado de la actividad solar registrado a bordo"], "evidencia": ["patel2020"]},
+      "rojo": {"titulo": "Tasa de dosis muy elevada (posible evento de partículas solares)", "acciones": ["Seguir el procedimiento de la misión ante eventos solares autorizado por el comandante y el oficial médico", "Registrar la dosis acumulada en el reporte para la Tierra"], "evidencia": ["patel2020"]}
+    },
+    "pvt": {
+      "amarillo": {"titulo": "Más errores de atención de lo habitual", "acciones": ["Pausa breve y repetir la prueba PVT-B más tarde", "Revisar el sueño de la noche anterior"], "evidencia": ["basner2011"]},
+      "rojo": {"titulo": "Atención muy reducida para esta persona", "acciones": ["Valorar posponer tareas críticas que exijan atención sostenida", "Descansar y repetir la prueba PVT-B"], "evidencia": ["basner2011", "nasa2013"]}
+    },
+    "mood": {
+      "amarillo": {"titulo": "Ánimo más bajo de lo habitual", "acciones": ["Hablar con un compañero de confianza", "Mantener rutinas de ejercicio y comunicación diferida"], "evidencia": ["basner2014"]},
+      "rojo": {"titulo": "Ánimo bajo sostenido", "acciones": ["Conversación de seguimiento con el oficial médico", "Usar los recursos de apoyo psicológico previstos por la misión"], "evidencia": ["basner2014"]}
+    }
+  },
+  "escalado_rojo": "Notificar al oficial médico de a bordo y seguir los protocolos autorizados de la misión.",
+  "aviso": "Orientación de seguimiento generada por reglas a partir de una detección estadística. No es un diagnóstico ni una indicación de tratamiento."
+}

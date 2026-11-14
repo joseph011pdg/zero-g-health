@@ -1,0 +1,298 @@
+{
+  "params": {
+    "window": 14,
+    "min_periods": 7,
+    "yellow": 2.5,
+    "red": 4.5,
+    "persist": 3,
+    "exclude_alerts": true,
+    "use_initial": true,
+    "fixed": {
+      "rhr": 71.0,
+      "hrv": 18.454,
+      "sleep": 5.479,
+      "dose": 0.52,
+      "pvt": 5.0,
+      "mood": 5.5
+    },
+    "origen": "ajustado con semillas 1000–1019 (20 misiones)"
+  },
+  "grid": [
+    {
+      "yellow": 2.0,
+      "red": 3.0,
+      "vigilar": {
+        "eventos": 145,
+        "detectados": 145,
+        "sensibilidad_pct": 100.0,
+        "retraso_medio_dias": 0.86,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 55.7,
+        "episodios_falsos_por_30_dias": 6.31
+      },
+      "actuar": {
+        "eventos": 145,
+        "detectados": 145,
+        "sensibilidad_pct": 100.0,
+        "retraso_medio_dias": 2.43,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 24.8,
+        "episodios_falsos_por_30_dias": 4.23
+      },
+      "cumple_restriccion": false
+    },
+    {
+      "yellow": 2.0,
+      "red": 3.5,
+      "vigilar": {
+        "eventos": 145,
+        "detectados": 145,
+        "sensibilidad_pct": 100.0,
+        "retraso_medio_dias": 0.86,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 55.7,
+        "episodios_falsos_por_30_dias": 6.31
+      },
+      "actuar": {
+        "eventos": 145,
+        "detectados": 145,
+        "sensibilidad_pct": 100.0,
+        "retraso_medio_dias": 3.06,
+        "retraso_mediano_dias": 1.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 17.2,
+        "episodios_falsos_por_30_dias": 3.0
+      },
+      "cumple_restriccion": false
+    },
+    {
+      "yellow": 2.0,
+      "red": 4.0,
+      "vigilar": {
+        "eventos": 145,
+        "detectados": 145,
+        "sensibilidad_pct": 100.0,
+        "retraso_medio_dias": 0.86,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 55.7,
+        "episodios_falsos_por_30_dias": 6.31
+      },
+      "actuar": {
+        "eventos": 145,
+        "detectados": 144,
+        "sensibilidad_pct": 99.3,
+        "retraso_medio_dias": 3.22,
+        "retraso_mediano_dias": 1.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 13.9,
+        "episodios_falsos_por_30_dias": 2.36
+      },
+      "cumple_restriccion": false
+    },
+    {
+      "yellow": 2.0,
+      "red": 4.5,
+      "vigilar": {
+        "eventos": 145,
+        "detectados": 145,
+        "sensibilidad_pct": 100.0,
+        "retraso_medio_dias": 0.86,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 55.7,
+        "episodios_falsos_por_30_dias": 6.31
+      },
+      "actuar": {
+        "eventos": 145,
+        "detectados": 144,
+        "sensibilidad_pct": 99.3,
+        "retraso_medio_dias": 3.58,
+        "retraso_mediano_dias": 1.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 11.3,
+        "episodios_falsos_por_30_dias": 1.91
+      },
+      "cumple_restriccion": false
+    },
+    {
+      "yellow": 2.5,
+      "red": 3.0,
+      "vigilar": {
+        "eventos": 145,
+        "detectados": 145,
+        "sensibilidad_pct": 100.0,
+        "retraso_medio_dias": 1.89,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 28.3,
+        "episodios_falsos_por_30_dias": 5.08
+      },
+      "actuar": {
+        "eventos": 145,
+        "detectados": 143,
+        "sensibilidad_pct": 98.6,
+        "retraso_medio_dias": 2.44,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 16.8,
+        "episodios_falsos_por_30_dias": 3.43
+      },
+      "cumple_restriccion": false
+    },
+    {
+      "yellow": 2.5,
+      "red": 3.5,
+      "vigilar": {
+        "eventos": 145,
+        "detectados": 145,
+        "sensibilidad_pct": 100.0,
+        "retraso_medio_dias": 1.89,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 28.3,
+        "episodios_falsos_por_30_dias": 5.08
+      },
+      "actuar": {
+        "eventos": 145,
+        "detectados": 143,
+        "sensibilidad_pct": 98.6,
+        "retraso_medio_dias": 3.5,
+        "retraso_mediano_dias": 1.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 9.6,
+        "episodios_falsos_por_30_dias": 2.08
+      },
+      "cumple_restriccion": false
+    },
+    {
+      "yellow": 2.5,
+      "red": 4.0,
+      "vigilar": {
+        "eventos": 145,
+        "detectados": 145,
+        "sensibilidad_pct": 100.0,
+        "retraso_medio_dias": 1.89,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 28.3,
+        "episodios_falsos_por_30_dias": 5.08
+      },
+      "actuar": {
+        "eventos": 145,
+        "detectados": 141,
+        "sensibilidad_pct": 97.2,
+        "retraso_medio_dias": 3.65,
+        "retraso_mediano_dias": 1.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 6.6,
+        "episodios_falsos_por_30_dias": 1.38
+      },
+      "cumple_restriccion": false
+    },
+    {
+      "yellow": 2.5,
+      "red": 4.5,
+      "vigilar": {
+        "eventos": 145,
+        "detectados": 145,
+        "sensibilidad_pct": 100.0,
+        "retraso_medio_dias": 1.89,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 28.3,
+        "episodios_falsos_por_30_dias": 5.08
+      },
+      "actuar": {
+        "eventos": 145,
+        "detectados": 138,
+        "sensibilidad_pct": 95.2,
+        "retraso_medio_dias": 4.03,
+        "retraso_mediano_dias": 1.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 4.2,
+        "episodios_falsos_por_30_dias": 0.86
+      },
+      "cumple_restriccion": true
+    },
+    {
+      "yellow": 3.0,
+      "red": 3.5,
+      "vigilar": {
+        "eventos": 145,
+        "detectados": 143,
+        "sensibilidad_pct": 98.6,
+        "retraso_medio_dias": 2.41,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 14.9,
+        "episodios_falsos_por_30_dias": 3.17
+      },
+      "actuar": {
+        "eventos": 145,
+        "detectados": 143,
+        "sensibilidad_pct": 98.6,
+        "retraso_medio_dias": 3.55,
+        "retraso_mediano_dias": 1.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 8.1,
+        "episodios_falsos_por_30_dias": 1.82
+      },
+      "cumple_restriccion": false
+    },
+    {
+      "yellow": 3.0,
+      "red": 4.0,
+      "vigilar": {
+        "eventos": 145,
+        "detectados": 143,
+        "sensibilidad_pct": 98.6,
+        "retraso_medio_dias": 2.41,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 14.9,
+        "episodios_falsos_por_30_dias": 3.17
+      },
+      "actuar": {
+        "eventos": 145,
+        "detectados": 139,
+        "sensibilidad_pct": 95.9,
+        "retraso_medio_dias": 3.71,
+        "retraso_mediano_dias": 1.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 5.1,
+        "episodios_falsos_por_30_dias": 1.11
+      },
+      "cumple_restriccion": false
+    },
+    {
+      "yellow": 3.0,
+      "red": 4.5,
+      "vigilar": {
+        "eventos": 145,
+        "detectados": 143,
+        "sensibilidad_pct": 98.6,
+        "retraso_medio_dias": 2.41,
+        "retraso_mediano_dias": 0.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 14.9,
+        "episodios_falsos_por_30_dias": 3.17
+      },
+      "actuar": {
+        "eventos": 145,
+        "detectados": 131,
+        "sensibilidad_pct": 90.3,
+        "retraso_medio_dias": 4.15,
+        "retraso_mediano_dias": 1.0,
+        "dias_sanos": 6015,
+        "falsas_alarmas_dias_pct": 2.9,
+        "episodios_falsos_por_30_dias": 0.61
+      },
+      "cumple_restriccion": true
+    }
+  ],
+  "restriccion": "episodios falsos 'actuar' <= 1.0 / 30 días"
+}
