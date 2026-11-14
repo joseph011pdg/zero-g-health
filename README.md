@@ -87,6 +87,9 @@ y en otra terminal `cd frontend; npm run dev` (http://localhost:5173, proxy `/ap
 
 ## Demo pública en línea (Render)
 
+**URL: https://basal-pxyn.onrender.com** · código: https://github.com/joseph011pdg/basal
+
+
 El repositorio incluye `render.yaml` (runtime Python, plan gratuito) y la interfaz ya compilada en `frontend/dist`.
 1. Subir el repositorio a GitHub.
 2. En Render: **New → Blueprint** → elegir el repositorio → **Apply**. Render instala `backend/requirements.txt` y

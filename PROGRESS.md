@@ -42,7 +42,8 @@ Registro de avance por fases (para retomar si la sesión se interrumpe). Fecha l
 - Repositorio git inicializado (rama `main`, autor provisional "Equipo BASAL" <basal-team@users.noreply.github.com>).
 
 ## Pendiente (equipo)
-- [ ] Crear repositorio en GitHub, `git push`, y en Render: New → Blueprint (requiere iniciar sesión).
+- [x] Publicado: https://github.com/joseph011pdg/basal (público) y https://basal-pxyn.onrender.com (Render, plan free,
+      modo público). Cada push a `main` redespliega; recompilar `frontend/dist` antes si cambia la interfaz.
 - [ ] Ensayar la demo con el guion y grabar el video (2–3 min); capturas para la entrega.
 - [ ] Revisar la página oficial del reto y los campos de entrega de Space Apps 2026 (no verificados en esta sesión).
 - [ ] Verificar DOIs añadidos (Basner 2011, Watson 2015) y el intervalo 2–5 s de PVT-B en el artículo original.
