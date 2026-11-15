@@ -20,7 +20,7 @@ export async function api(path, opts = {}) {
       body: opts.body ? JSON.stringify(opts.body) : undefined
     })
   } catch (e) {
-    throw new ApiError('No hay conexión con el motor local (backend). Ejecute scripts\\start.ps1.')
+    throw new ApiError('No connection with the local engine (backend). Run scripts\\start.ps1.')
   }
   if (!res.ok) {
     let msg = `Error ${res.status}`
@@ -63,7 +63,7 @@ export const useStore = defineStore('basal', {
   getters: {
     day: (s) => s.mission?.dia ?? 0,
     selectedAstro: (s) => s.crew.find((a) => a.id === s.selected),
-    officer: (s) => s.crew.find((a) => /m[eé]dic/i.test(a.rol)),
+    officer: (s) => s.crew.find((a) => /medical|m[eé]dic/i.test(a.rol)),
     isOfficer: (s) => s.role === 'oficial'
   },
   actions: {
@@ -126,7 +126,7 @@ export const useStore = defineStore('basal', {
     },
     // Revisión de una alarma. En la demo pública se guarda solo en este navegador.
     async review(a, estado, nota = null) {
-      const revisor = this.officer ? this.officer.nombre : 'Oficial médico'
+      const revisor = this.officer ? this.officer.nombre : 'Medical Officer'
       if (this.publico) {
         const key = `${a.astro_id}|${a.episodio}|${a.nivel}`
         const acks = { ...this.acks }
@@ -177,21 +177,22 @@ export const useStore = defineStore('basal', {
 
 export const LEVEL = {
   verde: { label: 'Normal', icon: 'check' },
-  amarillo: { label: 'Vigilar', icon: 'triangle' },
-  rojo: { label: 'Actuar', icon: 'octagon' },
-  calibrando: { label: 'Calibrando', icon: 'dashed' },
-  sin_dato: { label: 'Sin dato', icon: 'minus' }
+  amarillo: { label: 'Watch', icon: 'triangle' },
+  rojo: { label: 'Act', icon: 'octagon' },
+  calibrando: { label: 'Calibrating', icon: 'dashed' },
+  sin_dato: { label: 'No data', icon: 'minus' }
 }
 export const RANK_LEVEL = { sin_dato: -1, calibrando: -1, verde: 0, amarillo: 1, rojo: 2 }
 export const IND_ICON = { rhr: 'heart', hrv: 'activity', sleep: 'moon', dose: 'radiation', pvt: 'target', mood: 'smile' }
-export const SRC_LABEL = { sintetico: 'sintético', manual: 'manual', csv: 'CSV', pvt: 'PVT-B', pvt_abreviada: 'PVT abreviada', real: 'real' }
-export const STATE_LABEL = { pendiente: 'Sin reconocer', reconocida: 'Reconocida', pospuesta: 'Pospuesta 24 h', revisada: 'Resuelta', escalada: 'Escalada', descartada: 'Descartada' }
+export const SRC_LABEL = { sintetico: 'synthetic', manual: 'manual', csv: 'CSV', pvt: 'PVT-B', pvt_abreviada: 'short PVT', real: 'real' }
+export const STATE_LABEL = { pendiente: 'Unacknowledged', reconocida: 'Acknowledged', pospuesta: 'Snoozed 24 h', revisada: 'Resolved', escalada: 'Escalated', descartada: 'Dismissed' }
 
-const nf = (v, d) => Number(v).toLocaleString('es', { minimumFractionDigits: d, maximumFractionDigits: d })
-// Cifras con coma decimal (es)
+//NÚMEROS en inglés: punto decimal y coma de miles
+export const LOCALE = 'en-US'
+const nf = (v, d) => Number(v).toLocaleString(LOCALE, { minimumFractionDigits: d, maximumFractionDigits: d })
 export const fmt = (v, d = 1) => (v === null || v === undefined || Number.isNaN(v) ? '—' : nf(v, d))
-// Número con coma decimal sin fijar decimales (cifras de validación)
-export const nn = (v, max = 2) => (v === null || v === undefined || Number.isNaN(Number(v)) ? '—' : Number(v).toLocaleString('es', { maximumFractionDigits: max }))
+//NÚMERO sin fijar decimales (cifras de validación)
+export const nn = (v, max = 2) => (v === null || v === undefined || Number.isNaN(Number(v)) ? '—' : Number(v).toLocaleString(LOCALE, { maximumFractionDigits: max }))
 export const signed = (v, d = 1) => (v === null || v === undefined ? '—' : `${v > 0 ? '+' : v < 0 ? '−' : ''}${nf(Math.abs(v), d)}`)
 
 export function download(name, content, type = 'application/json') {
@@ -225,5 +226,5 @@ export function episodes(alerts, day) {
   return out.sort((a, b) => order(a) - order(b) || RANK_LEVEL[b.rep.nivel] - RANK_LEVEL[a.rep.nivel] || b.rep.day - a.rep.day)
 }
 
-// "1 aviso" / "2 avisos"
+//PLURAL "1 notice" / "2 notices"
 export const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`

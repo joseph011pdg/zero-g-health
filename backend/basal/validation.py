@@ -29,9 +29,9 @@ from .indicators import INDICATORS, INDICATOR_KEYS
 from .simulator import SCENARIOS, random_assignments, simulate_mission
 
 DAYS = 120
-METHODS = {"A_vigilar": "Individual · vigilar (amarillo o rojo)",
-           "A_actuar": "Individual · actuar (rojo)",
-           "B_fijo": "Referencia poblacional fija"}
+METHODS = {"A_vigilar": "Personal · Watch (Watch or Act)",
+           "A_actuar": "Personal · Act",
+           "B_fijo": "Fixed population reference"}
 YELLOW_GRID = [2.0, 2.5, 3.0]
 RED_GRID = [3.0, 3.5, 4.0, 4.5]
 MAX_FA_EPISODES_ACTUAR = 1.0  # restricción de ajuste: ≤ 1 episodio "actuar" falso por 30 días-astronauta
@@ -186,7 +186,7 @@ def tune(seeds=TUNING_SEEDS, base: Params | None = None, missions=None) -> tuple
     best = max(ok, key=lambda g: (g["actuar"]["sensibilidad_pct"], -(g["actuar"]["retraso_medio_dias"] or 99),
                                   -g["vigilar"]["episodios_falsos_por_30_dias"]))
     p = replace(base, yellow=best["yellow"], red=best["red"], fixed=fixed,
-                origen=f"ajustado con semillas {seeds[0]}–{seeds[-1]} ({len(seeds)} misiones)")
+                origen=f"tuned with seeds {seeds[0]}–{seeds[-1]} ({len(seeds)} missions)")
     return p, grid
 
 
@@ -243,7 +243,7 @@ def main():
                       "semillas_evaluacion": [EVALUATION_SEEDS[0], EVALUATION_SEEDS[-1]],
                       "misiones_evaluacion": len(EVALUATION_SEEDS), "astronautas_por_mision": 4,
                       "dias_por_mision": DAYS, "intensidad_eventos": "uniforme 0,5–1,5",
-                      "restriccion_ajuste": f"episodios falsos 'actuar' <= {MAX_FA_EPISODES_ACTUAR} por 30 días-astronauta"},
+                      "restriccion_ajuste": f"false 'Act' episodes <= {MAX_FA_EPISODES_ACTUAR} per 30 astronaut-days"},
         "parametros": p.to_dict(), "metodos": METHODS,
         "escenarios": {k: v["nombre"] for k, v in SCENARIOS.items()},
         "ajuste": grid, "evaluacion": main_res, "ablacion": abl, "heterogeneidad": sweep,

@@ -1,17 +1,17 @@
 <template>
   <Sheet :title="`Check-in · ${astro.nombre}`" @close="$emit('close')">
     <form class="grid" @submit.prevent="save" @input="start">
-      <label class="field"><span>¿Cómo está su ánimo? <strong class="num big">{{ animo }}</strong>/10</span>
-        <input type="range" min="1" max="10" step="0.5" v-model.number="animo" aria-label="Ánimo de 1 a 10" />
-        <div class="row between tiny muted"><span>Muy bajo</span><span>Excelente</span></div></label>
-      <div class="field"><span>¿Cómo durmió anoche?</span>
-        <div class="seg" role="radiogroup" aria-label="Calidad del sueño">
+      <label class="field"><span>How is your mood? <strong class="num big">{{ animo }}</strong>/10</span>
+        <input type="range" min="1" max="10" step="0.5" v-model.number="animo" aria-label="Mood from 1 to 10" />
+        <div class="row between tiny muted"><span>Very low</span><span>Excellent</span></div></label>
+      <div class="field"><span>How did you sleep last night?</span>
+        <div class="seg" role="radiogroup" aria-label="Sleep quality">
           <button v-for="q in Q" :key="q.v" type="button" role="radio" :aria-checked="sueno === q.v" :class="{ on: sueno === q.v }" @click="sueno = q.v; start()">
             <strong>{{ q.v }}</strong><span class="tiny">{{ q.l }}</span></button>
         </div></div>
-      <label class="field"><span>Notas (opcional)</span>
-        <textarea class="input" v-model="notas" maxlength="500" placeholder="Síntomas o algo que quiera contar" /></label>
-      <button class="btn primary full" type="submit" :disabled="!sueno || busy">Guardar check-in</button>
+      <label class="field"><span>Notes (optional)</span>
+        <textarea class="input" v-model="notas" maxlength="500" placeholder="Symptoms or anything you want to share" /></label>
+      <button class="btn primary full" type="submit" :disabled="!sueno || busy">Save check-in</button>
     </form>
   </Sheet>
 </template>
@@ -23,7 +23,7 @@ import { api, useStore } from '../store.js'
 const props = defineProps({ astro: Object })
 const emit = defineEmits(['close', 'saved'])
 const s = useStore()
-const Q = [{ v: 1, l: 'Muy mal' }, { v: 2, l: 'Mal' }, { v: 3, l: 'Regular' }, { v: 4, l: 'Bien' }, { v: 5, l: 'Muy bien' }]
+const Q = [{ v: 1, l: 'Very bad' }, { v: 2, l: 'Bad' }, { v: 3, l: 'Fair' }, { v: 4, l: 'Good' }, { v: 5, l: 'Very good' }]
 const animo = ref(7)
 const sueno = ref(null)
 const notas = ref('')
@@ -35,7 +35,7 @@ async function save() {
   try {
     await s.run(() => api(`/astronauts/${props.astro.id}/checkin`, { method: 'POST', body: {
       animo: animo.value, calidad_sueno: sueno.value, notas: notas.value || null,
-      segundos: t0 ? (performance.now() - t0) / 1000 : null } }), s.publico ? `Check-in recibido (demo pública: no se guarda)` : `Check-in guardado (día ${s.day})`)
+      segundos: t0 ? (performance.now() - t0) / 1000 : null } }), s.publico ? 'Check-in received (public demo: not saved)' : `Check-in saved (day ${s.day})`)
     await s.refresh()
     emit('saved')
     emit('close')

@@ -1,18 +1,18 @@
 <template>
-  <aside class="guided panel no-print" role="dialog" aria-label="Demo guiada">
+  <aside class="guided panel no-print" role="dialog" aria-label="Guided demo">
     <div class="row between">
       <div>
-        <div class="label">Demo guiada · paso {{ i + 1 }} de {{ STEPS.length }}</div>
+        <div class="label">Guided demo · step {{ i + 1 }} of {{ STEPS.length }}</div>
         <h3>{{ step.title }}</h3>
       </div>
-      <button class="btn sm ghost" @click="$emit('close')" aria-label="Cerrar"><Icon name="close" :size="14" /></button>
+      <button class="btn sm ghost" @click="$emit('close')" aria-label="Close"><Icon name="close" :size="14" /></button>
     </div>
     <p class="small">{{ step.text }}</p>
-    <p class="tiny muted">Acción real: {{ step.action }}</p>
+    <p class="tiny muted">Real action: {{ step.action }}</p>
     <div class="dots"><span v-for="(x, j) in STEPS" :key="j" :class="{ on: j === i, done: j < i }" /></div>
     <div class="row between">
-      <button class="btn sm" @click="go(i - 1)" :disabled="i === 0 || busy">Anterior</button>
-      <button class="btn sm primary" @click="go(i + 1)" :disabled="i === STEPS.length - 1 || busy">Siguiente <Icon name="chevron" :size="13" /></button>
+      <button class="btn sm" @click="go(i - 1)" :disabled="i === 0 || busy">Back</button>
+      <button class="btn sm primary" @click="go(i + 1)" :disabled="i === STEPS.length - 1 || busy">Next <Icon name="chevron" :size="13" /></button>
     </div>
   </aside>
 </template>
@@ -31,24 +31,24 @@ const i = ref(0)
 const busy = ref(false)
 
 const STEPS = [
-  { title: 'Cuatro astronautas, cuatro líneas base', day: 40, to: '/', role: 'oficial', action: 'ir al día 40 y abrir la vista de misión',
-    text: 'Cada tripulante ficticio tiene sus propios valores habituales. El sistema aprendió los primeros 14 días de cada uno.' },
-  { title: 'Situación inicial estable', day: 40, to: '/persona/A1', select: 'A1', role: 'astronauta', action: 'rol Astronauta: abrir a la Cmdte. Rivera',
-    text: 'Seis indicadores dentro de su rango habitual. Debajo, cada indicador frente a su propio normal.' },
-  { title: 'Comienza un cambio progresivo', day: 49, to: '/persona/A1', select: 'A1', action: 'avanzar al día 49',
-    text: 'El simulador inyectó una fatiga progresiva desde el día 44: el sueño baja poco a poco y aumentan los lapsos de la PVT-B.' },
-  { title: 'Desviación relevante y alerta explicada', day: 54, to: '/persona/A1', select: 'A1', action: 'avanzar al día 54',
-    text: 'La alerta dice qué cambió, cuánto (z robusto frente a su línea base), cómo se detectó, qué seguimiento se sugiere y con qué fuente.' },
-  { title: 'Otro patrón: estrés fisiológico', day: 72, to: '/persona/A3', select: 'A3', action: 'abrir al Ing. Lindqvist en el día 72',
-    text: 'FC en reposo ↑ y variabilidad ↓ a la vez. El umbral poblacional fijo no lo marca porque su FC basal es baja.' },
-  { title: 'Se pierde el enlace con la Tierra', day: 97, to: '/', action: 'avanzar al día 97 (apagón 95–104)',
-    text: 'El encabezado muestra SIN ENLACE. El monitoreo, las alertas y el almacenamiento siguen funcionando a bordo.' },
-  { title: 'El oficial médico revisa', day: 97, to: '/', action: 'rol Oficial médico → Alarmas → Reconocer',
-    text: 'Alarmas por prioridad: reconocer o posponer 24 h; si una roja lleva 2 días sin reconocer, el sistema pide escalarla.', role: 'oficial' },
-  { title: 'Reporte para la Tierra en cola', day: 97, to: '/tierra', action: 'abrir Reportes',
-    text: 'Genere el reporte: queda pendiente en la cola local. Al volver el enlace (día 105) se puede transmitir (envío simulado).' },
-  { title: '¿Cómo sabemos que funciona?', day: 97, to: '/laboratorio/validacion', action: 'abrir el Validation Lab',
-    text: 'Comparación con un umbral poblacional fijo en 40 misiones independientes de las usadas para ajustar, incluidos los casos donde no ganamos.' }
+  { title: 'Four astronauts, four baselines', day: 40, to: '/', role: 'oficial', action: 'go to day 40 and open the crew view',
+    text: 'Each fictional crew member has their own usual values. The system learned the first 14 days of each person.' },
+  { title: 'Stable starting point', day: 40, to: '/crew/A1', select: 'A1', role: 'astronauta', action: 'Astronaut role: open Cmdr. Rivera',
+    text: 'Six indicators within their usual range. Below, each indicator against this person\'s own usual values.' },
+  { title: 'A gradual change begins', day: 49, to: '/crew/A1', select: 'A1', action: 'move to day 49',
+    text: 'The simulator injected progressive fatigue from day 44: sleep slowly shortens and PVT-B lapses increase.' },
+  { title: 'Relevant deviation, explained alert', day: 54, to: '/crew/A1', select: 'A1', action: 'move to day 54',
+    text: 'The alert says what changed, by how much (robust z vs. their baseline), how it was detected, which follow-up is suggested and which source supports it.' },
+  { title: 'Another pattern: physiological stress', day: 72, to: '/crew/A3', select: 'A3', action: 'open Eng. Lindqvist on day 72',
+    text: 'Resting HR ↑ and variability ↓ at the same time. The fixed population threshold misses it because his resting HR is low.' },
+  { title: 'The link with Earth is lost', day: 97, to: '/', action: 'move to day 97 (blackout 95–104)',
+    text: 'The header shows NO LINK. Monitoring, alerts and storage keep working on board.' },
+  { title: 'The Medical Officer reviews', day: 97, to: '/', action: 'Medical Officer role → Alerts → Acknowledge',
+    text: 'Alerts by priority: acknowledge or snooze 24 h; if an Act alert stays unacknowledged for 2 days, it is escalated.', role: 'oficial' },
+  { title: 'Report for Earth, queued', day: 97, to: '/reports', action: 'open Reports',
+    text: 'Generate the report: it waits in the onboard queue. When the link returns (day 105) it can be transmitted (simulated).' },
+  { title: 'How do we know it works?', day: 97, to: '/lab/validation', action: 'open the Validation lab',
+    text: 'Compared with a fixed population threshold on 40 missions independent from those used for tuning, including the cases where we do not win.' }
 ]
 const step = computed(() => STEPS[i.value])
 

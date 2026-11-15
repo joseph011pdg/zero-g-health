@@ -98,10 +98,10 @@ def score_indicator(values, key: str, p: Params) -> pd.DataFrame:
         z = z_ini if use_ini else z_rec
         if use_ini:
             out["med"][t], out["mad"][t], out["n_obs"][t] = init_med, init_mad, p.window
-            ref[t] = "inicio de misión"
+            ref[t] = "mission-start baseline"
         else:
             out["med"][t], out["mad"][t], out["n_obs"][t] = med_r, mad_r, len(pool)
-            ref[t] = f"últimos {p.window} días"
+            ref[t] = f"last {p.window} days"
         out["z"][t], out["z_rec"][t], out["z_ini"][t] = z, z_rec, z_ini
 
         if z >= p.red:

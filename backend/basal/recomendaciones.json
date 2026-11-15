@@ -1,57 +1,57 @@
 {
-  "_nota": "Orientaciones de SEGUIMIENTO, conservadoras e informativas. No son diagnósticos ni prescripciones. Toda alerta roja incluye notificar al oficial médico y seguir los protocolos autorizados de la misión. Las reglas combinadas se evalúan primero.",
+  "_nota": "Conservative, informational FOLLOW-UP guidance. Not diagnoses or prescriptions. Every Act alert includes notifying the Medical Officer and following the authorized mission protocols. Combined rules are evaluated first. Keys and level identifiers (amarillo = Watch, rojo = Act) are internal and not translated.",
   "combinadas": [
     {
       "id": "estres_fisiologico",
       "requiere": {"rhr": "amarillo", "hrv": "amarillo"},
-      "titulo": "Patrón de estrés fisiológico (FC en reposo ↑ y variabilidad ↓)",
-      "mensaje": "La FC en reposo subió y la variabilidad cardíaca bajó a la vez respecto a lo habitual para esta persona. Este patrón se ha observado antes de síntomas de infección en estudios con wearables, pero también aparece con estrés, mala recuperación o carga de ejercicio. No es un diagnóstico.",
-      "acciones": ["Registrar síntomas (temperatura, malestar, piel) en el check-in", "Moderar la intensidad del ejercicio de hoy si el plan de misión lo permite", "Repetir la medición en 24 h"],
+      "titulo": "Physiological stress pattern (resting HR ↑ and variability ↓)",
+      "mensaje": "Resting heart rate rose and heart rate variability fell at the same time, compared with what is usual for this person. Wearable studies have seen this pattern before infection symptoms, but it also appears with stress, poor recovery or exercise load. It is not a diagnosis.",
+      "acciones": ["Log symptoms (temperature, malaise, skin) in the check-in", "Reduce today's exercise intensity if the mission plan allows", "Repeat the measurement in 24 h"],
       "evidencia": ["mishra2020", "crucian2018"]
     },
     {
       "id": "fatiga",
       "requiere": {"sleep": "amarillo", "pvt": "amarillo"},
-      "titulo": "Fatiga: sueño más corto y más lapsos de atención",
-      "mensaje": "Durmió menos de lo habitual y aumentaron los lapsos en la prueba de vigilancia psicomotora (PVT-B). La privación de sueño reduce el desempeño en la PVT.",
-      "acciones": ["Valorar posponer tareas críticas que exijan atención sostenida", "Priorizar el periodo de descanso de esta noche", "Repetir la prueba PVT-B mañana"],
+      "titulo": "Fatigue: shorter sleep and more attention lapses",
+      "mensaje": "Slept less than usual and lapses increased on the psychomotor vigilance test (PVT-B). Sleep loss reduces PVT performance.",
+      "acciones": ["Consider postponing critical tasks that need sustained attention", "Prioritize tonight's rest period", "Repeat the PVT-B tomorrow"],
       "evidencia": ["basner2011", "basner2014"]
     },
     {
       "id": "conductual",
       "requiere": {"mood": "amarillo", "pvt": "amarillo"},
-      "titulo": "Cambio conductual: ánimo más bajo y peor desempeño cognitivo",
-      "mensaje": "El autorreporte de ánimo y la prueba de vigilancia empeoraron a la vez respecto a lo habitual. En Mars-520 se observaron cambios conductuales y de sueño muy distintos entre tripulantes.",
-      "acciones": ["Conversación de seguimiento con el oficial médico o un compañero de confianza", "Mantener rutinas de ejercicio, sueño y contacto con la familia (diferido)", "Repetir check-in y PVT-B mañana"],
+      "titulo": "Behavioral change: lower mood and worse cognitive performance",
+      "mensaje": "Self-reported mood and the vigilance test worsened at the same time compared with what is usual. The 520-day Mars-500 analog mission showed very different behavioral and sleep changes between crew members.",
+      "acciones": ["Follow-up conversation with the Medical Officer or a trusted crewmate", "Keep exercise, sleep and (delayed) family contact routines", "Repeat check-in and PVT-B tomorrow"],
       "evidencia": ["basner2014"]
     }
   ],
   "individuales": {
     "rhr": {
-      "amarillo": {"titulo": "FC en reposo por encima de lo habitual", "acciones": ["Hidratación y descanso; evitar comparar con otros tripulantes", "Repetir la medición en 24 h"], "evidencia": ["mishra2020"]},
-      "rojo": {"titulo": "FC en reposo muy por encima de lo habitual", "acciones": ["Registrar síntomas en el check-in", "Moderar el esfuerzo físico hasta la revisión médica"], "evidencia": ["mishra2020", "garrett2019"]}
+      "amarillo": {"titulo": "Resting heart rate above usual", "acciones": ["Hydrate and rest; avoid comparing with other crew members", "Repeat the measurement in 24 h"], "evidencia": ["mishra2020"]},
+      "rojo": {"titulo": "Resting heart rate well above usual", "acciones": ["Log symptoms in the check-in", "Limit physical effort until the medical review"], "evidencia": ["mishra2020", "garrett2019"]}
     },
     "hrv": {
-      "amarillo": {"titulo": "Variabilidad cardíaca más baja de lo habitual", "acciones": ["Priorizar la recuperación: sueño y pausas", "Repetir la medición mañana"], "evidencia": ["mishra2020"]},
-      "rojo": {"titulo": "Variabilidad cardíaca muy baja para esta persona", "acciones": ["Revisar carga de trabajo y ejercicio con el oficial médico", "Repetir la medición mañana"], "evidencia": ["mishra2020", "crucian2018"]}
+      "amarillo": {"titulo": "Heart rate variability lower than usual", "acciones": ["Prioritize recovery: sleep and breaks", "Repeat the measurement tomorrow"], "evidencia": ["mishra2020"]},
+      "rojo": {"titulo": "Heart rate variability very low for this person", "acciones": ["Review workload and exercise with the Medical Officer", "Repeat the measurement tomorrow"], "evidencia": ["mishra2020", "crucian2018"]}
     },
     "sleep": {
-      "amarillo": {"titulo": "Durmió menos de lo habitual", "acciones": ["Revisar horario, luz y ruido en el periodo de descanso", "Vigilar el sueño de la próxima noche"], "evidencia": ["basner2014", "watson2015"]},
-      "rojo": {"titulo": "Sueño muy reducido para esta persona", "acciones": ["Valorar posponer tareas críticas", "Coordinar con la tripulación un periodo de descanso"], "evidencia": ["basner2014", "basner2011"]}
+      "amarillo": {"titulo": "Slept less than usual", "acciones": ["Check schedule, light and noise during the rest period", "Watch next night's sleep"], "evidencia": ["basner2014", "watson2015"]},
+      "rojo": {"titulo": "Sleep much shorter than usual for this person", "acciones": ["Consider postponing critical tasks", "Arrange a rest period with the crew"], "evidencia": ["basner2014", "basner2011"]}
     },
     "dose": {
-      "amarillo": {"titulo": "Tasa de dosis de radiación más alta de lo habitual", "acciones": ["Verificar la lectura del dosímetro y la ubicación habitual", "Consultar el estado de la actividad solar registrado a bordo"], "evidencia": ["patel2020"]},
-      "rojo": {"titulo": "Tasa de dosis muy elevada (posible evento de partículas solares)", "acciones": ["Seguir el procedimiento de la misión ante eventos solares autorizado por el comandante y el oficial médico", "Registrar la dosis acumulada en el reporte para la Tierra"], "evidencia": ["patel2020"]}
+      "amarillo": {"titulo": "Radiation dose rate higher than usual", "acciones": ["Check the dosimeter reading and its usual location", "Check the onboard log of solar activity"], "evidencia": ["patel2020"]},
+      "rojo": {"titulo": "Very high dose rate (possible solar particle event)", "acciones": ["Follow the mission's solar event procedure authorized by the Commander and the Medical Officer", "Record the cumulative dose in the report to Earth"], "evidencia": ["patel2020"]}
     },
     "pvt": {
-      "amarillo": {"titulo": "Más lapsos de atención de lo habitual", "acciones": ["Pausa breve y repetir la prueba PVT-B más tarde", "Revisar el sueño de la noche anterior"], "evidencia": ["basner2011"]},
-      "rojo": {"titulo": "Atención muy reducida para esta persona", "acciones": ["Valorar posponer tareas críticas que exijan atención sostenida", "Descansar y repetir la prueba PVT-B"], "evidencia": ["basner2011", "nasa2013"]}
+      "amarillo": {"titulo": "More attention lapses than usual", "acciones": ["Take a short break and repeat the PVT-B later", "Check the previous night's sleep"], "evidencia": ["basner2011"]},
+      "rojo": {"titulo": "Attention much lower than usual for this person", "acciones": ["Consider postponing critical tasks that need sustained attention", "Rest and repeat the PVT-B"], "evidencia": ["basner2011", "nasa2013"]}
     },
     "mood": {
-      "amarillo": {"titulo": "Ánimo más bajo de lo habitual", "acciones": ["Hablar con un compañero de confianza", "Mantener rutinas de ejercicio y comunicación diferida"], "evidencia": ["basner2014"]},
-      "rojo": {"titulo": "Ánimo bajo sostenido", "acciones": ["Conversación de seguimiento con el oficial médico", "Usar los recursos de apoyo psicológico previstos por la misión"], "evidencia": ["basner2014"]}
+      "amarillo": {"titulo": "Mood lower than usual", "acciones": ["Talk with a trusted crewmate", "Keep exercise and delayed-communication routines"], "evidencia": ["basner2014"]},
+      "rojo": {"titulo": "Sustained low mood", "acciones": ["Follow-up conversation with the Medical Officer", "Use the psychological support resources planned by the mission"], "evidencia": ["basner2014"]}
     }
   },
-  "escalado_rojo": "Notificar al oficial médico de a bordo y seguir los protocolos autorizados de la misión.",
-  "aviso": "Orientación de seguimiento generada por reglas a partir de una detección estadística. No es un diagnóstico ni una indicación de tratamiento."
+  "escalado_rojo": "Notify the onboard Medical Officer and follow the authorized mission protocols.",
+  "aviso": "Rule-based follow-up guidance from a statistical detection. Not a diagnosis or a treatment instruction."
 }

@@ -19,7 +19,7 @@ from .indicators import INDICATORS, INDICATOR_KEYS
 from .recommender import EVIDENCE, alerts_for_day, change
 from .simulator import CREW, DEMO_ASSIGNMENTS, DEMO_CREW_EVENTS, POP, SCENARIOS, simulate_mission
 
-MISSION_NAME = "BASAL-M1 · Tránsito a Marte (misión simulada)"
+MISSION_NAME = "BASAL-M1 · Mars transit (simulated mission)"
 START_DATE = date(2035, 6, 1)
 DAYS = 120
 DEMO_DAY = 40  # la alarma del día 32 de A4 es un falso positivo del ruido: fuera de la ventana de 7 días
@@ -121,8 +121,8 @@ def comms(day: int, m: dict) -> dict:
     forced = bool(m.get("forzar_apagon"))
     off = forced or (m["blackout_start"] is not None and m["blackout_start"] <= day <= m["blackout_end"])
     return {"retraso_min": delay, "ida_vuelta_min": round(2 * delay, 1), "apagon": off,
-            "estado": "SIN ENLACE" if off else "Enlace diferido", "simulado": forced,
-            "nota": "Simulación: no hay integración real con comunicaciones espaciales."}
+            "estado": "NO LINK" if off else "Delayed link", "simulado": forced,
+            "nota": "Simulation: no real integration with space communications."}
 
 
 def daily_frame(astro_id: str) -> pd.DataFrame:
@@ -287,9 +287,9 @@ def radiation(res, day: int) -> dict:
             "presupuesto_escenario_mgy": round(expected, 2),
             "porcentaje_del_presupuesto": round(100 * measured / expected, 1) if expected else None,
             "tasa_nominal": NOMINAL_DOSE, "dias": day + 1,
-            "supuesto": f"Esperado a hoy en el escenario simulado: {str(NOMINAL_DOSE).replace('.', ',')} mGy/día × "
-                        f"{day + 1} días = {str(round(expected, 1)).replace('.', ',')} mGy. Dosis absorbida (mGy), no dosis "
-                        "equivalente (mSv). No es un límite de exposición de NASA; el acumulado se informa y no genera alarma."}
+            "supuesto": f"Expected to date in the simulated scenario: {NOMINAL_DOSE} mGy/day × "
+                        f"{day + 1} days = {round(expected, 1)} mGy. Absorbed dose (mGy), not equivalent dose "
+                        "(mSv). Not a NASA exposure limit; the cumulative dose is reported and does not raise an alert."}
 
 
 def crew() -> dict:
@@ -357,9 +357,9 @@ def save_pvt(astro_id: str, modo: str, duracion_s: float, rts: list[float], anti
     n = len(rts) + sin_respuesta
     motivo = None
     if interrupciones > 0:
-        motivo = f"prueba interrumpida {interrupciones} vez/veces (pérdida de foco)"
+        motivo = f"test interrupted {interrupciones} time(s) (window lost focus)"
     elif n < 5:
-        motivo = "muy pocos estímulos para ser interpretable"
+        motivo = "too few stimuli to be interpretable"
     valido = motivo is None
     scale = 180.0 / duracion_s if duracion_s > 0 else 1.0
     errores_3min = round(errores * scale, 1)
@@ -425,7 +425,7 @@ def build_report(astro_id: str | None, desde: int, hasta: int) -> dict:
         people.append({
             "astronauta": info, "nivel_final": LEVELS[global_level(res, hasta)],
             "indice_final": health_index(res, hasta), "indicadores": ind,
-            "cambios_relevantes": [f"{INDICATORS[k]['nombre']}: z máximo {z}" for k, z in cambios if z >= PARAMS.yellow],
+            "cambios_relevantes": [f"{INDICATORS[k]['nombre']}: max z {z}" for k, z in cambios if z >= PARAMS.yellow],
             "alertas": [{"id": a["id"], "dia": a["day"], "nivel": a["nivel"], "titulo": a["titulo"],
                          "estado": a["estado"], "nota": a["nota"]} for a in al],
             "calidad_datos": {"registros_rechazados": rejected,
@@ -438,11 +438,11 @@ def build_report(astro_id: str | None, desde: int, hasta: int) -> dict:
                                                   (i, desde, hasta))["n"]},
             "radiacion": radiation(res, hasta),
         })
-    return {"tipo": "Reporte de salud para envío diferido a la Tierra",
+    return {"tipo": "Health report for delayed transmission to Earth",
             "mision": m["nombre"], "periodo": {"desde": desde, "hasta": hasta},
             "generado_dia": m["current_day"], "parametros_detector": {"yellow": PARAMS.yellow, "red": PARAMS.red,
                                                                       "persist": PARAMS.persist, "window": PARAMS.window},
-            "aviso": "Prototipo educativo con datos sintéticos. No es un dispositivo médico.",
+            "aviso": "Educational prototype with simulated data. Not a medical device.",
             "tripulantes": people}
 
 
@@ -478,13 +478,13 @@ def transmit(dry: bool = False) -> dict:
     pending = db.query("SELECT id FROM reports WHERE estado = 'pendiente'")
     if c["apagon"]:
         return {"enviados": 0, "en_cola": len(pending), "comunicacion": c,
-                "mensaje": "Sin enlace con la Tierra: los reportes permanecen en la cola local."}
+                "mensaje": "No link with Earth: reports stay in the onboard queue."}
     if not dry:
         with db.tx() as con:
             con.execute("UPDATE reports SET estado = 'enviado (simulado)', dia_envio = ? WHERE estado = 'pendiente'",
                         (m["current_day"],))
     return {"enviados": len(pending), "en_cola": 0, "comunicacion": c,
-            "mensaje": f"Envío SIMULADO: llegarían a la Tierra en ~{c['retraso_min']} min."}
+            "mensaje": f"SIMULATED transmission: would reach Earth in ~{c['retraso_min']} min."}
 
 
 def report_csv(rid: int) -> str | None:
@@ -546,4 +546,4 @@ def demo_validation() -> dict:
                         "metodos": {meth: _summ(e[e.metodo == meth] if len(e) else e, d[d.metodo == meth])
                                     for meth in ("A_vigilar", "A_actuar", "B_fijo")}}
     return {"semilla": m["seed"], "dias": m["days"], "por_astronauta": out,
-            "nota": "Una sola misión: sirve para ilustrar, no para concluir. La conclusión sale de la evaluación con 40 misiones."}
+            "nota": "A single mission illustrates; it does not prove. Conclusions come from the 40-mission evaluation."}

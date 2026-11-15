@@ -1,13 +1,13 @@
 <template>
-  <section class="strip" aria-label="Trayectoria de la misión">
+  <section class="strip" aria-label="Mission trajectory">
     <figure class="body">
-      <div class="globe earth" role="img" aria-label="La Tierra girando (mapa Blue Marble de NASA)"></div>
-      <figcaption>Tierra</figcaption>
+      <div class="globe earth" role="img" aria-label="Earth rotating (NASA Blue Marble map)"></div>
+      <figcaption>Earth</figcaption>
     </figure>
 
     <div class="track">
       <div class="top">
-        <span class="ttl">Trayectoria <span class="date">{{ m.fecha }} · {{ Math.round(pct(s.day)) }} % del viaje</span></span>
+        <span class="ttl">Trajectory <span class="date">{{ m.fecha }} · {{ Math.round(pct(s.day)) }}% of the journey</span></span>
         <span class="small link" :class="m.comunicacion.apagon ? 'off' : ''">
           <Icon :name="m.comunicacion.apagon ? 'signalOff' : 'satellite'" :size="14" />
           {{ linkText }}
@@ -18,25 +18,25 @@
         <div class="line"></div>
         <div class="done" :style="{ width: pct(s.day) + '%' }"></div>
         <div v-if="hasBlackout" class="blackout" :style="{ left: pct(m.apagon[0]) + '%', width: Math.max(pct(m.apagon[1]) - pct(m.apagon[0]), 1.5) + '%' }"
-             :title="`Sin enlace con la Tierra: días ${m.apagon[0]}–${m.apagon[1]}`"></div>
+             :title="`No link with Earth: days ${m.apagon[0]}–${m.apagon[1]}`"></div>
         <span v-for="ms in milestones" :key="ms.day" class="tick" :class="{ past: s.day >= ms.day }" :style="{ left: pct(ms.day) + '%' }" :title="ms.label"></span>
         <div class="ship" :style="{ left: pct(s.day) + '%' }" aria-hidden="true">
-          <span class="bubble">Día {{ s.day }}</span>
+          <span class="bubble">Day {{ s.day }}</span>
           <svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="15.5" fill="#0b3d91" stroke="#ffffff" stroke-width="3" /><path d="M11 11.5l13 5.5-13 5.5 3-5.5z" fill="#ffffff" /></svg>
         </div>
         <input type="range" min="0" :max="m.dias - 1" :value="s.day" @change="s.setDay(+$event.target.value)"
-               aria-label="Día de misión (arrastre la nave)" class="range" />
+               aria-label="Mission day (drag the ship)" class="range" />
       </div>
 
       <div class="ms-labels">
         <span v-for="ms in milestones" :key="ms.day" :style="{ left: pct(ms.day) + '%' }" :class="{ past: s.day >= ms.day }">{{ ms.label }}</span>
-        <span v-if="hasBlackout" class="bl" :style="{ left: (pct(m.apagon[0]) + pct(m.apagon[1])) / 2 + '%' }">Sin enlace</span>
+        <span v-if="hasBlackout" class="bl" :style="{ left: (pct(m.apagon[0]) + pct(m.apagon[1])) / 2 + '%' }">Blackout</span>
       </div>
     </div>
 
     <figure class="body">
-      <div class="globe mars" role="img" aria-label="Marte girando (mosaico Viking de NASA/USGS)"></div>
-      <figcaption>Marte</figcaption>
+      <div class="globe mars" role="img" aria-label="Mars rotating (NASA/USGS Viking mosaic)"></div>
+      <figcaption>Mars</figcaption>
     </figure>
   </section>
 </template>
@@ -53,15 +53,15 @@ const hasBlackout = computed(() => m.value.apagon[0] !== null && m.value.apagon[
 // Hitos del plan de vuelo simulado (solo orientativos para la demo)
 const milestones = computed(() => {
   const last = m.value.dias - 1
-  return [{ day: 0, label: 'Salida' }, { day: Math.round(last / 2), label: 'Mitad del viaje' }, { day: last, label: 'Llegada' }]
+  return [{ day: 0, label: 'Departure' }, { day: Math.round(last / 2), label: 'Midway' }, { day: last, label: 'Arrival' }]
 })
 const linkText = computed(() => {
   const c = m.value.comunicacion
   const [a, b] = m.value.apagon
-  if (c.simulado) return 'Sin enlace · apagón simulado'
-  if (c.apagon) return `Sin enlace · vuelve en ${plural(b - s.day + 1, 'día', 'días')}`
-  if (hasBlackout.value && s.day < a) return `Mensajes tardan ${fmt(c.retraso_min, 1)} min · apagón en ${plural(a - s.day, 'día', 'días')}`
-  return `Mensajes tardan ${fmt(c.retraso_min, 1)} min`
+  if (c.simulado) return 'No link · simulated blackout'
+  if (c.apagon) return `No link · back in ${plural(b - s.day + 1, 'day', 'days')}`
+  if (hasBlackout.value && s.day < a) return `Messages take ${fmt(c.retraso_min, 1)} min · blackout in ${plural(a - s.day, 'day', 'days')}`
+  return `Messages take ${fmt(c.retraso_min, 1)} min`
 })
 </script>
 
@@ -111,7 +111,7 @@ const linkText = computed(() => {
   .earth { --size: 46px; } .mars { --size: 40px; }
   .body figcaption { display: none; }
   .ms-labels span:nth-child(2) { display: none; }
-  /* "Sin enlace" en una segunda fila para no montarse con "Llegada" */
+  /* "Blackout" en una segunda fila para no montarse con "Arrival" */
   .ms-labels { height: 32px; }
   .ms-labels .bl { top: 16px; }
   .top { flex-wrap: wrap; }

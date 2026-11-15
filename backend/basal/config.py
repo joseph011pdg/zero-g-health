@@ -33,7 +33,7 @@ class Params:
     fixed: dict = field(default_factory=lambda: {
         "rhr": 72.0, "hrv": 25.0, "sleep": 6.0, "dose": 0.5, "pvt": 5.0, "mood": 5.5,
     })
-    origen: str = "valores por defecto (sin ajustar)"
+    origen: str = "default values (not tuned)"
 
     def to_dict(self) -> dict:
         return asdict(self)

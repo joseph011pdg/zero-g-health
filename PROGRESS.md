@@ -82,6 +82,20 @@ Registro de avance por fases (para retomar si la sesión se interrumpe). Fecha l
 - 32 pruebas pytest pasan.
 - Pendiente: invitar a Katherine (abbydpk-oss) como colaboradora en GitHub (requiere iniciar sesión).
 
+### Todo en inglés ✅ (15/11 tarde)
+- Interfaz completa en inglés (sin i18n: solo inglés, por tiempo), textos del backend (alertas, acciones, evidencia,
+  escenarios, indicadores, mensajes de error), etiquetas de validación (solo texto; cifras sin cambios), lpm → bpm,
+  punto decimal (en-US). Rutas en inglés con redirección de las antiguas.
+- Docs en inglés: README, SCIENTIFIC_METHOD, DEMO_SCRIPT, JUDGES_QA (copias en español `*_ES.md`). Falsa alarma del
+  día 32 (A4, PVT, z = 4,5, sin evento hasta el día 52) explicada en DEMO_SCRIPT, JUDGES_QA y SCIENTIFIC_METHOD.
+- Portada: avisos ordenados por z (2 visibles + "N more notices"), leyenda "Act = notify the Medical Officer · Watch =
+  repeat the measurement". Móvil: cabecera compacta, franja de demo en una línea, Check-in/PVT 50/50, tablas con
+  scroll horizontal; sin desborde en 360/390/430 px en todas las rutas.
+- PWA: skipWaiting + clientsClaim + cleanupOutdatedCaches (autoUpdate); /api fuera del caché.
+- Keep-alive de GitHub Actions activo, pero GitHub lo ejecuta con poca frecuencia (2 corridas el 15/11): conviene un
+  monitor externo (p. ej. UptimeRobot) además.
+- 32 pruebas pytest pasan.
+
 ## Pendiente (equipo)
 - [x] Publicado: https://github.com/joseph011pdg/basal (público) y https://basal-pxyn.onrender.com (Render, plan free,
       modo público). Cada push a `main` redespliega; recompilar `frontend/dist` antes si cambia la interfaz.

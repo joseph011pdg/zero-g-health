@@ -3,22 +3,22 @@
     <div v-if="!a" class="skeleton" style="height: 420px" />
     <template v-else>
       <header class="head">
-        <router-link to="/" class="btn ghost sm back"><Icon name="prev" :size="13" /> Tripulación</router-link>
+        <router-link to="/" class="btn ghost sm back"><Icon name="prev" :size="13" /> Crew</router-link>
         <div class="id">
           <div class="ring" :class="a.nivel"><Avatar :id="a.id" :name="a.nombre" :size="64" /></div>
           <div>
             <div class="row wrap"><h1>{{ a.nombre }}</h1><LevelBadge :level="a.nivel" /></div>
-            <div class="muted small">{{ a.rol }} · día {{ a.dia }}<span v-if="a.indice !== null"> · estabilidad {{ a.indice }}/100</span></div>
+            <div class="muted small">{{ a.rol }} · day {{ a.dia }}<span v-if="a.indice !== null"> · stability {{ a.indice }}/100</span></div>
           </div>
         </div>
         <div class="row wrap actions">
           <button class="btn" @click="sheet = 'checkin'"><Icon name="smile" :size="16" /> Check-in</button>
-          <button class="btn primary" @click="sheet = 'pvt'"><Icon name="target" :size="16" /> Prueba PVT</button>
+          <button class="btn primary" @click="sheet = 'pvt'"><Icon name="target" :size="16" /> PVT test</button>
         </div>
       </header>
 
-      <nav class="switch" aria-label="Cambiar de astronauta">
-        <router-link v-for="c in s.crew" :key="c.id" :to="`/persona/${c.id}`" :class="{ on: c.id === id }" :title="c.nombre">
+      <nav class="switch" aria-label="Switch astronaut">
+        <router-link v-for="c in s.crew" :key="c.id" :to="`/crew/${c.id}`" :class="{ on: c.id === id }" :title="c.nombre">
           <Avatar :id="c.id" :name="c.nombre" :size="32" />
           <Icon :name="LEVEL[c.nivel].icon" :size="12" :stroke="2.6" class="st" :class="'c-' + c.nivel" />
         </router-link>
@@ -27,15 +27,15 @@
       <section class="grid">
         <div v-if="!todayAlerts.length" class="panel okp" :class="{ open: openEps.length }">
           <Icon :name="openEps.length ? 'clock' : 'check'" :size="22" :class="openEps.length ? 'c-rojo' : 'c-verde'" />
-          <div v-if="!openEps.length"><strong>Hoy: todo dentro de lo habitual</strong>
-            <p class="small muted">Ningún indicador se aleja de su normal. Un indicador sin datos aparece como “sin dato”, nunca como normal.</p></div>
-          <div v-else><strong>Hoy: valores dentro de lo habitual · {{ openEps.length === 1 ? 'una alerta sigue abierta' : `${openEps.length} alertas siguen abiertas` }}</strong>
-            <p class="small muted">Una alerta no se cierra sola porque el valor vuelva a su normal: la oficial médica debe reconocerla o resolverla.</p></div>
+          <div v-if="!openEps.length"><strong>Today: everything within their usual range</strong>
+            <p class="small muted">No indicator is away from their usual values. An indicator with no data shows “No data”, never normal.</p></div>
+          <div v-else><strong>Today: values within their usual range · {{ openEps.length === 1 ? 'one alert is still open' : `${openEps.length} alerts are still open` }}</strong>
+            <p class="small muted">An alert does not close by itself when the value returns to normal: the Medical Officer must acknowledge or resolve it.</p></div>
         </div>
         <AlertCard v-for="al in todayAlerts" :key="al.id" :a="al" :since="sinceOf(al)" @changed="load" />
         <template v-if="openEps.length">
           <p v-for="g in openEps" :key="'t' + g.key" class="small openline"><Icon name="clock" :size="14" />
-            Alerta del día {{ g.rep.day }} sigue abierta (sin reconocer hace {{ plural(a.dia - g.rep.day, 'día', 'días') }})</p>
+            Alert from day {{ g.rep.day }} still open (unacknowledged for {{ plural(a.dia - g.rep.day, 'day', 'days') }})</p>
           <AlertCard v-for="g in openEps" :key="g.key" :a="g.rep" :since="g.since" @changed="load" />
         </template>
       </section>
@@ -50,7 +50,7 @@
             <div class="val num" :class="'c-' + (v.nivel === 'verde' ? 'none' : v.nivel)">{{ fmt(v.valor, s.indicators[k].decimales) }} <small>{{ s.indicators[k].unidad }}</small></div>
             <Icon :name="trendIcon(k, v.tendencia_dia)" :size="18" :class="trendClass(k, v.tendencia_dia)" />
           </div>
-          <div class="small muted">Su normal: <span class="num">{{ fmt(v.linea_base, s.indicators[k].decimales) }}</span>
+          <div class="small muted">Their usual: <span class="num">{{ fmt(v.linea_base, s.indicators[k].decimales) }}</span>
             <span v-if="v.fuente && v.fuente !== 'sintetico'" class="tag manual">{{ SRC_LABEL[v.fuente] }}</span></div>
         </button>
       </section>
@@ -65,8 +65,8 @@
             <div class="tabs">
               <button v-for="r in RANGES" :key="r.v" :class="{ on: range === r.v }" @click="range = r.v">{{ r.l }}</button>
             </div>
-            <label class="row tiny"><input type="checkbox" v-model="showFixed" /> Umbral poblacional</label>
-            <label class="row tiny"><input type="checkbox" v-model="showTruth" /> Eventos simulados</label>
+            <label class="row tiny"><input type="checkbox" v-model="showFixed" /> Population threshold</label>
+            <label class="row tiny"><input type="checkbox" v-model="showTruth" /> Simulated events</label>
           </div>
         </div>
         <TrendChart :data="chartData" :unidad="s.indicators[ind].unidad" :nombre="s.indicators[ind].corto"
@@ -76,25 +76,25 @@
 
       <section class="cols-2">
         <div class="panel">
-          <h2 class="mb"><Icon name="radiation" :size="18" /> Radiación acumulada</h2>
+          <h2 class="mb"><Icon name="radiation" :size="18" /> Cumulative radiation</h2>
           <div class="kpi"><span class="v">{{ fmt(a.radiacion.acumulada_medida_mgy, 1) }} <small>mGy</small></span></div>
           <div class="bar"><div :style="{ width: Math.min(a.radiacion.porcentaje_del_presupuesto, 150) / 1.5 + '%' }" :class="{ over: a.radiacion.porcentaje_del_presupuesto > 110 }" /></div>
-          <p class="small"><b class="num">{{ fmt(a.radiacion.porcentaje_del_presupuesto, 0) }} %</b> de lo esperado a hoy ({{ fmt(a.radiacion.presupuesto_escenario_mgy, 1) }} mGy) · {{ plural(a.radiacion.dias_sin_lectura, 'día', 'días') }} sin lectura</p>
-          <p class="tiny muted">{{ a.radiacion.supuesto }} La alarma vigila la tasa diaria frente a la normal de cada persona.</p>
+          <p class="small"><b class="num">{{ fmt(a.radiacion.porcentaje_del_presupuesto, 0) }}%</b> of what is expected to date ({{ fmt(a.radiacion.presupuesto_escenario_mgy, 1) }} mGy) · {{ plural(a.radiacion.dias_sin_lectura, 'day', 'days') }} without a reading</p>
+          <p class="tiny muted">{{ a.radiacion.supuesto }} The alert watches the daily rate against each person's usual values.</p>
         </div>
         <div class="panel">
-          <h2 class="mb"><Icon name="clipboard" :size="18" /> Historial</h2>
+          <h2 class="mb"><Icon name="clipboard" :size="18" /> History</h2>
           <div class="hist">
             <div v-for="h in a.historial_alertas.filter((x) => x.nivel === 'rojo').slice(0, 6)" :key="h.id" class="hrow">
-              <LevelBadge :level="h.nivel" icon-only /><span class="small grow">{{ h.titulo }}</span><span class="tiny muted">día {{ h.day }}</span>
+              <LevelBadge :level="h.nivel" icon-only /><span class="small grow">{{ h.titulo }}</span><span class="tiny muted">day {{ h.day }}</span>
             </div>
             <div v-for="c in a.checkins.slice(0, 3)" :key="'c' + c.id" class="hrow">
-              <Icon name="smile" :size="15" class="muted" /><span class="small grow">Check-in: ánimo {{ fmt(c.animo, 1) }}/10, sueño {{ c.calidad_sueno }}/5</span><span class="tiny muted">día {{ c.day }}</span>
+              <Icon name="smile" :size="15" class="muted" /><span class="small grow">Check-in: mood {{ fmt(c.animo, 1) }}/10, sleep {{ c.calidad_sueno }}/5</span><span class="tiny muted">day {{ c.day }}</span>
             </div>
             <div v-for="p in a.pvt.slice(0, 3)" :key="'p' + p.id" class="hrow">
-              <Icon name="target" :size="15" class="muted" /><span class="small grow">PVT: {{ plural(p.errores, 'lapso', 'lapsos') }}{{ p.valido ? '' : ' (inválida)' }}</span><span class="tiny muted">día {{ p.day }}</span>
+              <Icon name="target" :size="15" class="muted" /><span class="small grow">PVT: {{ plural(p.errores, 'lapse', 'lapses') }}{{ p.valido ? '' : ' (invalid)' }}</span><span class="tiny muted">day {{ p.day }}</span>
             </div>
-            <p v-if="!a.historial_alertas.some((x) => x.nivel === 'rojo') && !a.checkins.length && !a.pvt.length" class="small muted">Sin eventos destacados.</p>
+            <p v-if="!a.historial_alertas.some((x) => x.nivel === 'rojo') && !a.checkins.length && !a.pvt.length" class="small muted">No notable events.</p>
           </div>
         </div>
       </section>
@@ -127,9 +127,9 @@ const ind = ref('rhr')
 const range = ref(60)
 const showFixed = ref(true)
 const showTruth = ref(false)
-// ?accion=checkin | pvt abre directamente el panel (botones de la portada)
-const sheet = ref(['checkin', 'pvt'].includes(route.query.accion) ? route.query.accion : null)
-const RANGES = [{ v: 14, l: '14 d' }, { v: 30, l: '30 d' }, { v: 60, l: '60 d' }, { v: 999, l: 'Todo' }]
+//?action=checkin | pvt abre directamente el panel (botones de la portada)
+const sheet = ref(['checkin', 'pvt'].includes(route.query.action) ? route.query.action : null)
+const RANGES = [{ v: 14, l: '14 d' }, { v: 30, l: '30 d' }, { v: 60, l: '60 d' }, { v: 999, l: 'All' }]
 let manual = false
 
 const hist = computed(() => (a.value ? s.withAcks(a.value.historial_alertas) : []))
@@ -161,8 +161,8 @@ const freshness = computed(() => {
   const pts = a.value.series[ind.value]
   const last = [...pts].reverse().find((p) => p.valor !== null)
   const q = a.value.indicadores[ind.value].calidad_14d_pct
-  const when = !last ? 'sin mediciones' : last.day === a.value.dia ? 'última medición: hoy' : `última medición: hace ${plural(a.value.dia - last.day, 'día', 'días')}`
-  return `${when} · datos en 14 días: ${q ?? 0} %${q !== null && q < 70 ? ' · fiabilidad baja' : ''}`
+  const when = !last ? 'no measurements' : last.day === a.value.dia ? 'last measurement: today' : `last measurement: ${plural(a.value.dia - last.day, 'day', 'days')} ago`
+  return `${when} · data in 14 days: ${q ?? 0}%${q !== null && q < 70 ? ' · low reliability' : ''}`
 })
 const chartData = computed(() => (a.value ? a.value.series[ind.value].slice(-range.value) : []))
 function trendIcon(k, t) {
@@ -182,6 +182,11 @@ function trendClass(k, t) {
 .ring { border-radius: 50%; padding: 3px; border: 3px solid var(--line); flex: none; }
 .ring.verde { border-color: var(--ok); } .ring.amarillo { border-color: #d99100; } .ring.rojo { border-color: var(--red); }
 .actions .btn { min-height: 44px; padding: 10px 18px; }
+@media (max-width: 640px) {
+  /* Check-in y PVT: dos columnas iguales a todo el ancho */
+  .actions { display: grid; grid-template-columns: 1fr 1fr; width: 100%; }
+  .actions .btn { justify-content: center; }
+}
 .switch { display: flex; gap: 8px; }
 .switch a { position: relative; border-radius: 50%; padding: 2px; border: 2px solid transparent; opacity: .7; }
 .switch a.on { border-color: var(--blue); opacity: 1; }

@@ -9,28 +9,28 @@
     </header>
 
     <p class="facts small">
-      <span v-for="c in a.cuanto" :key="c.indicador"><b>{{ s.indicators[c.indicador]?.corto || c.nombre }}:</b> {{ fmt(c.valor, dec(c)) }} {{ c.unidad }} frente a su normal de {{ fmt(c.linea_base, dec(c)) }} (z = {{ fmt(c.z, 1) }})</span>
-      <span class="muted">Día {{ a.day }}<template v-if="since !== null && since < a.day"> · abierta desde el día {{ since }} ({{ a.day - since + 1 }} días)</template></span>
+      <span v-for="c in a.cuanto" :key="c.indicador"><b>{{ s.indicators[c.indicador]?.corto || c.nombre }}:</b> {{ fmt(c.valor, dec(c)) }} {{ c.unidad }} vs. their usual {{ fmt(c.linea_base, dec(c)) }} (z = {{ fmt(c.z, 1) }})</span>
+      <span class="muted">Day {{ a.day }}<template v-if="since !== null && since < a.day"> · open since day {{ since }} ({{ a.day - since + 1 }} days)</template></span>
     </p>
     <ul class="todo">
-      <li v-for="(x, i) in a.acciones" :key="i" :class="{ esc: x.includes('oficial médico') }">
-        <Icon :name="x.includes('oficial médico') ? 'stethoscope' : 'check'" :size="15" />{{ x }}
+      <li v-for="(x, i) in a.acciones" :key="i" :class="{ esc: x.includes('Medical Officer') }">
+        <Icon :name="x.includes('Medical Officer') ? 'stethoscope' : 'check'" :size="15" />{{ x }}
       </li>
     </ul>
 
     <details :open="expanded">
-      <summary><Icon name="info" :size="14" /> ¿Por qué?</summary>
+      <summary><Icon name="info" :size="14" /> Why?</summary>
       <div class="why">
         <p class="small">{{ a.que_cambio }}</p>
         <div class="table-wrap">
           <table class="table mini">
-            <thead><tr><th>Indicador</th><th class="right">Hoy</th><th class="right">Su normal</th><th class="right">Cambio</th><th class="right">z</th></tr></thead>
+            <thead><tr><th>Indicator</th><th class="right">Today</th><th class="right">Their usual</th><th class="right">Change</th><th class="right">z</th></tr></thead>
             <tbody>
               <tr v-for="c in a.cuanto" :key="c.indicador">
                 <td>{{ c.nombre }}</td>
                 <td class="num right strong">{{ fmt(c.valor, dec(c)) }} <span class="muted">{{ c.unidad }}</span></td>
                 <td class="num right">{{ fmt(c.linea_base, dec(c)) }}</td>
-                <td class="num right">{{ signed(c.diferencia, dec(c)) }}<span class="muted" v-if="c.diferencia_pct !== null"> ({{ signed(c.diferencia_pct, 0) }} %)</span></td>
+                <td class="num right">{{ signed(c.diferencia, dec(c)) }}<span class="muted" v-if="c.diferencia_pct !== null"> ({{ signed(c.diferencia_pct, 0) }}%)</span></td>
                 <td class="num right strong" :class="'c-' + c.nivel">{{ fmt(c.z, 1) }}</td>
               </tr>
             </tbody>
@@ -40,26 +40,26 @@
         <ul class="ev">
           <li v-for="e in a.evidencia" :key="e.id" class="tiny"><span>{{ e.cita }}</span> <span class="muted">· {{ e.tipo }}. {{ e.nivel }}.</span></li>
         </ul>
-        <p v-if="a.fiabilidad !== 'normal'" class="tiny c-amarillo">Fiabilidad {{ a.fiabilidad }} ({{ a.calidad_datos_pct }} % de datos en 14 días).</p>
+        <p v-if="a.fiabilidad !== 'normal'" class="tiny c-amarillo">Reliability {{ a.fiabilidad }} ({{ a.calidad_datos_pct }}% of data in 14 days).</p>
         <p class="tiny faint">{{ a.aviso }}</p>
       </div>
     </details>
 
     <p v-if="!canReview" class="ack small" :class="a.estado === 'pendiente' ? 'pend' : 'done'">
       <Icon :name="a.estado === 'pendiente' ? 'clock' : 'check'" :size="14" />
-      <template v-if="a.estado === 'pendiente'">{{ a.nivel === 'rojo' ? 'La oficial médica ha sido avisada.' : 'Aviso para vigilar: repita la medición.' }}</template>
-      <template v-else>{{ STATE_LABEL[a.estado] }}<span v-if="a.revisor"> por {{ a.revisor }}</span><span v-if="a.revisado_dia !== null && a.revisado_dia !== undefined"> · día {{ a.revisado_dia }}</span><span v-if="a.nota">: “{{ a.nota }}”</span></template>
+      <template v-if="a.estado === 'pendiente'">{{ a.nivel === 'rojo' ? 'The Medical Officer has been notified.' : 'Watch notice: repeat the measurement.' }}</template>
+      <template v-else>{{ STATE_LABEL[a.estado] }}<span v-if="a.revisor"> by {{ a.revisor }}</span><span v-if="a.revisado_dia !== null && a.revisado_dia !== undefined"> · day {{ a.revisado_dia }}</span><span v-if="a.nota">: “{{ a.nota }}”</span></template>
     </p>
 
     <footer v-if="canReview" class="review no-print">
-      <p v-if="a.estado !== 'pendiente'" class="tiny muted">{{ STATE_LABEL[a.estado] }}<span v-if="a.revisor"> por {{ a.revisor }}</span><span v-if="a.revisado_dia !== null && a.revisado_dia !== undefined"> · día {{ a.revisado_dia }}</span><span v-if="a.nota"> · “{{ a.nota }}”</span></p>
-      <input class="input" v-model="nota" placeholder="Nota (opcional)" maxlength="500" aria-label="Nota del oficial médico" />
+      <p v-if="a.estado !== 'pendiente'" class="tiny muted">{{ STATE_LABEL[a.estado] }}<span v-if="a.revisor"> by {{ a.revisor }}</span><span v-if="a.revisado_dia !== null && a.revisado_dia !== undefined"> · day {{ a.revisado_dia }}</span><span v-if="a.nota"> · “{{ a.nota }}”</span></p>
+      <input class="input" v-model="nota" placeholder="Note (optional)" maxlength="500" aria-label="Medical Officer note" />
       <div class="row wrap">
-        <button class="btn sm primary" @click="review('reconocida')"><Icon name="check" :size="14" /> Reconocer</button>
-        <button class="btn sm" @click="review('pospuesta')"><Icon name="clock" :size="14" /> Posponer 24 h</button>
-        <button class="btn sm danger" @click="review('escalada')">Escalar a la oficial médica</button>
-        <button class="btn sm ghost" @click="review('revisada')">Resuelta</button>
-        <button v-if="a.estado !== 'pendiente'" class="btn sm ghost" @click="review('pendiente')">Reabrir</button>
+        <button class="btn sm primary" @click="review('reconocida')"><Icon name="check" :size="14" /> Acknowledge</button>
+        <button class="btn sm" @click="review('pospuesta')"><Icon name="clock" :size="14" /> Snooze 24 h</button>
+        <button class="btn sm danger" @click="review('escalada')">Escalate</button>
+        <button class="btn sm ghost" @click="review('revisada')">Resolved</button>
+        <button v-if="a.estado !== 'pendiente'" class="btn sm ghost" @click="review('pendiente')">Reopen</button>
       </div>
     </footer>
   </article>
@@ -82,7 +82,7 @@ const dec = (c) => s.indicators[c.indicador]?.decimales ?? 1
 
 async function review(estado) {
   const r = await s.run(() => s.review(props.a, estado, nota.value),
-    `Alerta: ${STATE_LABEL[estado].toLowerCase()}${s.publico ? ' (solo en este navegador)' : ''}`)
+    `Alert: ${STATE_LABEL[estado].toLowerCase()}${s.publico ? ' (only in this browser)' : ''}`)
   emit('changed', r)
 }
 </script>

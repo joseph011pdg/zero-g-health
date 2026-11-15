@@ -1,5 +1,5 @@
-# Despliegue en Render (Blueprint). Demo pública en línea de BASAL.
-# La interfaz ya va compilada en frontend/dist (recompilar con `npm run build` antes de cada push).
+# Render deployment (Blueprint). BASAL public online demo.
+# The interface is already compiled in frontend/dist (rebuild with `npm run build` before every push).
 services:
   - type: web
     name: basal

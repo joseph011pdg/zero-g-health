@@ -2,68 +2,68 @@
   <div class="page">
     <div class="page-head">
       <div>
-        <h2 class="title">Simulador de misión</h2>
-        <p>Datos <strong>simulados</strong> y reproducibles (semilla) con eventos conocidos. No son predicciones clínicas.</p>
+        <h2 class="title">Mission simulator</h2>
+        <p><strong>Simulated</strong>, reproducible data (seeded) with known events. Not clinical predictions.</p>
       </div>
     </div>
 
     <section class="panel ctl">
       <div class="row wrap">
         <button class="btn primary" @click="toggle" :aria-pressed="playing">
-          <Icon :name="playing ? 'pause' : 'play'" :size="14" />{{ playing ? 'Pausar' : 'Iniciar' }}</button>
-        <button class="btn" @click="step(1)" :disabled="playing"><Icon name="next" :size="14" /> +1 día</button>
-        <button class="btn" @click="step(7)" :disabled="playing">+7 días</button>
-        <label class="row small">Velocidad
-          <select class="input sm" v-model.number="speed"><option :value="1500">lenta</option><option :value="700">normal</option><option :value="250">rápida</option></select></label>
+          <Icon :name="playing ? 'pause' : 'play'" :size="14" />{{ playing ? 'Pause' : 'Play' }}</button>
+        <button class="btn" @click="step(1)" :disabled="playing"><Icon name="next" :size="14" /> +1 day</button>
+        <button class="btn" @click="step(7)" :disabled="playing">+7 days</button>
+        <label class="row small">Speed
+          <select class="input sm" v-model.number="speed"><option :value="1500">slow</option><option :value="700">normal</option><option :value="250">fast</option></select></label>
         <div class="daybig mono">D{{ String(s.day).padStart(3, '0') }}<span class="muted small"> / {{ s.mission.dias - 1 }}</span></div>
       </div>
       <div class="row wrap">
-        <label v-if="!s.publico" class="row small">Semilla <input class="input sm num" type="number" v-model.number="seed" min="0" /></label>
-        <button class="btn danger" @click="resetDemo"><Icon name="reset" :size="14" /> {{ s.publico ? 'Restablecer demo' : 'Reiniciar misión demo' }}</button>
+        <label v-if="!s.publico" class="row small">Seed <input class="input sm num" type="number" v-model.number="seed" min="0" /></label>
+        <button class="btn danger" @click="resetDemo"><Icon name="reset" :size="14" /> {{ s.publico ? 'Reset demo' : 'Restart demo mission' }}</button>
       </div>
     </section>
 
     <section class="cols-2">
       <div class="panel grid">
-        <h2><Icon name="cpu" /> Escenario por astronauta</h2>
+        <h2><Icon name="cpu" /> Scenario per astronaut</h2>
         <div class="cols-2">
-          <label class="field"><span>Astronauta</span>
+          <label class="field"><span>Astronaut</span>
             <select class="input" v-model="sa.astro_id"><option v-for="c in s.crew" :key="c.id" :value="c.id">{{ c.id }} · {{ c.nombre }}</option></select></label>
-          <label class="field"><span>Escenario</span>
+          <label class="field"><span>Scenario</span>
             <select class="input" v-model="sa.escenario">
               <option v-for="(v, k) in scen.escenarios" :key="k" :value="k">{{ k }} · {{ v.nombre }}</option></select></label>
-          <label class="field"><span>Día de inicio</span><input class="input" type="number" min="15" max="115" v-model.number="sa.inicio" :disabled="!scen.con_evento?.includes(sa.escenario)" /></label>
-          <label class="field"><span>Intensidad ({{ fmt(sa.intensidad, 1) }}×)</span><input type="range" min="0.3" max="2" step="0.1" v-model.number="sa.intensidad" :disabled="!scen.con_evento?.includes(sa.escenario)" /></label>
+          <label class="field"><span>Start day</span><input class="input" type="number" min="15" max="115" v-model.number="sa.inicio" :disabled="!scen.con_evento?.includes(sa.escenario)" /></label>
+          <label class="field"><span>Intensity ({{ fmt(sa.intensidad, 1) }}×)</span><input type="range" min="0.3" max="2" step="0.1" v-model.number="sa.intensidad" :disabled="!scen.con_evento?.includes(sa.escenario)" /></label>
         </div>
         <p class="small muted">{{ scen.escenarios?.[sa.escenario]?.desc }}</p>
-        <div class="row"><button class="btn primary" @click="applyScenario" :disabled="s.publico"><Icon name="spark" :size="14" /> Aplicar (regenera sus datos sintéticos)</button></div>
-        <p v-if="s.publico" class="tiny c-amarillo">En la demo pública no se regeneran datos (afectaría a todos). Pruebe los escenarios ya cargados desde la portada: fatiga (B), estrés (C) y evento solar (D).</p>
-        <p class="tiny faint">Se conservan los registros manuales de la persona. Los datos pasan por la misma ingesta validada.</p>
+        <div class="row"><button class="btn primary" @click="applyScenario" :disabled="s.publico"><Icon name="spark" :size="14" /> Apply (regenerates their synthetic data)</button></div>
+        <p v-if="s.publico" class="tiny c-amarillo">The public demo does not regenerate data (it would affect everyone). Try the preloaded scenarios from the home page: fatigue (B), stress (C) and solar event (D).</p>
+        <p class="tiny faint">The person's manual records are kept. Data goes through the same validated ingestion.</p>
       </div>
 
       <div class="panel grid">
-        <h2><Icon name="signalOff" /> Escenario F · interrupción de comunicaciones</h2>
+        <h2><Icon name="signalOff" /> Scenario F · communication outage</h2>
         <div class="cols-2">
-          <label class="field"><span>Inicio del apagón</span><input class="input" type="number" min="0" max="119" v-model.number="bo.inicio" /></label>
-          <label class="field"><span>Fin del apagón</span><input class="input" type="number" min="0" max="119" v-model.number="bo.fin" /></label>
+          <label class="field"><span>Blackout start</span><input class="input" type="number" min="0" max="119" v-model.number="bo.inicio" /></label>
+          <label class="field"><span>Blackout end</span><input class="input" type="number" min="0" max="119" v-model.number="bo.fin" /></label>
         </div>
         <div class="row wrap">
-          <button class="btn" @click="setBlackout(false)" :disabled="s.publico">Aplicar ventana</button>
-          <button class="btn ghost" @click="setBlackout(true)" :disabled="s.publico">Sin apagón</button>
+          <button class="btn" @click="setBlackout(false)" :disabled="s.publico">Apply window</button>
+          <button class="btn ghost" @click="setBlackout(true)" :disabled="s.publico">No blackout</button>
         </div>
         <div class="notice small" :class="s.mission.comunicacion.apagon ? 'err' : 'info'">
           <Icon :name="s.mission.comunicacion.apagon ? 'signalOff' : 'satellite'" />
-          <span>Hoy: <strong>{{ s.mission.comunicacion.estado }}</strong>{{ s.mission.comunicacion.apagon ? '' : ` · ${fmt(s.mission.comunicacion.retraso_min, 1)} min por sentido (${fmt(s.mission.comunicacion.ida_vuelta_min, 1)} min ida y vuelta)` }}.
-            Ventana actual: {{ s.mission.apagon[0] ?? '—' }}–{{ s.mission.apagon[1] ?? '—' }}. Durante el apagón el detector sigue
-            calculando y los reportes quedan en cola.</span></div>
-        <p class="tiny faint">Retraso modelado de forma simplificada (3 → 20 min por sentido). No hay integración real con
-          comunicaciones espaciales.</p>
+          <span>Today: <strong>{{ s.mission.comunicacion.estado }}</strong>{{ s.mission.comunicacion.apagon ? '' : ` · ${fmt(s.mission.comunicacion.retraso_min, 1)} min each way (${fmt(s.mission.comunicacion.ida_vuelta_min, 1)} min round trip)` }}.
+            Current window: {{ s.mission.apagon[0] ?? '—' }}–{{ s.mission.apagon[1] ?? '—' }}. During the blackout the detector keeps
+            running and reports stay queued.</span></div>
+        <p class="tiny faint">Simplified delay model (3 → 20 min each way). No real integration with
+          space communications.</p>
       </div>
     </section>
 
     <section class="panel">
       <div class="panel-head">
-        <h2><Icon name="activity" /> Respuesta del detector frente a la verdad simulada</h2>
+        <h2><Icon name="activity" /> Detector response vs. simulated ground truth</h2>
         <div class="row wrap">
           <select class="input sm" v-model="viewId"><option v-for="c in s.crew" :key="c.id" :value="c.id">{{ c.id }} · {{ c.nombre }}</option></select>
           <select class="input sm" v-model="viewInd"><option v-for="(c, k) in s.indicators" :key="k" :value="k">{{ c.corto }}</option></select>
@@ -74,13 +74,13 @@
           <span class="tiny muted name">{{ c.corto }}</span>
           <div class="cells" :style="{ gridTemplateColumns: `repeat(${s.mission.dias}, 1fr)` }">
             <span v-for="d in s.mission.dias" :key="d" class="cellx"
-                  :class="[cellLevel(k, d - 1), { truth: inEvent(k, d - 1) }]" :title="`Día ${d - 1}: ${cellLevel(k, d - 1)}`" />
+                  :class="[cellLevel(k, d - 1), { truth: inEvent(k, d - 1) }]" :title="`Day ${d - 1}: ${CELL[cellLevel(k, d - 1)] || cellLevel(k, d - 1)}`" />
           </div>
         </div>
         <div class="row wrap tiny muted legend">
-          <span><i class="sw verde" />normal</span><span><i class="sw amarillo" />vigilar</span><span><i class="sw rojo" />actuar</span>
-          <span><i class="sw sin_dato" />sin dato / calibrando</span><span><i class="sw future" />futuro (aún no revelado)</span>
-          <span><i class="sw truthsw" />evento inyectado (verdad)</span>
+          <span><i class="sw verde" />normal</span><span><i class="sw amarillo" />Watch</span><span><i class="sw rojo" />Act</span>
+          <span><i class="sw sin_dato" />no data / calibrating</span><span><i class="sw future" />future (not revealed yet)</span>
+          <span><i class="sw truthsw" />injected event (ground truth)</span>
         </div>
       </div>
       <TrendChart v-if="astro" :data="astro.series[viewInd]" :unidad="s.indicators[viewInd].unidad" :nombre="s.indicators[viewInd].corto"
@@ -89,17 +89,17 @@
     </section>
 
     <section class="panel">
-      <div class="panel-head"><h2><Icon name="clipboard" /> Eventos inyectados (la "respuesta correcta")</h2>
-        <span class="tiny muted">solo visibles aquí y en la validación; el astronauta no los ve</span></div>
+      <div class="panel-head"><h2><Icon name="clipboard" /> Injected events (the "right answer")</h2>
+        <span class="tiny muted">only visible here and in validation; the astronaut does not see them</span></div>
       <div class="table-wrap">
         <table class="table">
-          <thead><tr><th>Astronauta</th><th>Escenario</th><th>Inicio</th><th>Fin</th><th>Indicadores</th><th>Intensidad</th><th>Estado hoy</th></tr></thead>
+          <thead><tr><th>Astronaut</th><th>Scenario</th><th>Start</th><th>End</th><th>Indicators</th><th>Intensity</th><th>Status today</th></tr></thead>
           <tbody>
             <tr v-for="(e, i) in events" :key="i">
               <td>{{ e.astro_id }}</td><td><span class="tag">{{ e.escenario }}</span> {{ e.nombre }}</td>
               <td class="mono">D{{ e.start }}</td><td class="mono">D{{ e.end }}</td><td class="tiny">{{ e.afecta }}</td>
               <td class="num">{{ fmt(e.intensidad, 1) }}×</td>
-              <td class="tiny">{{ s.day < e.start ? 'futuro' : s.day <= e.end ? 'en curso' : 'terminado' }}</td>
+              <td class="tiny">{{ s.day < e.start ? 'future' : s.day <= e.end ? 'ongoing' : 'finished' }}</td>
             </tr>
           </tbody>
         </table>
@@ -111,6 +111,7 @@
 <script setup>
 import { ref, reactive, watch, onBeforeUnmount } from 'vue'
 import { api, useStore, fmt } from '../store.js'
+const CELL = { verde: 'normal', amarillo: 'Watch', rojo: 'Act', sin_dato: 'no data', calibrando: 'calibrating', future: 'future' }
 import Icon from '../components/Icon.vue'
 import TrendChart from '../components/TrendChart.vue'
 
@@ -145,24 +146,24 @@ async function loop() {
 }
 async function step(n) { await s.run(() => s.advance(n)) }
 async function resetDemo() {
-  if (s.publico) { playing.value = false; await s.run(() => s.resetDemo(), 'Demo restablecida en este navegador'); return }
-  if (!confirm('¿Reiniciar la misión de demostración? Se borran check-ins, pruebas, revisiones y reportes de esta base local.')) return
+  if (s.publico) { playing.value = false; await s.run(() => s.resetDemo(), 'Demo reset in this browser'); return }
+  if (!confirm('Restart the demo mission? Check-ins, tests, reviews and reports in this local database will be deleted.')) return
   playing.value = false
-  await s.run(() => api('/sim/reset', { method: 'POST', body: { seed: seed.value } }), `Misión reiniciada (semilla ${seed.value})`)
+  await s.run(() => api('/sim/reset', { method: 'POST', body: { seed: seed.value } }), `Mission restarted (seed ${seed.value})`)
   await s.refresh()
 }
 async function applyScenario() {
   const item = { escenario: sa.escenario }
   if (scen.value.con_evento.includes(sa.escenario)) { item.inicio = sa.inicio; item.intensidad = sa.intensidad }
   const r = await s.run(() => api('/sim/astronaut', { method: 'POST', body: { astro_id: sa.astro_id, plan: [item] } }),
-    `Escenario ${sa.escenario} aplicado a ${sa.astro_id}`)
-  if (r.rechazados.length) s.toast(`${r.rechazados.length} registro(s) inválido(s) rechazado(s) por la ingesta`, 'err')
+    `Scenario ${sa.escenario} applied to ${sa.astro_id}`)
+  if (r.rechazados.length) s.toast(`${r.rechazados.length} invalid record(s) rejected by ingestion`, 'err')
   viewId.value = sa.astro_id
   await s.refresh()
 }
 async function setBlackout(none) {
   const body = none ? { inicio: null, fin: null } : { inicio: bo.inicio, fin: bo.fin }
-  await s.run(() => api('/sim/blackout', { method: 'POST', body }), none ? 'Apagón eliminado' : 'Ventana de apagón actualizada')
+  await s.run(() => api('/sim/blackout', { method: 'POST', body }), none ? 'Blackout removed' : 'Blackout window updated')
   await s.refresh()
 }
 function cellLevel(k, d) {

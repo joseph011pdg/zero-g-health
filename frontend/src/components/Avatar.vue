@@ -1,5 +1,5 @@
 <template>
-  <img class="avatar-img" :src="src" :alt="`Retrato ilustrado de ${name}`" :width="size" :height="size" @error="fallback" />
+  <img class="avatar-img" :src="src" :alt="`Illustrated portrait of ${name}`" :width="size" :height="size" @error="fallback" />
 </template>
 
 <script setup>

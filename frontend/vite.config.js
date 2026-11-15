@@ -9,16 +9,20 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icon.svg'],
       manifest: {
-        name: 'BASAL · Monitoreo de salud autónomo',
+        name: 'BASAL · Autonomous crew health monitoring',
         short_name: 'BASAL',
-        description: 'Monitoreo de salud de astronautas sin conexión con la Tierra',
+        description: 'Astronaut health monitoring without a link to Earth',
         theme_color: '#0b3d91',
         background_color: '#f4f6fa',
         display: 'standalone',
-        lang: 'es',
+        lang: 'en',
         icons: [{ src: 'icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' }]
       },
       workbox: {
+        //ACTUALIZACIÓN inmediata: el jurado nunca ve una versión vieja en caché
+        skipWaiting: true,
+        clientsClaim: true,
+        cleanupOutdatedCaches: true,
         navigateFallbackDenylist: [/^\/api/, /^\/docs/],
         globPatterns: ['**/*.{js,css,html,svg,jpg,png,woff,woff2,webmanifest}']
       }

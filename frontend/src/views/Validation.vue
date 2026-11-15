@@ -2,8 +2,8 @@
   <div class="page">
     <div class="page-head">
       <div>
-        <h2 class="title">¿En qué condiciones la línea base individual detecta mejor?</h2>
-        <p>Línea base individual frente a un umbral igual para todos. Ajustado con unas misiones simuladas y evaluado con otras distintas.</p>
+        <h2 class="title">When does a personal baseline detect better?</h2>
+        <p>Personal baseline vs. one threshold for everyone. Tuned on some simulated missions and evaluated on different ones.</p>
       </div>
     </div>
 
@@ -11,65 +11,65 @@
     <div v-if="!v && !err" class="skeleton" style="height: 300px" />
     <template v-if="v">
       <section class="panel proto">
-        <div><span class="label">Ajuste</span><div class="small">semillas {{ v.protocolo.semillas_ajuste.join('–') }} · 20 misiones</div></div>
-        <div><span class="label">Evaluación (independiente)</span><div class="small">semillas {{ v.protocolo.semillas_evaluacion.join('–') }} ·
-          {{ v.protocolo.misiones_evaluacion }} misiones × {{ v.protocolo.astronautas_por_mision }} astronautas × {{ v.protocolo.dias_por_mision }} días</div></div>
-        <div><span class="label">Cortes elegidos</span><div class="small mono">vigilar |z| ≥ {{ nn(v.parametros.yellow) }} · actuar ≥ {{ nn(v.parametros.red) }} o {{ v.parametros.persist }} días</div></div>
-        <div><span class="label">Criterio de ajuste</span><div class="small">{{ v.protocolo.restriccion_ajuste }}; máxima sensibilidad "actuar"</div></div>
-        <div><span class="label">Eventos evaluados</span><div class="small">{{ g.B_fijo.eventos }} eventos · {{ g.B_fijo.dias_sanos.toLocaleString('es') }} días sanos</div></div>
+        <div><span class="label">Tuning</span><div class="small">seeds {{ v.protocolo.semillas_ajuste.join('–') }} · 20 missions</div></div>
+        <div><span class="label">Evaluation (independent)</span><div class="small">seeds {{ v.protocolo.semillas_evaluacion.join('–') }} ·
+          {{ v.protocolo.misiones_evaluacion }} missions × {{ v.protocolo.astronautas_por_mision }} astronauts × {{ v.protocolo.dias_por_mision }} days</div></div>
+        <div><span class="label">Chosen cutoffs</span><div class="small mono">Watch |z| ≥ {{ nn(v.parametros.yellow) }} · Act ≥ {{ nn(v.parametros.red) }} or {{ v.parametros.persist }} days</div></div>
+        <div><span class="label">Tuning criterion</span><div class="small">{{ v.protocolo.restriccion_ajuste }}; maximum "Act" sensitivity</div></div>
+        <div><span class="label">Events evaluated</span><div class="small">{{ g.B_fijo.eventos }} events · {{ nn(g.B_fijo.dias_sanos, 0) }} healthy days</div></div>
       </section>
 
       <section class="cols-3">
         <div v-for="(label, m) in v.metodos" :key="m" class="panel method" :class="m">
           <div class="label">{{ label }}</div>
           <div class="kpis">
-            <div class="kpi"><span class="v">{{ nn(g[m].sensibilidad_pct) }} <small>%</small></span><span class="tiny muted">sensibilidad (eventos)</span></div>
-            <div class="kpi"><span class="v">{{ nn(g[m].retraso_medio_dias) }} <small>d</small></span><span class="tiny muted">retraso medio · mediana {{ nn(g[m].retraso_mediano_dias) }} d</span></div>
-            <div class="kpi"><span class="v">{{ nn(g[m].episodios_falsos_por_30_dias) }}</span><span class="tiny muted">falsas alarmas / 30 días-astronauta</span></div>
-            <div class="kpi"><span class="v">{{ nn(g[m].falsas_alarmas_dias_pct) }} <small>%</small></span><span class="tiny muted">días sanos con alerta</span></div>
+            <div class="kpi"><span class="v">{{ nn(g[m].sensibilidad_pct) }} <small>%</small></span><span class="tiny muted">sensitivity (events)</span></div>
+            <div class="kpi"><span class="v">{{ nn(g[m].retraso_medio_dias) }} <small>d</small></span><span class="tiny muted">mean delay · median {{ nn(g[m].retraso_mediano_dias) }} d</span></div>
+            <div class="kpi"><span class="v">{{ nn(g[m].episodios_falsos_por_30_dias) }}</span><span class="tiny muted">false alarms / 30 astronaut-days</span></div>
+            <div class="kpi"><span class="v">{{ nn(g[m].falsas_alarmas_dias_pct) }} <small>%</small></span><span class="tiny muted">healthy days with an alert</span></div>
           </div>
         </div>
       </section>
 
       <section class="cols-2">
         <div class="panel">
-          <div class="panel-head"><h2>Sensibilidad por escenario</h2><span class="tiny muted">% de eventos detectados</span></div>
+          <div class="panel-head"><h2>Sensitivity by scenario</h2><span class="tiny muted">% of events detected</span></div>
           <v-chart class="ch" :option="scenOpt('sensibilidad_pct', '%')" autoresize />
         </div>
         <div class="panel">
-          <div class="panel-head"><h2>Retraso medio por escenario</h2><span class="tiny muted">días desde el inicio (menos = antes)</span></div>
+          <div class="panel-head"><h2>Mean delay by scenario</h2><span class="tiny muted">days from onset (lower = earlier)</span></div>
           <v-chart class="ch" :option="scenOpt('retraso_medio_dias', 'd')" autoresize />
         </div>
       </section>
 
       <section class="cols-2">
         <div class="panel">
-          <div class="panel-head"><h2>Condición clave: diferencias entre personas</h2></div>
+          <div class="panel-head"><h2>Key condition: differences between people</h2></div>
           <v-chart class="ch" :option="sweepOpt" autoresize />
-          <p class="small">Al aumentar la heterogeneidad entre astronautas (DE entre personas × factor), el umbral fijo pierde
-            sensibilidad mientras la línea base individual se mantiene. Con poblaciones muy homogéneas (0,25×) el umbral fijo
-            iguala la sensibilidad y avisa antes: <strong>ahí la personalización no aporta ventaja</strong>.</p>
+          <p class="small">As heterogeneity between astronauts grows (between-person SD × factor), the fixed threshold loses
+            sensitivity while the personal baseline holds. With very homogeneous populations (0.25×) the fixed threshold
+            matches the sensitivity and alerts earlier: <strong>there, personalization brings no advantage</strong>.</p>
         </div>
         <div class="panel">
-          <div class="panel-head"><h2>Anticipación A frente a B</h2><span class="tiny muted">mismos eventos</span></div>
-          <table class="table">
-            <thead><tr><th></th><th>Vigilar</th><th>Actuar</th></tr></thead>
+          <div class="panel-head"><h2>Lead time, A vs. B</h2><span class="tiny muted">same events</span></div>
+          <div class="table-wrap"><table class="table">
+            <thead><tr><th></th><th>Watch</th><th>Act</th></tr></thead>
             <tbody>
               <tr v-for="r in ANT" :key="r.k"><td class="small">{{ r.l }}</td>
                 <td class="num">{{ nn(v.evaluacion.anticipacion.A_vigilar[r.k]) }}</td><td class="num">{{ nn(v.evaluacion.anticipacion.A_actuar[r.k]) }}</td></tr>
             </tbody>
-          </table>
-          <p class="tiny muted">Anticipación media positiva = A avisa antes que B. El nivel "actuar" exige más evidencia
-            (corte {{ nn(v.parametros.red) }} o persistencia) y por eso, en promedio, avisa <strong>después</strong> que el umbral fijo en
-            los eventos que ambos detectan, a cambio de menos falsas alarmas y de detectar eventos que B no ve.</p>
+          </table></div>
+          <p class="tiny muted">Positive mean lead time = A alerts before B. The "Act" level requires more evidence
+            (cutoff {{ nn(v.parametros.red) }} or persistence), so on average it alerts <strong>later</strong> than the fixed threshold on
+            the events both detect, in exchange for fewer false alarms and detecting events that B misses.</p>
         </div>
       </section>
 
       <section class="cols-2">
         <div class="panel">
-          <div class="panel-head"><h2>Resultados por indicador</h2><span class="tiny muted">sensibilidad del indicador en los eventos que lo afectan · falsas alarmas (% días)</span></div>
+          <div class="panel-head"><h2>Results by indicator</h2><span class="tiny muted">indicator sensitivity on the events that affect it · false alarms (% of days)</span></div>
           <div class="table-wrap"><table class="table">
-            <thead><tr><th>Indicador</th><th>Eventos</th><th>A vigilar</th><th>A actuar</th><th>B fijo</th><th>FA A act.</th><th>FA B</th></tr></thead>
+            <thead><tr><th>Indicator</th><th>Events</th><th>A Watch</th><th>A Act</th><th>B fixed</th><th>FA A Act</th><th>FA B</th></tr></thead>
             <tbody><tr v-for="(x, k) in v.evaluacion.por_indicador.B_fijo" :key="k">
               <td>{{ s.indicators[k]?.corto || k }}</td><td class="num">{{ x.eventos_que_lo_afectan }}</td>
               <td class="num">{{ nn(v.evaluacion.por_indicador.A_vigilar[k].sensibilidad_pct) }}</td>
@@ -80,67 +80,67 @@
           </table></div>
         </div>
         <div class="panel">
-          <div class="panel-head"><h2>Ablación del método A</h2><span class="tiny muted">qué aporta cada decisión</span></div>
-          <table class="table">
-            <thead><tr><th>Variante</th><th>Sens. actuar</th><th>Retraso</th><th>FA/30 d</th></tr></thead>
+          <div class="panel-head"><h2>Method A ablation</h2><span class="tiny muted">what each design choice adds</span></div>
+          <div class="table-wrap"><table class="table">
+            <thead><tr><th>Variant</th><th>Sens. Act</th><th>Delay</th><th>FA/30 d</th></tr></thead>
             <tbody><tr v-for="(x, k) in v.ablacion" :key="k" :class="{ hl: k === 'completo' }">
-              <td class="small">{{ ABL[k] }}</td><td class="num">{{ nn(x.A_actuar.sensibilidad_pct) }} %</td>
+              <td class="small">{{ ABL[k] }}</td><td class="num">{{ nn(x.A_actuar.sensibilidad_pct) }}%</td>
               <td class="num">{{ nn(x.A_actuar.retraso_medio_dias) }} d</td><td class="num">{{ nn(x.A_actuar.episodios_falsos_por_30_dias) }}</td></tr></tbody>
-          </table>
-          <p class="tiny muted">La línea base inicial es la que permite detectar deterioros lentos (escenario E): sin ella la
-            sensibilidad "actuar" cae de forma marcada, a cambio de menos falsas alarmas.</p>
+          </table></div>
+          <p class="tiny muted">The mission-start baseline is what allows slow deterioration to be detected (scenario E): without it,
+            "Act" sensitivity drops markedly, in exchange for fewer false alarms.</p>
         </div>
       </section>
 
       <section class="panel">
-        <div class="panel-head"><h2>Ajuste de cortes (solo semillas de ajuste)</h2><span class="tiny muted">fila resaltada = elegida</span></div>
+        <div class="panel-head"><h2>Cutoff tuning (tuning seeds only)</h2><span class="tiny muted">highlighted row = chosen</span></div>
         <div class="table-wrap"><table class="table">
-          <thead><tr><th>Amarillo</th><th>Rojo</th><th>Sens. vigilar</th><th>FA vigilar /30 d</th><th>Sens. actuar</th><th>Retraso actuar</th><th>FA actuar /30 d</th><th>Cumple</th></tr></thead>
+          <thead><tr><th>Watch</th><th>Act</th><th>Sens. Watch</th><th>FA Watch /30 d</th><th>Sens. Act</th><th>Delay Act</th><th>FA Act /30 d</th><th>Meets</th></tr></thead>
           <tbody><tr v-for="(r, i) in v.ajuste" :key="i" :class="{ hl: r.yellow === v.parametros.yellow && r.red === v.parametros.red }">
-            <td class="num">{{ nn(r.yellow) }}</td><td class="num">{{ nn(r.red) }}</td><td class="num">{{ nn(r.vigilar.sensibilidad_pct) }} %</td>
-            <td class="num">{{ nn(r.vigilar.episodios_falsos_por_30_dias) }}</td><td class="num">{{ nn(r.actuar.sensibilidad_pct) }} %</td>
+            <td class="num">{{ nn(r.yellow) }}</td><td class="num">{{ nn(r.red) }}</td><td class="num">{{ nn(r.vigilar.sensibilidad_pct) }}%</td>
+            <td class="num">{{ nn(r.vigilar.episodios_falsos_por_30_dias) }}</td><td class="num">{{ nn(r.actuar.sensibilidad_pct) }}%</td>
             <td class="num">{{ nn(r.actuar.retraso_medio_dias) }} d</td><td class="num">{{ nn(r.actuar.episodios_falsos_por_30_dias) }}</td>
-            <td>{{ r.cumple_restriccion ? 'sí' : 'no' }}</td></tr></tbody>
+            <td>{{ r.cumple_restriccion ? 'yes' : 'no' }}</td></tr></tbody>
         </table></div>
       </section>
 
       <section class="cols-2">
         <div class="panel grid">
-          <h2><Icon name="flask" /> Reproducir un experimento</h2>
+          <h2><Icon name="flask" /> Reproduce an experiment</h2>
           <div class="cols-2">
-            <label class="field"><span>Misiones (1–30)</span><input class="input" type="number" min="1" max="30" v-model.number="ex.n_misiones" /></label>
-            <label class="field"><span>Semilla inicial</span><input class="input" type="number" min="0" v-model.number="ex.semilla_inicial" /></label>
-            <label class="field"><span>Escenario</span><select class="input" v-model="ex.escenario">
-              <option :value="null">Mixto</option><option value="B">B · fatiga progresiva</option><option value="C">C · estrés fisiológico</option>
-              <option value="D">D · evento solar</option><option value="E">E · cambio conductual</option></select></label>
-            <label class="field"><span>Heterogeneidad ({{ nn(ex.heterogeneidad) }}×)</span><input type="range" min="0.25" max="2.5" step="0.25" v-model.number="ex.heterogeneidad" /></label>
-            <label class="field"><span>Datos faltantes ({{ Math.round(ex.faltantes * 100) }} %)</span><input type="range" min="0" max="0.4" step="0.05" v-model.number="ex.faltantes" /></label>
-            <label class="field"><span>Cortes amarillo / rojo</span>
+            <label class="field"><span>Missions (1–30)</span><input class="input" type="number" min="1" max="30" v-model.number="ex.n_misiones" /></label>
+            <label class="field"><span>Starting seed</span><input class="input" type="number" min="0" v-model.number="ex.semilla_inicial" /></label>
+            <label class="field"><span>Scenario</span><select class="input" v-model="ex.escenario">
+              <option :value="null">Mixed</option><option value="B">B · progressive fatigue</option><option value="C">C · physiological stress</option>
+              <option value="D">D · solar event</option><option value="E">E · behavioral change</option></select></label>
+            <label class="field"><span>Heterogeneity ({{ nn(ex.heterogeneidad) }}×)</span><input type="range" min="0.25" max="2.5" step="0.25" v-model.number="ex.heterogeneidad" /></label>
+            <label class="field"><span>Missing data ({{ Math.round(ex.faltantes * 100) }}%)</span><input type="range" min="0" max="0.4" step="0.05" v-model.number="ex.faltantes" /></label>
+            <label class="field"><span>Watch / Act cutoffs</span>
               <div class="row"><input class="input" type="number" step="0.5" v-model.number="ex.yellow" /><input class="input" type="number" step="0.5" v-model.number="ex.red" /></div></label>
           </div>
-          <button class="btn primary" @click="runEx" :disabled="running"><Icon name="play" :size="14" />{{ running ? 'Calculando…' : 'Ejecutar' }}</button>
-          <p class="tiny faint">El umbral fijo (B) usa los valores ajustados para heterogeneidad 1×. Use semillas distintas de 1000–1019 para no evaluar con el conjunto de ajuste.</p>
+          <button class="btn primary" @click="runEx" :disabled="running"><Icon name="play" :size="14" />{{ running ? 'Running…' : 'Run' }}</button>
+          <p class="tiny faint">The fixed threshold (B) uses the values tuned for 1× heterogeneity. Use seeds other than 1000–1019 so you do not evaluate on the tuning set.</p>
         </div>
         <div class="panel">
-          <h2>Resultado del experimento</h2>
-          <p v-if="!exRes" class="small muted">Ejecute un experimento para ver los resultados aquí.</p>
+          <h2>Experiment result</h2>
+          <p v-if="!exRes" class="small muted">Run an experiment to see the results here.</p>
           <template v-else>
-            <p class="tiny muted mono">semillas {{ exRes.semillas.join('–') }} · {{ exRes.astronautas }} astronautas · escenario {{ exRes.escenario }} ·
-              heterogeneidad {{ nn(exRes.heterogeneidad) }}× · faltantes {{ Math.round(exRes.faltantes * 100) }} % · cortes {{ nn(exRes.parametros.yellow) }}/{{ nn(exRes.parametros.red) }} · {{ nn(exRes.segundos) }} s</p>
-            <table class="table">
-              <thead><tr><th>Método</th><th>Eventos</th><th>Sens.</th><th>Retraso</th><th>FA/30 d</th><th>FA % días</th></tr></thead>
+            <p class="tiny muted mono">seeds {{ exRes.semillas.join('–') }} · {{ exRes.astronautas }} astronauts · scenario {{ exRes.escenario }} ·
+              heterogeneity {{ nn(exRes.heterogeneidad) }}× · missing {{ Math.round(exRes.faltantes * 100) }}% · cutoffs {{ nn(exRes.parametros.yellow) }}/{{ nn(exRes.parametros.red) }} · {{ nn(exRes.segundos) }} s</p>
+            <div class="table-wrap"><table class="table">
+              <thead><tr><th>Method</th><th>Events</th><th>Sens.</th><th>Delay</th><th>FA/30 d</th><th>FA % days</th></tr></thead>
               <tbody><tr v-for="(x, m) in exRes.resultados.global" :key="m"><td class="small">{{ v.metodos[m] }}</td>
-                <td class="num">{{ x.eventos }}</td><td class="num">{{ nn(x.sensibilidad_pct) }} %</td><td class="num">{{ nn(x.retraso_medio_dias) }} d</td>
-                <td class="num">{{ nn(x.episodios_falsos_por_30_dias) }}</td><td class="num">{{ nn(x.falsas_alarmas_dias_pct) }} %</td></tr></tbody>
-            </table>
+                <td class="num">{{ x.eventos }}</td><td class="num">{{ nn(x.sensibilidad_pct) }}%</td><td class="num">{{ nn(x.retraso_medio_dias) }} d</td>
+                <td class="num">{{ nn(x.episodios_falsos_por_30_dias) }}</td><td class="num">{{ nn(x.falsas_alarmas_dias_pct) }}%</td></tr></tbody>
+            </table></div>
           </template>
         </div>
       </section>
 
       <section class="panel" v-if="demo">
-        <div class="panel-head"><h2>Por astronauta · misión de demostración cargada</h2><span class="tiny muted">{{ demo.nota }}</span></div>
+        <div class="panel-head"><h2>Per astronaut · loaded demo mission</h2><span class="tiny muted">{{ demo.nota }}</span></div>
         <div class="table-wrap"><table class="table">
-          <thead><tr><th>Astronauta</th><th>Eventos</th><th>A actuar: detectados · FA/30 d</th><th>A vigilar: detectados · FA/30 d</th><th>B fijo: detectados · FA/30 d</th></tr></thead>
+          <thead><tr><th>Astronaut</th><th>Events</th><th>A Act: detected · FA/30 d</th><th>A Watch: detected · FA/30 d</th><th>B fixed: detected · FA/30 d</th></tr></thead>
           <tbody><tr v-for="(x, id) in demo.por_astronauta" :key="id">
             <td>{{ id }} · {{ x.nombre }}</td><td class="small">{{ x.eventos.map((e) => `${e.escenario} (D${e.start}–${e.end})`).join(', ') || '—' }}</td>
             <td class="num">{{ x.metodos.A_actuar.detectados }}/{{ x.metodos.A_actuar.eventos }} · {{ nn(x.metodos.A_actuar.episodios_falsos_por_30_dias) }}</td>
@@ -151,22 +151,22 @@
 
       <section class="cols-2">
         <div class="panel">
-          <h2>Definiciones</h2>
+          <h2>Definitions</h2>
           <ul class="small defs">
-            <li><strong>Evento verdadero:</strong> desviación inyectada por el simulador (escenarios B, C, D, E) con inicio, fin e indicadores afectados conocidos; intensidad aleatoria 0,5–1,5×.</li>
-            <li><strong>Detección:</strong> alguna alerta en un indicador afectado entre el inicio y el fin + 2 días. <strong>Retraso:</strong> días desde el inicio hasta esa alerta.</li>
-            <li><strong>Día sano:</strong> día ≥ 14 fuera de [inicio − 1, fin + 7] de todo evento. <strong>Falsa alarma:</strong> alerta en un día sano; un episodio es una racha de días con alerta que empieza en un día sano.</li>
-            <li><strong>Método B:</strong> percentil 97,5 (si subir es malo) o 2,5 (si bajar es malo) de los días sanos de la población de ajuste: {{ fixedTxt }}.</li>
+            <li><strong>True event:</strong> deviation injected by the simulator (scenarios B, C, D, E) with known start, end and affected indicators; random intensity 0.5–1.5×.</li>
+            <li><strong>Detection:</strong> any alert on an affected indicator between the start and the end + 2 days. <strong>Delay:</strong> days from the start to that alert.</li>
+            <li><strong>Healthy day:</strong> day ≥ 14 outside [start − 1, end + 7] of every event. <strong>False alarm:</strong> alert on a healthy day; an episode is a run of alert days that starts on a healthy day.</li>
+            <li><strong>Method B:</strong> 97.5th percentile (if rising is bad) or 2.5th (if falling is bad) of healthy days in the tuning population: {{ fixedTxt }}.</li>
           </ul>
         </div>
         <div class="panel">
-          <h2>Limitaciones del experimento</h2>
+          <h2>Experiment limitations</h2>
           <ul class="small defs">
-            <li>Todos los datos son <strong>sintéticos</strong>: el resultado depende de los supuestos del simulador (diferencias entre personas mayores que la variación diaria, forma y tamaño de los eventos).</li>
-            <li>No hay validación con datos reales de astronautas ni validación clínica. Mostrar que el método funciona en datos simulados no prueba que funcione en vuelo.</li>
-            <li>El nivel "vigilar" genera ~{{ nn(g.A_vigilar.episodios_falsos_por_30_dias) }} avisos falsos por 30 días por astronauta al vigilar 6 indicadores: es un aviso para repetir la medición, no para actuar.</li>
-            <li>El comparador B es un intervalo poblacional estimado en la misma población simulada; umbrales clínicos reales (p. ej., FC &gt; 100 lpm) serían aún menos sensibles a cambios individuales.</li>
-            <li>Ventana de 14 días y min. 7 observaciones fijadas por diseño (no ajustadas).</li>
+            <li>All data are <strong>synthetic</strong>: the result depends on the simulator's assumptions (between-person differences larger than day-to-day variation, shape and size of the events).</li>
+            <li>There is no validation with real astronaut data and no clinical validation. Showing that the method works on simulated data does not prove that it works in flight.</li>
+            <li>The "Watch" level produces ~{{ nn(g.A_vigilar.episodios_falsos_por_30_dias) }} false notices per 30 days per astronaut when watching 6 indicators: it means repeat the measurement, not act.</li>
+            <li>Comparator B is a population interval estimated on the same simulated population; real clinical thresholds (e.g., HR &gt; 100 bpm) would be even less sensitive to individual changes.</li>
+            <li>14-day window and minimum of 7 observations fixed by design (not tuned).</li>
           </ul>
         </div>
       </section>
@@ -189,11 +189,11 @@ const running = ref(false)
 const exRes = ref(null)
 const ex = ref({ n_misiones: 10, semilla_inicial: 3000, escenario: null, heterogeneidad: 1, faltantes: 0, yellow: 2.5, red: 4.5 })
 const COL = { A_vigilar: C.blue, A_actuar: C.ok, B_fijo: C.mars }
-const ABL = { completo: 'Completo (exclusión + línea inicial)', sin_excluir_alertas: 'Sin excluir días en alerta',
-  sin_linea_inicial: 'Sin línea base inicial', solo_ventana_movil: 'Solo ventana móvil de 14 días' }
-const ANT = [{ k: 'eventos_detectados_por_ambos', l: 'Eventos detectados por ambos' }, { k: 'anticipacion_media_dias', l: 'Anticipación media (días)' },
-  { k: 'A_antes_que_B', l: 'A avisa antes' }, { k: 'mismo_dia', l: 'Mismo día' }, { k: 'B_antes_que_A', l: 'B avisa antes' },
-  { k: 'solo_A_detecta', l: 'Solo A detecta' }, { k: 'solo_B_detecta', l: 'Solo B detecta' }]
+const ABL = { completo: 'Full (exclusion + mission-start baseline)', sin_excluir_alertas: 'Without excluding alert days',
+  sin_linea_inicial: 'Without mission-start baseline', solo_ventana_movil: '14-day rolling window only' }
+const ANT = [{ k: 'eventos_detectados_por_ambos', l: 'Events detected by both' }, { k: 'anticipacion_media_dias', l: 'Mean lead time (days)' },
+  { k: 'A_antes_que_B', l: 'A alerts first' }, { k: 'mismo_dia', l: 'Same day' }, { k: 'B_antes_que_A', l: 'B alerts first' },
+  { k: 'solo_A_detecta', l: 'Only A detects' }, { k: 'solo_B_detecta', l: 'Only B detects' }]
 
 const g = computed(() => v.value.evaluacion.global)
 const fixedTxt = computed(() => Object.entries(v.value.parametros.fixed)
@@ -214,7 +214,7 @@ function scenOpt(field, unit) {
     animation: true, tooltip: { ...baseTooltip, trigger: 'axis', valueFormatter: (x) => `${nn(x)} ${unit}` },
     legend: { top: 0, textStyle: { color: C.muted, fontSize: 11 } }, grid: { left: 40, right: 10, top: 34, bottom: 30 },
     xAxis: { type: 'category', data: scs.map((k) => `${k} · ${v.value.escenarios[k]}`), ...axis({ splitLine: { show: false } }),
-      axisLabel: { color: C.muted, fontSize: 10, interval: 0, formatter: (x) => x.split(' · ')[1].replace(' (evento solar)', '') } },
+      axisLabel: { color: C.muted, fontSize: 10, interval: 0, formatter: (x) => x.split(' · ')[1].replace(' (solar event)', '') } },
     yAxis: { type: 'value', ...axis() },
     series: Object.keys(v.value.metodos).map((m) => ({ name: v.value.metodos[m], type: 'bar', barGap: '10%',
       data: scs.map((k) => ps[m][k][field]), itemStyle: { color: COL[m], borderRadius: [3, 3, 0, 0] },
@@ -227,20 +227,20 @@ const sweepOpt = computed(() => {
   return {
     tooltip: { ...baseTooltip, trigger: 'axis', valueFormatter: (x) => nn(x) }, legend: { top: 0, textStyle: { color: C.muted, fontSize: 11 } },
     grid: { left: 40, right: 44, top: 34, bottom: 30 },
-    xAxis: { type: 'category', data: xs, name: 'heterogeneidad', nameLocation: 'middle', nameGap: 22, nameTextStyle: { color: C.muted }, ...axis({ splitLine: { show: false } }) },
+    xAxis: { type: 'category', data: xs, name: 'heterogeneity', nameLocation: 'middle', nameGap: 22, nameTextStyle: { color: C.muted }, ...axis({ splitLine: { show: false } }) },
     yAxis: [{ type: 'value', min: 50, max: 100, name: 'sens. %', nameTextStyle: { color: C.muted }, ...axis() },
       { type: 'value', name: 'FA/30 d', nameTextStyle: { color: C.muted }, ...axis({ splitLine: { show: false } }) }],
     series: [
-      { name: 'Sens. A actuar', type: 'line', data: rows.map((r) => r.A_actuar.sensibilidad_pct), itemStyle: { color: C.ok }, symbolSize: 7 },
-      { name: 'Sens. B fijo', type: 'line', data: rows.map((r) => r.B_fijo.sensibilidad_pct), itemStyle: { color: C.mars }, symbolSize: 7 },
-      { name: 'FA A actuar', type: 'bar', yAxisIndex: 1, data: rows.map((r) => r.A_actuar.episodios_falsos_por_30_dias), itemStyle: { color: 'rgba(31,122,77,.25)' }, barWidth: 12 },
-      { name: 'FA B fijo', type: 'bar', yAxisIndex: 1, data: rows.map((r) => r.B_fijo.episodios_falsos_por_30_dias), itemStyle: { color: 'rgba(200,98,58,.25)' }, barWidth: 12 }
+      { name: 'Sens. A Act', type: 'line', data: rows.map((r) => r.A_actuar.sensibilidad_pct), itemStyle: { color: C.ok }, symbolSize: 7 },
+      { name: 'Sens. B fixed', type: 'line', data: rows.map((r) => r.B_fijo.sensibilidad_pct), itemStyle: { color: C.mars }, symbolSize: 7 },
+      { name: 'FA A Act', type: 'bar', yAxisIndex: 1, data: rows.map((r) => r.A_actuar.episodios_falsos_por_30_dias), itemStyle: { color: 'rgba(31,122,77,.25)' }, barWidth: 12 },
+      { name: 'FA B fixed', type: 'bar', yAxisIndex: 1, data: rows.map((r) => r.B_fijo.episodios_falsos_por_30_dias), itemStyle: { color: 'rgba(200,98,58,.25)' }, barWidth: 12 }
     ]
   }
 })
 async function runEx() {
   running.value = true
-  try { exRes.value = await s.run(() => api('/validation/run', { method: 'POST', body: ex.value }), 'Experimento terminado') } finally { running.value = false }
+  try { exRes.value = await s.run(() => api('/validation/run', { method: 'POST', body: ex.value }), 'Experiment finished') } finally { running.value = false }
 }
 </script>
 

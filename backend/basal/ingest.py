@@ -29,24 +29,24 @@ def validate(rec: dict, astro_ids: set[str], days: int) -> tuple[dict | None, st
     try:
         day = int(float(rec.get("day")))
     except (TypeError, ValueError):
-        return None, "día ausente o no numérico"
+        return None, "missing or non-numeric day"
     if not 0 <= day < days:
-        return None, f"día fuera de la misión (0–{days - 1})"
+        return None, f"day outside the mission (0–{days - 1})"
     raw = rec.get("value")
     if raw is None or str(raw).strip() == "":
-        return None, "valor ausente (la falta de dato no se interpreta como normal)"
+        return None, "missing value (missing data is never read as normal)"
     try:
         value = float(raw)
     except (TypeError, ValueError):
-        return None, f"valor no numérico: '{raw}'"
+        return None, f"non-numeric value: '{raw}'"
     if math.isnan(value) or math.isinf(value):
-        return None, "valor no numérico (NaN/inf)"
+        return None, "non-numeric value (NaN/inf)"
     unit = canonical_unit(k, rec.get("unit"))
     if unit is None:
-        return None, f"unidad '{rec.get('unit')}' no válida para {k} (se espera {INDICATORS[k]['unidad']})"
+        return None, f"unit '{rec.get('unit')}' not valid for {k} (expected {INDICATORS[k]['unidad']})"
     lo, hi = INDICATORS[k]["limits"]
     if not lo <= value <= hi:
-        return None, f"valor físicamente imposible para {k}: {value} (rango {lo}–{hi})"
+        return None, f"physically impossible value for {k}: {value} (range {lo}–{hi})"
     source = str(rec.get("source") or "manual").strip().lower()
     if source not in SOURCES:
         return None, f"origen desconocido: '{source}'"
@@ -64,7 +64,7 @@ def store(records: list[dict], overwrite: bool = True, log_ok: bool = True) -> d
         if norm:
             key = (norm["astro_id"], norm["day"], norm["indicator"])
             if key in seen:
-                norm, why = None, "duplicado dentro del mismo lote"
+                norm, why = None, "duplicate within the same batch"
             else:
                 seen.add(key)
         if norm:
@@ -80,7 +80,7 @@ def store(records: list[dict], overwrite: bool = True, log_ok: bool = True) -> d
                               (r["astro_id"], r["day"], r["indicator"])).fetchone()
             if old is not None and not overwrite:
                 duplicates += 1
-                why = "ya existe un valor para ese día (use 'sobrescribir')"
+                why = "a value already exists for that day (use 'sobrescribir' / overwrite)"
                 rejected.append({**{k: r[k] for k in ("astro_id", "day", "indicator", "value")}, "motivo": why})
                 logs.append((r["astro_id"], r["day"], r["indicator"], str(r["value"]), r["source"], "duplicado", why))
                 continue
@@ -107,7 +107,7 @@ def parse_csv(text: str, default_source: str = "csv") -> tuple[list[dict], str |
     cols = [c.strip() for c in (reader.fieldnames or [])]
     missing = [c for c in CSV_COLUMNS if c not in cols]
     if missing:
-        return [], f"faltan columnas en la cabecera: {', '.join(missing)} (esquema: {','.join(CSV_COLUMNS)}[,source])"
+        return [], f"missing header columns: {', '.join(missing)} (schema: {','.join(CSV_COLUMNS)}[,source])"
     rows = []
     for r in reader:
         r = {(k or "").strip(): (v.strip() if isinstance(v, str) else v) for k, v in r.items()}

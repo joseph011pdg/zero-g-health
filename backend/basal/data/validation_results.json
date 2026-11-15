@@ -13,7 +13,7 @@
     "astronautas_por_mision": 4,
     "dias_por_mision": 120,
     "intensidad_eventos": "uniforme 0,5–1,5",
-    "restriccion_ajuste": "episodios falsos 'actuar' <= 1.0 por 30 días-astronauta"
+    "restriccion_ajuste": "false 'Act' episodes <= 1.0 per 30 astronaut-days"
   },
   "parametros": {
     "window": 14,
@@ -31,20 +31,20 @@
       "pvt": 5.0,
       "mood": 5.5
     },
-    "origen": "ajustado con semillas 1000–1019 (20 misiones)"
+    "origen": "tuned with seeds 1000–1019 (20 missions)"
   },
   "metodos": {
-    "A_vigilar": "Individual · vigilar (amarillo o rojo)",
-    "A_actuar": "Individual · actuar (rojo)",
-    "B_fijo": "Referencia poblacional fija"
+    "A_vigilar": "Personal · Watch (Watch or Act)",
+    "A_actuar": "Personal · Act",
+    "B_fijo": "Fixed population reference"
   },
   "escenarios": {
-    "A": "Estabilidad fisiológica",
-    "B": "Fatiga progresiva",
-    "C": "Estrés fisiológico",
-    "D": "Exposición ambiental (evento solar)",
-    "E": "Cambio conductual",
-    "G": "Datos incompletos"
+    "A": "Physiological stability",
+    "B": "Progressive fatigue",
+    "C": "Physiological stress",
+    "D": "Environmental exposure (solar event)",
+    "E": "Behavioral change",
+    "G": "Incomplete data"
   },
   "ajuste": [
     {

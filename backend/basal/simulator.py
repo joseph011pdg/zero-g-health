@@ -21,25 +21,25 @@ import pandas as pd
 from .indicators import INDICATOR_KEYS
 
 CREW = [
-    {"id": "A1", "nombre": "Cmdte. Inés Rivera", "rol": "Comandante"},
-    {"id": "A2", "nombre": "Dra. Amara Okafor", "rol": "Oficial médica"},
-    {"id": "A3", "nombre": "Ing. Erik Lindqvist", "rol": "Ingeniero de vuelo"},
-    {"id": "A4", "nombre": "Esp. Kenji Tanaka", "rol": "Especialista de misión"},
+    {"id": "A1", "nombre": "Cmdr. Inés Rivera", "rol": "Commander"},
+    {"id": "A2", "nombre": "Dr. Amara Okafor", "rol": "Medical Officer"},
+    {"id": "A3", "nombre": "Eng. Erik Lindqvist", "rol": "Flight Engineer"},
+    {"id": "A4", "nombre": "Spec. Kenji Tanaka", "rol": "Mission Specialist"},
 ]
 
 SCENARIOS = {
-    "A": {"nombre": "Estabilidad fisiológica", "afecta": [], "dur": (0, 0),
-          "desc": "Sin desviaciones inyectadas: solo variación diaria normal."},
-    "B": {"nombre": "Fatiga progresiva", "afecta": ["sleep", "pvt", "mood"], "dur": (10, 16),
-          "desc": "El sueño se acorta poco a poco y aumentan los errores en la PVT."},
-    "C": {"nombre": "Estrés fisiológico", "afecta": ["rhr", "hrv"], "dur": (5, 8),
-          "desc": "Sube la FC en reposo y baja la variabilidad cardíaca (patrón de estrés o infección)."},
-    "D": {"nombre": "Exposición ambiental (evento solar)", "afecta": ["dose"], "dur": (1, 2),
-          "desc": "Un evento de partículas solares eleva la tasa de dosis durante 1–2 días."},
-    "E": {"nombre": "Cambio conductual", "afecta": ["mood", "pvt"], "dur": (25, 35),
-          "desc": "Descenso lento y persistente del ánimo con peor desempeño cognitivo."},
-    "G": {"nombre": "Datos incompletos", "afecta": [], "dur": (0, 0),
-          "desc": "Faltan mediciones y llegan registros inválidos que la ingesta debe rechazar."},
+    "A": {"nombre": "Physiological stability", "afecta": [], "dur": (0, 0),
+          "desc": "No injected deviations: normal day-to-day variation only."},
+    "B": {"nombre": "Progressive fatigue", "afecta": ["sleep", "pvt", "mood"], "dur": (10, 16),
+          "desc": "Sleep gradually shortens and PVT-B lapses increase."},
+    "C": {"nombre": "Physiological stress", "afecta": ["rhr", "hrv"], "dur": (5, 8),
+          "desc": "Resting heart rate rises and heart rate variability falls (stress or infection pattern)."},
+    "D": {"nombre": "Environmental exposure (solar event)", "afecta": ["dose"], "dur": (1, 2),
+          "desc": "A solar particle event raises the dose rate for 1–2 days."},
+    "E": {"nombre": "Behavioral change", "afecta": ["mood", "pvt"], "dur": (25, 35),
+          "desc": "Slow, persistent drop in mood with worse cognitive performance."},
+    "G": {"nombre": "Incomplete data", "afecta": [], "dur": (0, 0),
+          "desc": "Missing measurements and invalid records that ingestion must reject."},
 }
 EVENT_SCENARIOS = ["B", "C", "D", "E"]
 

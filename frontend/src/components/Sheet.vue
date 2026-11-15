@@ -3,7 +3,7 @@
     <div class="sheet" role="dialog" aria-modal="true" :aria-label="title" ref="box" tabindex="-1">
       <header class="row between">
         <h2>{{ title }}</h2>
-        <button class="btn ghost sm" @click="$emit('close')" aria-label="Cerrar"><Icon name="close" :size="16" /></button>
+        <button class="btn ghost sm" @click="$emit('close')" aria-label="Close"><Icon name="close" :size="16" /></button>
       </header>
       <slot />
     </div>

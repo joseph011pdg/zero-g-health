@@ -1,7 +1,9 @@
 # BASAL · Monitoreo de salud autónomo para astronautas
 
 Hackatón NASA Space Apps 2026 (reto: health monitoring software). **Entrega: dom 15/11/2026 23:59 (Ecuador).**
-Equipo de 2. Todo en español (código, interfaz, docs; resumen en inglés en README).
+Equipo de 2. **Interfaz, textos de la API y docs en inglés** (el jurado evalúa en inglés); copias en español `*_ES.md`.
+Identificadores internos en español (niveles `amarillo`/`rojo`, estados `pendiente`, claves JSON, nombres de archivo).
+Rutas: `/`, `/crew/:id`, `/reports`, `/lab/:tab` (simulator, validation, data, science), `/about`; las rutas antiguas en español redirigen.
 Avance y pendientes: **PROGRESS.md** (actualizar al terminar cada fase).
 
 ## Idea

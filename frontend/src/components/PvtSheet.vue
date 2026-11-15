@@ -1,36 +1,36 @@
 <template>
-  <Sheet :title="`Prueba de atención · ${astro.nombre}`" @close="close">
+  <Sheet :title="`Attention test · ${astro.nombre}`" @close="close">
     <div v-if="phase === 'idle'" class="grid">
       <div class="tabs">
-        <button :class="{ on: mode === 'pvtb_3min' }" @click="mode = 'pvtb_3min'">3 minutos</button>
+        <button :class="{ on: mode === 'pvtb_3min' }" @click="mode = 'pvtb_3min'">3 minutes</button>
         <button :class="{ on: mode === 'abreviada_60s' }" @click="mode = 'abreviada_60s'">60 s (demo)</button>
       </div>
-      <p class="small">Toque el recuadro o pulse <kbd>Espacio</kbd> en cuanto aparezca el número. No se adelante.</p>
-      <p v-if="mode === 'abreviada_60s'" class="notice warn tiny">Versión corta de demostración: no equivale a la PVT-B de 3 minutos.</p>
+      <p class="small">Tap the box or press <kbd>Space</kbd> as soon as the number appears. Do not jump the gun.</p>
+      <p v-if="mode === 'abreviada_60s'" class="notice warn tiny">Short demo version: not equivalent to the 3-minute PVT-B.</p>
     </div>
 
-    <div class="stage" :class="phase" @pointerdown.prevent="hit" role="button" tabindex="0" aria-label="Zona de respuesta">
-      <button v-if="phase === 'idle'" class="btn primary" @pointerdown.stop @click="start"><Icon name="play" :size="14" /> Empezar</button>
-      <span v-else-if="phase === 'wait'" class="muted">Espere…</span>
+    <div class="stage" :class="phase" @pointerdown.prevent="hit" role="button" tabindex="0" aria-label="Response area">
+      <button v-if="phase === 'idle'" class="btn primary" @pointerdown.stop @click="start"><Icon name="play" :size="14" /> Start</button>
+      <span v-else-if="phase === 'wait'" class="muted">Wait…</span>
       <span v-else-if="phase === 'go'" class="counter num">{{ counter }}</span>
-      <span v-else-if="phase === 'early'" class="early">Demasiado pronto</span>
+      <span v-else-if="phase === 'early'" class="early">Too early</span>
       <div v-else-if="phase === 'done'" class="result">
         <div class="cols-3">
-          <div class="kpi"><span class="v">{{ medianRt }} <small>ms</small></span><span class="tiny muted">Reacción típica</span></div>
-          <div class="kpi"><span class="v">{{ lapses }}</span><span class="tiny muted">Lentas (≥ 355 ms)</span></div>
-          <div class="kpi"><span class="v">{{ falseStarts + fastCount }}</span><span class="tiny muted">Anticipadas</span></div>
+          <div class="kpi"><span class="v">{{ medianRt }} <small>ms</small></span><span class="tiny muted">Typical reaction</span></div>
+          <div class="kpi"><span class="v">{{ lapses }}</span><span class="tiny muted">Lapses (≥ 355 ms)</span></div>
+          <div class="kpi"><span class="v">{{ falseStarts + fastCount }}</span><span class="tiny muted">False starts</span></div>
         </div>
-        <p v-if="interruptions" class="tiny c-amarillo">Se cambió de ventana {{ interruptions }} vez/veces: se guardará como inválida.</p>
+        <p v-if="interruptions" class="tiny c-amarillo">Window switched {{ interruptions }} time(s): it will be saved as invalid.</p>
       </div>
     </div>
 
     <div v-if="['wait', 'go', 'early'].includes(phase)" class="row between small muted">
-      <span>Quedan {{ remaining }} s</span>
-      <button class="btn ghost sm" @pointerdown.stop @click="cancel">Cancelar</button>
+      <span>{{ remaining }} s left</span>
+      <button class="btn ghost sm" @pointerdown.stop @click="cancel">Cancel</button>
     </div>
     <div v-if="phase === 'done'" class="row between">
-      <button class="btn" @click="phase = 'idle'">Repetir</button>
-      <button class="btn primary" @click="save" :disabled="busy">Guardar resultado</button>
+      <button class="btn" @click="phase = 'idle'">Repeat</button>
+      <button class="btn primary" @click="save" :disabled="busy">Save result</button>
     </div>
   </Sheet>
 </template>
@@ -110,7 +110,7 @@ async function save() {
     const r = await s.run(() => api(`/astronauts/${props.astro.id}/pvt`, { method: 'POST', body: {
       modo: mode.value, duracion_s: durS, rts: rts.value, anticipaciones: falseStarts.value,
       sin_respuesta: noResp.value, interrupciones: interruptions.value } }))
-    s.toast(r.valido ? `${s.publico ? 'Prueba calculada (demo pública: no se guarda)' : 'Prueba guardada'}: ${plural(r.errores, 'lapso', 'lapsos')}` : `Prueba inválida: ${r.motivo_invalido}`, r.valido ? 'ok' : 'err')
+    s.toast(r.valido ? `${s.publico ? 'Test scored (public demo: not saved)' : 'Test saved'}: ${plural(r.errores, 'lapse', 'lapses')}` : `Invalid test: ${r.motivo_invalido}`, r.valido ? 'ok' : 'err')
     await s.refresh()
     emit('saved')
     emit('close')

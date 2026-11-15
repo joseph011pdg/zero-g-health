@@ -5,25 +5,29 @@ import Lab from './views/Lab.vue'
 import Tierra from './views/Tierra.vue'
 import English from './views/English.vue'
 
-// Dos destinos en el menú (Tripulación, Laboratorio); Persona se abre desde un retrato y Tierra desde la cabecera.
+//RUTAS en inglés; las rutas antiguas en español redirigen
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: '/', component: Crew, meta: { title: 'Tripulación' } },
-    { path: '/persona/:id', component: Persona, props: true, meta: { title: 'Ficha' } },
-    { path: '/laboratorio', redirect: '/laboratorio/simulador' },
-    { path: '/laboratorio/:tab', component: Lab, props: true, meta: { title: 'Laboratorio' } },
-    { path: '/tierra', component: Tierra, meta: { title: 'Reportes' } },
-    { path: '/en', component: English, meta: { title: 'English summary' } },
-    { path: '/salud/:id', redirect: (to) => `/persona/${to.params.id}` },
+    { path: '/', component: Crew, meta: { title: 'Crew' } },
+    { path: '/crew/:id', component: Persona, props: true, meta: { title: 'Profile' } },
+    { path: '/lab', redirect: '/lab/simulator' },
+    { path: '/lab/:tab', component: Lab, props: true, meta: { title: 'Laboratory' } },
+    { path: '/reports', component: Tierra, meta: { title: 'Reports' } },
+    { path: '/about', component: English, meta: { title: 'About' } },
+    { path: '/en', redirect: '/' },
+    { path: '/persona/:id', redirect: (to) => `/crew/${to.params.id}` },
+    { path: '/salud/:id', redirect: (to) => `/crew/${to.params.id}` },
+    { path: '/tierra', redirect: '/reports' },
+    { path: '/laboratorio/:tab?', redirect: (to) => `/lab/${{ validacion: 'validation', datos: 'data', ciencia: 'science' }[to.params.tab] || 'simulator'}` },
     { path: '/:pathMatch(.*)*', redirect: '/' }
   ],
   scrollBehavior: (to) => (to.hash ? { el: to.hash, top: 110, behavior: 'smooth' } : { top: 0 })
 })
 
-// Título de pestaña por vista ("BASAL · Alarmas")
+//TÍTULO de pestaña por vista ("BASAL · Alerts")
 router.afterEach((to) => {
-  const t = to.path === '/' && to.hash === '#alarmas' ? 'Alarmas' : to.meta.title
+  const t = to.path === '/' && to.hash === '#alerts' ? 'Alerts' : to.meta.title
   document.title = t ? `BASAL · ${t}` : 'BASAL'
 })
 

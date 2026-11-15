@@ -1,58 +1,69 @@
-# Guion de demostración (≈ 3 minutos)
+# Demo script (≈ 3 minutes)
 
-**Preparación (antes de presentar)**
-1. `.\scripts\start.ps1 -Reset` → se abre `http://127.0.0.1:8000` con la misión demo en el día 40 (demo pública: https://basal-pxyn.onrender.com,
-   abrirla 5 minutos antes para que el servidor gratuito despierte).
-2. Desactivar el wifi (para mostrar que funciona sin Internet). Pantalla completa del navegador (F11).
-3. Tener abierta la pantalla Tripulación. El botón **Demo guiada** de la portada ejecuta cada paso de verdad.
-   Los botones "Ver fatiga (B)", "Ver estrés (C)" y "Ver evento solar (D)" saltan al día de cada escenario.
+Spanish version: `DEMO_SCRIPT_ES.md`.
 
-> Los tiempos son orientativos. Si el tiempo oficial es menor, saltar los bloques marcados *(opcional)*.
+**Preparation (before presenting)**
+1. `.\scripts\start.ps1 -Reset` → opens `http://127.0.0.1:8000` with the demo mission on day 40 (public demo:
+   https://basal-pxyn.onrender.com — open it 5 minutes before so the free server wakes up).
+2. Turn off Wi-Fi (to show that the local version works without Internet). Full-screen browser (F11).
+3. Keep the Crew screen open. The **Guided demo** button on the home page performs each step for real.
+   The "See fatigue (B)", "See stress (C)" and "See solar event (D)" buttons jump to the day of each scenario.
 
----
-
-**0:00 – 0:25 · Problema**
-"En camino a Marte, un mensaje a la Tierra tarda hasta 20 minutos en llegar, y a veces no llega. Los astronautas
-cambian de forma gradual —sueño, corazón, atención, ánimo— y cada persona es distinta. Un umbral igual para todos
-puede no ver un cambio importante en alguien cuyo valor normal es bajo… o alarmar a quien siempre está alto."
-
-**0:25 – 0:45 · Propuesta** — *Tripulación (paso 1 de la demo guiada)*
-"BASAL compara a cada astronauta **consigo mismo**. Aprende su línea base de 14 días y avisa cuando deja de comportarse
-como de costumbre. Aquí: cuatro tripulantes ficticios, seis indicadores, todo calculado en este portátil, sin red."
-
-**0:45 – 1:30 · Demostración** — *Pasos 2 a 4 (Cmdte. Rivera)*
-- Día 40: "Todo dentro de lo habitual. Cada indicador muestra su valor y 'su normal'; la gráfica compara su umbral personal con el poblacional."
-- Día 54: "El simulador inyectó una fatiga progresiva desde el día 44. BASAL dispara **Actuar: fatiga**. La alerta dice en una frase qué pasa y qué hacer; en "¿Por qué?" responde: qué cambió (sueño 6 h frente a 6,8 h habituales y más lapsos en la PVT-B), cuánto (z = 3 y
-  5,5), cómo se detectó (fórmula con sus números), qué hacer (posponer tareas críticas, descansar, repetir la prueba,
-  avisar al oficial médico) y con qué fuente y nivel de evidencia."
-
-**1:30 – 1:50 · Donde el umbral fijo no ve** — *Paso 5 (Ing. Lindqvist, día 72)*
-"Su FC en reposo subió de 53 a 60 lpm y su variabilidad bajó. Para un umbral poblacional, 60 es normal. Para él no:
-z = 4,7. BASAL lo marca; el umbral fijo, no."
-
-**1:50 – 2:15 · Sin Tierra** — *Pasos 6 a 8*
-- Día 97 (o el botón **Simular apagón** de la portada en cualquier día): "Apagón de comunicaciones. El sistema sigue
-  monitoreando y mostrando alarmas; los reportes quedan en cola."
-- Cambiar al rol **Oficial médico**: "Las alarmas se ordenan por prioridad. Reconozco el episodio de Lindqvist y queda registrado quién y cuándo; si una roja lleva dos días sin reconocer, se escala a la oficial médica. Una alerta sigue abierta aunque hoy los valores hayan vuelto a su normal. Las amarillas se agrupan para evitar la fatiga de alarmas."
-- "Generamos el reporte para la Tierra: queda **en cola**. *(opcional: avanzar al día 105 y pulsar "Enviar cola" — envío simulado)*."
-
-**2:15 – 2:45 · Ciencia** — *Paso 9 (Validation Lab)*
-"¿Cómo sabemos que funciona? Ajustamos los cortes con 20 misiones simuladas y evaluamos con **otras 40**. El nivel
-*actuar* detectó el 98,9 % de los eventos con 0,8 falsas alarmas cada 30 días; el umbral fijo, el 88,9 % con 1,9.
-Pero somos honestos: en cambios lentos o grandes **el umbral fijo avisa antes**, y si las personas se parecen mucho
-entre sí, la personalización no aporta. Esta gráfica muestra exactamente **en qué condiciones** gana cada método."
-
-**2:45 – 3:00 · Impacto y cierre**
-"Lo mismo sirve en la Antártida, en submarinos o en comunidades andinas y amazónicas sin médico. BASAL no
-diagnostica: le dice a cada persona, en su idioma, qué cambió en *su* cuerpo y qué seguimiento hacer, cuando la Tierra
-está demasiado lejos."
+> Times are approximate. If the official time is shorter, skip the blocks marked *(optional)*.
 
 ---
 
-**Nota honesta sobre el día 32** (si alguien revisa el historial de Tanaka): la alarma "actuar" del día 32 no
-corresponde a ningún evento inyectado; es un falso positivo real del detector. Por eso la demo arranca en el día 40,
-fuera de la ventana de 7 días de la portada, y si preguntan se usa para explicar la tasa medida: 0,78 falsas alarmas
-por 30 días-astronauta en el nivel "actuar".
+**0:00 – 0:25 · Problem**
+"On the way to Mars, a message to Earth takes up to 20 minutes to arrive, and sometimes it does not arrive at all.
+Astronauts change gradually — sleep, heart, attention, mood — and every person is different. One threshold for
+everyone can miss an important change in someone whose usual value is low… or alarm someone who is always high."
 
-**Si algo falla**: si la interfaz muestra "Motor local no disponible", volver a ejecutar `.\scripts\start.ps1`. Si los
-datos se movieron, `.\scripts\start.ps1 -Reset` restablece exactamente el mismo escenario (semilla 7).
+**0:25 – 0:45 · Proposal** — *Crew (guided demo step 1)*
+"BASAL compares each astronaut **with themselves**. It learns their 14-day baseline and alerts when they stop behaving
+as usual. Here: four fictional crew members, six indicators, all computed on this laptop, with no network."
+
+**0:45 – 1:30 · Demo** — *Steps 2 to 4 (Cmdr. Rivera)*
+- Day 40: "Everything within the usual range. Each indicator shows its value and 'their usual'; the chart compares
+  the personal range with the population threshold."
+- Day 54: "The simulator injected progressive fatigue from day 44. BASAL fires **Act: fatigue**. The alert says in one
+  sentence what is going on and what to do; under 'Why?' it answers: what changed (sleep 6 h vs. their usual 6.8 h and
+  more PVT-B lapses), by how much (z = 3 and 5.5), how it was detected (the formula with its numbers), what to do
+  (postpone critical tasks, rest, repeat the test, notify the Medical Officer) and which source and level of evidence
+  supports it."
+
+**1:30 – 1:50 · Where the fixed threshold is blind** — *Step 5 (Eng. Lindqvist, day 72)*
+"His resting heart rate rose from 53 to 60 bpm and his variability fell. For a population threshold, 60 is normal.
+For him it is not: z = 4.7. BASAL flags it; the fixed threshold does not."
+
+**1:50 – 2:15 · Without Earth** — *Steps 6 to 8*
+- Day 97 (or the **Simulate blackout** button on the home page, on any day): "Communication blackout. The system keeps
+  monitoring and showing alerts; reports stay queued."
+- Switch to the **Medical Officer** role: "Alerts are sorted by priority — *Act* means notify the Medical Officer,
+  *Watch* means repeat the measurement. I acknowledge Lindqvist's episode and it records who and when, with a note;
+  if an Act alert stays unacknowledged for two days it is escalated. An alert stays open even if today's values are
+  back to normal. Watch notices are sorted by z and the rest are grouped, to avoid alarm fatigue."
+- "We generate the report for Earth: it stays **queued**. *(optional: move to day 105 and press 'Send queue' —
+  simulated transmission)*."
+
+**2:15 – 2:45 · Science** — *Step 9 (Validation lab)*
+"How do we know it works? We tuned the cutoffs on 20 simulated missions and evaluated on **40 different ones**. The
+*Act* level detected 98.9% of events with 0.78 false alarms per 30 astronaut-days; the fixed threshold, 88.9% with
+1.87. But we are honest: on slow or large changes **the fixed threshold alerts earlier**, and if people are very
+similar to each other, personalization adds nothing. This chart shows exactly **under which conditions** each method
+wins."
+
+**2:45 – 3:00 · Impact and close**
+"The same applies to Antarctica, submarines or Andean and Amazonian communities without a doctor. BASAL does not
+diagnose: it tells each person, in plain words, what changed in *their* body and what follow-up to do, when Earth is
+too far away."
+
+---
+
+**Honest note about day 32** (if someone checks Tanaka's history): Spec. Kenji Tanaka's (A4) **Act** alert on day 32
+(PVT lapses, z = 4.5) does not match any injected event — his first event, a behavioral change, starts on day 52. It
+is a genuine false positive of the detector. That is why the demo starts on day 40, outside the 7-day window of the
+home page; if asked, use it to explain the measured rate: 0.78 false alarms per 30 astronaut-days at the Act level.
+
+**If something fails**: if the interface says "The local engine is not responding", run `.\scripts\start.ps1` again.
+If the data moved, `.\scripts\start.ps1 -Reset` restores exactly the same scenario (seed 7). In the public demo, use
+"Reset demo".

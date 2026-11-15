@@ -2,35 +2,35 @@
   <div class="page">
     <section class="opening">
       <div class="lead">
-        <h1 v-if="highPending"><span class="hl">{{ highPending === 1 ? '1 alarma requiere' : `${highPending} alarmas requieren` }}</span> atención.</h1>
-        <h1 v-else-if="lowPending">Sin alarmas urgentes; <span class="hl">{{ plural(lowPending, 'aviso', 'avisos') }}</span> para vigilar.</h1>
-        <h1 v-else-if="needAction.length || watch.length">Alarmas al día; <span class="hl">{{ needAction.length + watch.length }} de {{ s.crew.length }}</span> en seguimiento.</h1>
-        <h1 v-else>Toda la tripulación <span class="hl">dentro de lo habitual</span>.</h1>
+        <h1 v-if="highPending"><span class="hl">{{ highPending === 1 ? '1 alert needs' : `${highPending} alerts need` }}</span> attention.</h1>
+        <h1 v-else-if="lowPending">No urgent alerts; <span class="hl">{{ plural(lowPending, 'notice', 'notices') }}</span> to watch.</h1>
+        <h1 v-else-if="needAction.length || watch.length">Alerts up to date; <span class="hl">{{ needAction.length + watch.length }} of {{ s.crew.length }}</span> being followed.</h1>
+        <h1 v-else>The whole crew is <span class="hl">within their usual range</span>.</h1>
 
         <dl class="pitch">
-          <div><dt>Problema</dt><dd>Hacia Marte un mensaje tarda hasta 20 min por sentido y hay apagones: la Tierra no puede vigilar la salud en tiempo real.</dd></div>
-          <div><dt>Solución</dt><dd>BASAL compara a cada astronauta con su propia línea base y avisa a bordo, sin Internet, con una explicación y una acción segura.</dd></div>
-          <div><dt>Prueba</dt><dd>En simulación detecta el <b>98,9 %</b> de los eventos con <b>0,78</b> falsas alarmas por 30 días-astronauta (umbral fijo: 88,9 % y 1,87). <router-link to="/laboratorio/validacion">Ver validación</router-link> · <i>datos simulados</i></dd></div>
+          <div><dt>Problem</dt><dd>On the way to Mars a message takes up to 20 min each way and there are blackouts: Earth cannot watch crew health in real time.</dd></div>
+          <div><dt>Solution</dt><dd>BASAL compares each astronaut with their own baseline and alerts on board, without Internet, with an explanation and a safe follow-up.</dd></div>
+          <div><dt>Evidence</dt><dd>In simulation it detects <b>98.9%</b> of events with <b>0.78</b> false alarms per 30 astronaut-days (fixed threshold: 88.9% and 1.87). <router-link to="/lab/validation">See validation</router-link> · <i>simulated data</i></dd></div>
         </dl>
 
         <div class="actions">
-          <button class="ab main" @click="goAlarms"><span><Icon name="bell" :size="16" />Revisar alarmas</span><span class="k num">{{ highPending }}</span></button>
-          <router-link class="ab" :to="`/persona/${s.selected}?accion=checkin`"><span><Icon name="smile" :size="16" />Check-in</span><span class="k">{{ short(selName) }}</span></router-link>
-          <router-link class="ab" :to="`/persona/${s.selected}?accion=pvt`"><span><Icon name="target" :size="16" />Prueba PVT</span><span class="k">3 min</span></router-link>
-          <router-link class="ab" to="/tierra"><span><Icon name="send" :size="16" />Enviar reporte</span><span class="k num">{{ s.pendingReports }} en cola</span></router-link>
+          <button class="ab main" @click="goAlarms"><span><Icon name="bell" :size="16" />Review alerts</span><span class="k num">{{ highPending }}</span></button>
+          <router-link class="ab" :to="`/crew/${s.selected}?action=checkin`"><span><Icon name="smile" :size="16" />Check-in</span><span class="k">{{ short(selName) }}</span></router-link>
+          <router-link class="ab" :to="`/crew/${s.selected}?action=pvt`"><span><Icon name="target" :size="16" />PVT test</span><span class="k">3 min</span></router-link>
+          <router-link class="ab" to="/reports"><span><Icon name="send" :size="16" />Send report</span><span class="k num">{{ s.pendingReports }} queued</span></router-link>
         </div>
 
-        <div class="tryit" role="group" aria-label="Probar la demo">
-          <button class="tb main" @click="s.demo = true"><Icon name="compass" :size="15" />Demo guiada</button>
+        <div class="tryit" role="group" aria-label="Try the demo">
+          <button class="tb main" @click="s.demo = true"><Icon name="compass" :size="15" />Guided demo</button>
           <button class="tb" :aria-pressed="s.apagon" @click="toggleApagon">
-            <Icon :name="s.apagon ? 'satellite' : 'signalOff'" :size="15" />{{ s.apagon ? 'Restablecer enlace' : 'Simular apagón' }}</button>
+            <Icon :name="s.apagon ? 'satellite' : 'signalOff'" :size="15" />{{ s.apagon ? 'Restore link' : 'Simulate blackout' }}</button>
           <button v-for="sc in SCEN" :key="sc.k" class="tb" @click="goScen(sc)">{{ sc.l }}</button>
         </div>
 
         <div class="byline">
-          <span><Icon name="satellite" :size="14" />{{ link.apagon ? 'Sin enlace con la Tierra' : `Mensajes a la Tierra: ${fmt(link.retraso_min, 1)} min` }}</span>
+          <span><Icon name="satellite" :size="14" />{{ link.apagon ? 'No link with Earth' : `Messages to Earth: ${fmt(link.retraso_min, 1)} min` }}</span>
           <span v-if="blackoutText"><Icon name="signalOff" :size="14" />{{ blackoutText }}</span>
-          <span v-if="s.updatedAt"><Icon name="clock" :size="14" />Actualizado {{ hhmm(s.updatedAt) }}</span>
+          <span v-if="s.updatedAt"><Icon name="clock" :size="14" />Updated {{ hhmm(s.updatedAt) }}</span>
         </div>
       </div>
 
@@ -41,11 +41,11 @@
                autoplay muted playsinline preload="auto" @timeupdate="softLoop" aria-hidden="true"></video>
         <img v-else class="hero-video" src="/img/portada-poster.jpg" alt="" />
         <div class="txt">
-          <h2>Monitoreo de salud de la tripulación</h2>
-          <p>Cada astronauta comparado con su propia línea base. Alertas explicadas y seguimiento sin depender de la Tierra.</p>
+          <h2>Crew health monitoring</h2>
+          <p>Each astronaut compared with their own baseline. Explained alerts and follow-up without depending on Earth.</p>
           <div class="hbtns">
-            <button class="hb p" @click="goAlarms">Revisar alarmas</button>
-            <router-link class="hb" to="/tierra">Generar reporte</router-link>
+            <button class="hb p" @click="goAlarms">Review alerts</button>
+            <router-link class="hb" to="/reports">Generate report</router-link>
           </div>
         </div>
       </div>
@@ -54,80 +54,81 @@
     <MissionStrip />
 
     <section aria-labelledby="t-crew">
-      <div class="sec-h"><h2 id="t-crew">Tripulación</h2><router-link class="go" :to="`/persona/${s.selected}`">Ver los seis indicadores →</router-link></div>
-      <router-link v-for="(p, i) in rows" :key="p.a.id" :to="`/persona/${p.a.id}`" class="person" @click="s.select(p.a.id)">
+      <div class="sec-h"><h2 id="t-crew">Crew</h2><router-link class="go" :to="`/crew/${s.selected}`">See all six indicators →</router-link></div>
+      <router-link v-for="(p, i) in rows" :key="p.a.id" :to="`/crew/${p.a.id}`" class="person" @click="s.select(p.a.id)">
         <div class="who">
           <b>{{ p.a.nombre }}</b><small>{{ p.a.rol }}</small>
           <LevelBadge :level="p.a.nivel" class="st" />
-          <span class="dots" aria-label="Seis indicadores">
+          <span class="dots" aria-label="Six indicators">
             <i v-for="(v, k) in p.a.indicadores" :key="k" :class="'d-' + v.nivel" :title="`${s.indicators[k].corto}: ${LEVEL[v.nivel].label}`"></i>
           </span>
           <span v-if="openOf(p.a.id)" class="openep">{{ openOf(p.a.id) }}</span>
         </div>
         <div class="reading" :class="'n-' + p.a.nivel">
           <span class="v num">{{ fmt(p.v.valor, s.indicators[p.k].decimales) }}</span> <span class="u">{{ s.indicators[p.k].unidad }}</span>
-          <span class="d num">Su normal {{ fmt(p.v.linea_base, s.indicators[p.k].decimales) }}<template v-if="p.v.diferencia !== null"> · {{ signed(p.v.diferencia, s.indicators[p.k].decimales) }}</template></span>
+          <span class="d num">Their usual {{ fmt(p.v.linea_base, s.indicators[p.k].decimales) }}<template v-if="p.v.diferencia !== null"> · {{ signed(p.v.diferencia, s.indicators[p.k].decimales) }}</template></span>
         </div>
         <figure>
           <TrendChart v-if="series[p.a.id]" :data="series[p.a.id][p.k]" :unidad="s.indicators[p.k].unidad" :nombre="s.indicators[p.k].corto"
                       :decimales="s.indicators[p.k].decimales" :show-fixed="false" :height="74" compact />
           <div v-else class="skeleton" style="min-height: 74px" />
-          <figcaption><b>Fig. {{ i + 1 }}</b> {{ s.indicators[p.k].corto }} · 14 días</figcaption>
+          <figcaption><b>Fig. {{ i + 1 }}</b> {{ s.indicators[p.k].corto }} · 14 days</figcaption>
         </figure>
       </router-link>
     </section>
 
     <section class="two">
-      <div id="alarmas">
-        <div class="sec-h"><h2>Alarmas</h2></div>
+      <div id="alerts">
+        <div class="sec-h"><h2>Alerts</h2></div>
+        <p class="legend"><span class="pr">ACT</span> notify the Medical Officer · <span class="pw">WATCH</span> repeat the measurement</p>
         <div v-if="loading" class="skeleton" style="min-height: 80px" />
-        <p v-else-if="!high.length && !low.length" class="empty"><Icon name="check" :size="15" class="c-verde" /> Sin alarmas en los últimos 7 días.</p>
+        <p v-else-if="!high.length && !low.length" class="empty"><Icon name="check" :size="15" class="c-verde" /> No alerts in the last 7 days.</p>
         <template v-else>
           <div v-for="g in high" :key="g.key" class="find" :class="{ done: g.rep.estado !== 'pendiente' }">
             <div class="ftxt">
-              <h3><span class="pr">ALTA</span>{{ short(crewName(g.rep.astro_id)) }}: {{ g.rep.titulo }}</h3>
+              <h3><span class="pr">ACT</span>{{ short(crewName(g.rep.astro_id)) }}: {{ g.rep.titulo }}</h3>
               <span class="fact">{{ factText(g.rep) }}</span>
               <span class="meta" :class="metaClass(g)">{{ statusText(g) }}</span>
             </div>
             <div v-if="s.isOfficer" class="facts">
               <template v-if="g.rep.estado === 'pendiente'">
-                <button class="act-p" @click="act(g.rep, 'reconocida')"><Icon name="check" :size="14" />Reconocer</button>
-                <button class="act-l" @click="act(g.rep, 'pospuesta')">Posponer 24 h</button>
+                <button class="act-p" @click="act(g.rep, 'reconocida')"><Icon name="check" :size="14" />Acknowledge</button>
+                <button class="act-l" @click="act(g.rep, 'pospuesta')">Snooze 24 h</button>
               </template>
-              <router-link v-else class="act-l" :to="`/persona/${g.rep.astro_id}`">Ver ficha</router-link>
+              <router-link v-else class="act-l" :to="`/crew/${g.rep.astro_id}`">View profile</router-link>
             </div>
           </div>
-          <div v-if="low.length" class="watchrow">
-            <button class="act-l" @click="showLow = !showLow" :aria-expanded="showLow">{{ plural(lowPending, 'aviso', 'avisos') }} para vigilar{{ low.length > lowPending ? ` (${low.length - lowPending} ya revisados)` : '' }} {{ showLow ? '↑' : '→' }}</button>
-          </div>
-          <div v-if="showLow" class="lowlist">
-            <router-link v-for="g in low" :key="g.key" :to="`/persona/${g.rep.astro_id}`" class="lowitem">
-              <span class="pw">VIGILAR</span><span>{{ short(crewName(g.rep.astro_id)) }}: {{ g.rep.titulo }}</span><span class="muted small">{{ factText(g.rep) }} · {{ STATE_LABEL[g.rep.estado] }}</span>
+          <div v-if="low.length" class="lowlist">
+            <router-link v-for="g in lowShown" :key="g.key" :to="`/crew/${g.rep.astro_id}`" class="lowitem">
+              <span class="pw">WATCH</span><span>{{ short(crewName(g.rep.astro_id)) }}: {{ g.rep.titulo }}</span><span class="muted small">{{ factText(g.rep) }} · {{ STATE_LABEL[g.rep.estado] }}</span>
             </router-link>
+          </div>
+          <div v-if="lowSorted.length > LOW_TOP" class="watchrow">
+            <button class="act-l" @click="showLow = !showLow" :aria-expanded="showLow">{{ showLow ? 'Show fewer' : plural(lowSorted.length - LOW_TOP, 'more notice', 'more notices') }} {{ showLow ? '↑' : '→' }}</button>
           </div>
         </template>
       </div>
       <div>
-        <div class="sec-h"><h2>Enlace con la Tierra</h2><router-link class="go" to="/tierra">Reportes →</router-link></div>
+        <div class="sec-h"><h2>Link with Earth</h2><router-link class="go" to="/reports">Reports →</router-link></div>
         <table class="kv">
           <tbody>
-            <tr><th scope="row">Retraso por mensaje</th><td class="num">{{ link.apagon ? 'sin enlace' : `${fmt(link.retraso_min, 1)} min` }}</td></tr>
-            <tr><th scope="row">{{ link.apagon ? 'Enlace vuelve' : 'Próximo apagón' }}</th><td class="num">{{ blackoutCell }}</td></tr>
-            <tr><th scope="row">Reportes en cola</th><td class="num">{{ s.pendingReports }}</td></tr>
-            <tr><th scope="row">Último envío</th><td class="num">{{ lastSent }}</td></tr>
+            <tr><th scope="row">Delay per message</th><td class="num">{{ link.apagon ? 'no link' : `${fmt(link.retraso_min, 1)} min` }}</td></tr>
+            <tr><th scope="row">{{ link.apagon ? 'Link returns' : 'Next blackout' }}</th><td class="num">{{ blackoutCell }}</td></tr>
+            <tr><th scope="row">Reports queued</th><td class="num">{{ s.pendingReports }}</td></tr>
+            <tr><th scope="row">Last sent</th><td class="num">{{ lastSent }}</td></tr>
           </tbody>
         </table>
       </div>
     </section>
 
-    <footer class="colophon"><span>Datos simulados · prototipo educativo, no es un dispositivo médico</span><span>Funciona a bordo, sin conexión · <router-link to="/en" lang="en">English summary</router-link></span></footer>
+    <footer class="colophon"><span>Simulated data · educational prototype, not a medical device</span><span>Runs on board with no Internet (local version) · <router-link to="/about">About BASAL</router-link></span></footer>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, watch as vwatch } from 'vue'
 import { useRouter } from 'vue-router'
-import { api, useStore, fmt, signed, plural, episodes, STATE_LABEL, RANK_LEVEL, LEVEL } from '../store.js'
+import { api, useStore, fmt, signed, plural, episodes, STATE_LABEL, RANK_LEVEL, LEVEL, LOCALE } from '../store.js'
 import Icon from '../components/Icon.vue'
 import LevelBadge from '../components/LevelBadge.vue'
 import TrendChart from '../components/TrendChart.vue'
@@ -185,22 +186,22 @@ const rows = computed(() => s.crew.map((a) => {
 const blackoutText = computed(() => {
   const [a, b] = s.mission.apagon
   if (a === null || a === undefined) return ''
-  if (link.value.simulado) return 'Apagón simulado: los reportes esperan en cola'
-  if (link.value.apagon) return `Enlace vuelve en ${plural(b - s.day + 1, 'día', 'días')}`
-  if (s.day < a) return `Apagón en ${plural(a - s.day, 'día', 'días')}`
+  if (link.value.simulado) return 'Simulated blackout: reports wait in the queue'
+  if (link.value.apagon) return `Link returns in ${plural(b - s.day + 1, 'day', 'days')}`
+  if (s.day < a) return `Blackout in ${plural(a - s.day, 'day', 'days')}`
   return ''
 })
 const blackoutCell = computed(() => {
   const [a, b] = s.mission.apagon
   if (a === null || a === undefined) return '—'
-  if (link.value.simulado) return 'al desactivar el apagón simulado'
-  if (link.value.apagon) return `día ${b + 1} · en ${plural(b - s.day + 1, 'día', 'días')}`
-  if (s.day < a) return `día ${a} · en ${plural(a - s.day, 'día', 'días')}`
-  return 'superado'
+  if (link.value.simulado) return 'when the simulated blackout is turned off'
+  if (link.value.apagon) return `day ${b + 1} · in ${plural(b - s.day + 1, 'day', 'days')}`
+  if (s.day < a) return `day ${a} · in ${plural(a - s.day, 'day', 'days')}`
+  return 'passed'
 })
 const lastSent = computed(() => {
   const d = reports.value.map((r) => r.dia_envio).filter((x) => x !== null && x !== undefined)
-  return d.length ? `día ${Math.max(...d)}` : '—'
+  return d.length ? `day ${Math.max(...d)}` : '—'
 })
 
 // Episodios de alarma (misma persona, tipo y nivel en días consecutivos); en la demo pública
@@ -210,29 +211,34 @@ const high = computed(() => groups.value.filter((g) => g.rep.nivel === 'rojo'))
 const low = computed(() => groups.value.filter((g) => g.rep.nivel === 'amarillo'))
 const highPending = computed(() => high.value.filter((g) => g.rep.estado === 'pendiente').length)
 const lowPending = computed(() => low.value.filter((g) => g.rep.estado === 'pendiente').length)
+//AVISOS: pendientes y de mayor z primero; el resto se agrupa
+const LOW_TOP = 2
+const maxZ = (a) => Math.max(...(a.cuanto || []).map((c) => Math.abs(c.z ?? 0)), 0)
+const lowSorted = computed(() => [...low.value].sort((x, y) => (x.rep.estado === 'pendiente' ? 0 : 1) - (y.rep.estado === 'pendiente' ? 0 : 1) || maxZ(y.rep) - maxZ(x.rep)))
+const lowShown = computed(() => (showLow.value ? lowSorted.value : lowSorted.value.slice(0, LOW_TOP)))
 
 function statusText(g) {
   const a = g.rep
   if (a.estado === 'pendiente') {
     const d = s.day - g.since
-    return d >= 2 ? `${d} días sin reconocer · se escala a la oficial médica` : `Sin reconocer desde el día ${g.since}`
+    return d >= 2 ? `${d} days unacknowledged · escalate` : `Unacknowledged since day ${g.since}`
   }
-  if (a.estado === 'pospuesta') return `Pospuesta hasta el día ${a.revisado_dia + 1}`
-  return `${STATE_LABEL[a.estado]}${a.revisor ? ` por ${a.revisor}` : ''}${a.revisado_dia != null ? ` · día ${a.revisado_dia}` : ''}`
+  if (a.estado === 'pospuesta') return `Snoozed until day ${a.revisado_dia + 1}`
+  return `${STATE_LABEL[a.estado]}${a.revisor ? ` by ${a.revisor}` : ''}${a.revisado_dia != null ? ` · day ${a.revisado_dia}` : ''}`
 }
 const metaClass = (g) => (g.rep.estado === 'pendiente' ? 'pend' : g.rep.estado === 'pospuesta' ? 'muted' : 'ok')
 async function act(a, estado) {
-  const nota = estado === 'reconocida' ? window.prompt('Nota para el registro (opcional):', '') : null
+  const nota = estado === 'reconocida' ? window.prompt('Note for the log (optional):', '') : null
   if (nota === null && estado === 'reconocida') return // cancelado
   await s.run(() => s.review(a, estado, nota),
-    `${estado === 'reconocida' ? 'Alarma reconocida' : 'Alarma pospuesta 24 h'}${s.publico ? ' (solo en este navegador)' : ''}`)
+    `${estado === 'reconocida' ? 'Alert acknowledged' : 'Alert snoozed 24 h'}${s.publico ? ' (only in this browser)' : ''}`)
   if (!s.publico) await load()
 }
 // Qué indicador y cuánto: "Lapsos PVT: 5 lapsos frente a su normal de 1 (z = 4,8)"
 function factText(a) {
   return (a.cuanto || []).map((c) => {
     const d = s.indicators[c.indicador]?.decimales ?? 1
-    return `${s.indicators[c.indicador]?.corto || c.nombre}: ${fmt(c.valor, d)} ${c.unidad} frente a su normal de ${fmt(c.linea_base, d)} (z = ${fmt(c.z, 1)})`
+    return `${s.indicators[c.indicador]?.corto || c.nombre}: ${fmt(c.valor, d)} ${c.unidad} vs. their usual ${fmt(c.linea_base, d)} (z = ${fmt(c.z, 1)})`
   }).join(' · ')
 }
 // Episodio de alarma abierto aunque hoy los valores hayan vuelto a su normal
@@ -240,29 +246,29 @@ function openOf(id) {
   const g = groups.value.find((x) => x.astro_id === id && x.rep.estado === 'pendiente' && x.rep.nivel === 'rojo' && x.rep.day < s.day)
   if (!g) return ''
   const a = s.crew.find((x) => x.id === id)
-  return `${a?.nivel === 'verde' ? 'Hoy: normal · ' : ''}Alerta del día ${g.rep.day} sigue abierta (sin reconocer hace ${plural(s.day - g.rep.day, 'día', 'días')})`
+  return `${a?.nivel === 'verde' ? 'Today: normal · ' : ''}Alert from day ${g.rep.day} still open (unacknowledged for ${plural(s.day - g.rep.day, 'day', 'days')})`
 }
 const SCEN = [
-  { k: 'B', l: 'Ver fatiga (B)', day: 54, id: 'A1' },
-  { k: 'C', l: 'Ver estrés (C)', day: 72, id: 'A3' },
-  { k: 'D', l: 'Ver evento solar (D)', day: 87, id: null }
+  { k: 'B', l: 'See fatigue (B)', day: 54, id: 'A1' },
+  { k: 'C', l: 'See stress (C)', day: 72, id: 'A3' },
+  { k: 'D', l: 'See solar event (D)', day: 87, id: null }
 ]
 async function goScen(sc) {
   await s.run(() => s.setDay(sc.day))
-  if (sc.id) { s.select(sc.id); router.push(`/persona/${sc.id}`) }
+  if (sc.id) { s.select(sc.id); router.push(`/crew/${sc.id}`) }
 }
 function toggleApagon() {
   const on = !s.apagon
-  s.run(() => s.setApagon(on), on ? 'Apagón simulado: los datos y alarmas siguen; los reportes quedan en cola' : 'Enlace restablecido')
+  s.run(() => s.setApagon(on), on ? 'Simulated blackout: data and alerts keep working; reports stay queued' : 'Link restored')
 }
 function goAlarms() {
   if (!s.isOfficer) s.setRole('oficial')
-  router.push({ path: '/', hash: '#alarmas' })
-  document.getElementById('alarmas')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  router.push({ path: '/', hash: '#alerts' })
+  document.getElementById('alerts')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }
 const crewName = (id) => s.crew.find((a) => a.id === id)?.nombre || id
 const short = (n) => (n || '').replace(/^[^ ]+\. /, '').split(' ').slice(-1)[0]
-const hhmm = (d) => d.toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' })
+const hhmm = (d) => d.toLocaleTimeString(LOCALE, { hour: '2-digit', minute: '2-digit' })
 </script>
 
 <style scoped>
@@ -339,6 +345,8 @@ figure { margin: 0; }
 .dots i.d-sin_dato, .dots i.d-calibrando { background: transparent; border: 1.5px solid var(--muted); }
 .openep { display: block; margin-top: 6px; font-size: 0.78rem; font-weight: 600; color: var(--red); line-height: 1.35; }
 .fact { display: block; margin-top: 4px; font-size: 0.84rem; color: var(--text-2); }
+.legend { font-size: 0.8rem; color: var(--text-2); margin: 0 0 4px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.legend .pr { margin-right: 0; vertical-align: 0; }
 .colophon { border-top: 1px solid var(--ink); padding-top: 12px; font-size: 0.8rem; color: var(--muted); display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
 
 @media (max-width: 1000px) {

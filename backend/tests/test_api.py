@@ -53,7 +53,7 @@ def test_alerts_are_explainable_and_reviewable(fresh):
     c = al["cuanto"][0]
     assert c["linea_base"] is not None and c["z"] is not None
     if al["nivel"] == "rojo":
-        assert any("oficial médico" in x for x in al["acciones"])
+        assert any("Medical Officer" in x for x in al["acciones"])
     r = fresh.patch(f"/api/alerts/{al['id']}", json={"estado": "revisada", "nota": "Descanso extra"}).json()
     assert r["estado"] == "revisada"
     again = fresh.get("/api/astronauts/A1").json()["alertas"]
@@ -92,7 +92,7 @@ def test_radiation_cumulative_separate_from_rate(fresh):
     fresh.post("/api/mission/day", json={"day": 90})
     r = fresh.get("/api/astronauts/A1").json()["radiacion"]
     assert r["acumulada_medida_mgy"] > r["presupuesto_escenario_mgy"] * 0.8
-    assert "No es un límite" in r["supuesto"]
+    assert "Not a NASA exposure limit" in r["supuesto"]
 
 
 def test_create_astronaut_and_scenario(fresh):

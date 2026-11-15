@@ -23,8 +23,8 @@ from .config import VALIDATION_PATH
 from .indicators import INDICATORS
 from .simulator import EVENT_SCENARIOS, SCENARIOS
 
-app = FastAPI(title="BASAL · Monitoreo de salud autónomo", version="2.0",
-              description="Prototipo educativo con datos sintéticos. No es un dispositivo médico.")
+app = FastAPI(title="BASAL · Autonomous crew health monitoring", version="2.0",
+              description="Educational prototype with simulated data. Not a medical device.")
 app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
                    allow_methods=["*"], allow_headers=["*"])
 
@@ -54,35 +54,35 @@ PUBLIC = os.environ.get("BASAL_PUBLIC", "0") == "1"
 
 def _forbid_in_public(what: str):
     if PUBLIC:
-        raise HTTPException(403, f"{what} está deshabilitado en la demo pública en línea. "
-                                 "Ejecute BASAL localmente (.\\scripts\\start.ps1) para usarlo.")
+        raise HTTPException(403, f"{what} is disabled in the public online demo. "
+                                 "Run BASAL locally (.\\scripts\\start.ps1) to use it.")
 
 
 def _astro_or_404(astro_id: str):
     if not db.one("SELECT id FROM astronauts WHERE id = ?", (astro_id,)):
-        raise HTTPException(404, f"Astronauta '{astro_id}' no encontrado")
+        raise HTTPException(404, f"Astronaut '{astro_id}' not found")
 
 
 # ------------------------------------------------------------------ sistema
-@app.get("/api/health", tags=["sistema"])
+@app.get("/api/health", tags=["system"])
 def health():
     return {"ok": True, "modo": "publico" if PUBLIC else "local", "publico": PUBLIC, "version_datos": db.data_version(),
             "validacion_precalculada": VALIDATION_PATH.exists()}
 
 
-@app.get("/api/indicators", tags=["sistema"])
+@app.get("/api/indicators", tags=["system"])
 def indicators():
     return {k: {**{x: v for x, v in cfg.items() if x != "limits"}, "limites": list(cfg["limits"]),
                 "umbral_fijo": services.PARAMS.fixed[k]} for k, cfg in INDICATORS.items()}
 
 
-@app.get("/api/evidence", tags=["sistema"])
+@app.get("/api/evidence", tags=["system"])
 def evidence():
     return services.evidence()
 
 
 # ------------------------------------------------------------------ misión y simulador (F9)
-@app.get("/api/mission", tags=["misión"])
+@app.get("/api/mission", tags=["mission"])
 def mission():
     return services.mission()
 
@@ -91,9 +91,9 @@ class DayIn(BaseModel):
     day: int = Field(ge=0)
 
 
-@app.post("/api/mission/day", tags=["misión"])
+@app.post("/api/mission/day", tags=["mission"])
 def set_day(body: DayIn):
-    _forbid_in_public("Cambiar el día para todos (en la demo pública el día es por sesión)")
+    _forbid_in_public("Changing the day for everyone (in the public demo the day is per session)")
     m = db.get_mission()
     db.execute("UPDATE mission SET current_day = ? WHERE id = 1", (min(body.day, m["days"] - 1),))
     return services.mission()
@@ -103,9 +103,9 @@ class AdvanceIn(BaseModel):
     n: int = Field(default=1, ge=-120, le=120)
 
 
-@app.post("/api/mission/advance", tags=["misión"])
+@app.post("/api/mission/advance", tags=["mission"])
 def advance(body: AdvanceIn):
-    _forbid_in_public("Cambiar el día para todos (en la demo pública el día es por sesión)")
+    _forbid_in_public("Changing the day for everyone (in the public demo the day is per session)")
     m = db.get_mission()
     return set_day(DayIn(day=max(0, min(m["current_day"] + body.n, m["days"] - 1))))
 
@@ -124,7 +124,7 @@ class ResetIn(BaseModel):
     dia: int = Field(default=services.DEMO_DAY, ge=0, le=119)
 
 
-@app.post("/api/sim/reset", tags=["simulador"])
+@app.post("/api/sim/reset", tags=["simulator"])
 def sim_reset(body: ResetIn):
     """Reinicia la misión de demostración (borra datos manuales, alertas y reportes)."""
     if PUBLIC:  # en la demo pública solo se permite volver al escenario canónico
@@ -140,10 +140,10 @@ class ScenarioIn(BaseModel):
     seed: int | None = None
 
 
-@app.post("/api/sim/astronaut", tags=["simulador"])
+@app.post("/api/sim/astronaut", tags=["simulator"])
 def sim_astronaut(body: ScenarioIn):
     """Asigna escenarios a un astronauta y regenera solo sus datos sintéticos."""
-    _forbid_in_public("Cambiar escenarios")
+    _forbid_in_public("Changing scenarios")
     _astro_or_404(body.astro_id)
     r = services.set_astronaut_scenario(body.astro_id, [p.model_dump(exclude_none=True) for p in body.plan],
                                         body.seed)
@@ -156,30 +156,30 @@ class BlackoutIn(BaseModel):
     fin: int | None = Field(default=None, ge=0, le=119)
 
 
-@app.post("/api/sim/blackout", tags=["simulador"])
+@app.post("/api/sim/blackout", tags=["simulator"])
 def sim_blackout(body: BlackoutIn):
     """Escenario F: define (o elimina) la ventana de interrupción de comunicaciones."""
-    _forbid_in_public("Cambiar el apagón")
+    _forbid_in_public("Changing the blackout")
     if body.inicio is not None and (body.fin is None or body.fin < body.inicio):
-        raise HTTPException(422, "El fin del apagón debe ser mayor o igual que el inicio")
+        raise HTTPException(422, "Blackout end must be greater than or equal to its start")
     db.execute("UPDATE mission SET blackout_start = ?, blackout_end = ? WHERE id = 1", (body.inicio, body.fin))
     return services.mission()
 
 
-@app.get("/api/sim/scenarios", tags=["simulador"])
+@app.get("/api/sim/scenarios", tags=["simulator"])
 def sim_scenarios():
     return {"escenarios": SCENARIOS, "con_evento": EVENT_SCENARIOS,
-            "mision": {"F": "Interrupción de comunicaciones (ventana de apagón configurable)"}}
+            "mision": {"F": "Communication outage (configurable blackout window)"}}
 
 
-@app.get("/api/events", tags=["simulador"])
+@app.get("/api/events", tags=["simulator"])
 def events(astro_id: str | None = None):
     """Eventos inyectados por el simulador (la 'verdad'; solo para la demo y la validación)."""
     return services.events(astro_id)
 
 
 # ------------------------------------------------------------------ astronautas (F1)
-@app.get("/api/crew", tags=["astronautas"])
+@app.get("/api/crew", tags=["astronauts"])
 def crew():
     return services.crew()
 
@@ -193,11 +193,11 @@ class AstronautIn(BaseModel):
     generar_datos: Literal["ninguno", "A", "B", "C", "E"] = "ninguno"
 
 
-@app.post("/api/astronauts", tags=["astronautas"], status_code=201)
+@app.post("/api/astronauts", tags=["astronauts"], status_code=201)
 def create_astronaut(body: AstronautIn):
-    _forbid_in_public("Crear perfiles")
+    _forbid_in_public("Creating profiles")
     if db.one("SELECT id FROM astronauts WHERE id = ?", (body.id,)):
-        raise HTTPException(409, f"Ya existe un astronauta con id '{body.id}'")
+        raise HTTPException(409, f"An astronaut with id '{body.id}' already exists")
     db.execute("INSERT INTO astronauts (id, nombre, rol, edad, notas, ficticio) VALUES (?,?,?,?,?,1)",
                (body.id, body.nombre, body.rol, body.edad, body.notas))
     if body.generar_datos != "ninguno":
@@ -208,11 +208,11 @@ def create_astronaut(body: AstronautIn):
     return services.astronaut(body.id)
 
 
-@app.get("/api/astronauts/{astro_id}", tags=["astronautas"])
+@app.get("/api/astronauts/{astro_id}", tags=["astronauts"])
 def astronaut(astro_id: str, desde: int = Query(0, ge=0)):
     a = services.astronaut(astro_id, desde)
     if not a:
-        raise HTTPException(404, f"Astronauta '{astro_id}' no encontrado")
+        raise HTTPException(404, f"Astronaut '{astro_id}' not found")
     return a
 
 
@@ -226,9 +226,9 @@ class MeasurementIn(BaseModel):
     source: Literal["manual", "real", "csv"] = "manual"
 
 
-@app.post("/api/measurements", tags=["ingesta"])
+@app.post("/api/measurements", tags=["ingestion"])
 def post_measurement(body: MeasurementIn):
-    _forbid_in_public("Guardar mediciones")
+    _forbid_in_public("Saving measurements")
     rec = body.model_dump()
     if rec["day"] is None:
         rec["day"] = db.get_mission()["current_day"]
@@ -243,18 +243,18 @@ class CsvIn(BaseModel):
     sobrescribir: bool = False
 
 
-@app.post("/api/ingest/csv", tags=["ingesta"])
+@app.post("/api/ingest/csv", tags=["ingestion"])
 def ingest_csv(body: CsvIn):
-    _forbid_in_public("Importar CSV")
+    _forbid_in_public("Importing CSV")
     rows, err = ingest.parse_csv(body.csv)
     if err:
         raise HTTPException(422, err)
     if not rows:
-        raise HTTPException(422, "El archivo no contiene filas de datos")
+        raise HTTPException(422, "The file has no data rows")
     return ingest.store(rows, overwrite=body.sobrescribir)
 
 
-@app.get("/api/ingest/log", tags=["ingesta"])
+@app.get("/api/ingest/log", tags=["ingestion"])
 def ingest_log(limit: int = Query(100, ge=1, le=1000), estado: str | None = None):
     sql, args = "SELECT * FROM ingest_log", []
     if estado:
@@ -262,7 +262,7 @@ def ingest_log(limit: int = Query(100, ge=1, le=1000), estado: str | None = None
     return db.query(sql + " ORDER BY id DESC LIMIT ?", (*args, limit))
 
 
-@app.get("/api/ingest/schema", tags=["ingesta"])
+@app.get("/api/ingest/schema", tags=["ingestion"])
 def csv_schema():
     return {"columnas": ingest.CSV_COLUMNS + ["source (opcional)"],
             "indicadores": {k: {"unidad": v["unidad"], "alias": v["units"], "rango": list(v["limits"])}
@@ -281,11 +281,11 @@ class PvtIn(BaseModel):
     interrupciones: int = Field(default=0, ge=0, le=100)
 
 
-@app.post("/api/astronauts/{astro_id}/pvt", tags=["registro"])
+@app.post("/api/astronauts/{astro_id}/pvt", tags=["logging"])
 def post_pvt(astro_id: str, body: PvtIn):
     _astro_or_404(astro_id)
     if any(r < 0 or r > 30000 for r in body.rts):
-        raise HTTPException(422, "Tiempos de reacción fuera de rango")
+        raise HTTPException(422, "Reaction times out of range")
     return services.save_pvt(astro_id, body.modo, body.duracion_s, body.rts, body.anticipaciones,
                              body.interrupciones, body.sin_respuesta, persist=not PUBLIC)
 
@@ -297,7 +297,7 @@ class CheckinIn(BaseModel):
     segundos: float | None = Field(default=None, ge=0, le=3600)
 
 
-@app.post("/api/astronauts/{astro_id}/checkin", tags=["registro"])
+@app.post("/api/astronauts/{astro_id}/checkin", tags=["logging"])
 def post_checkin(astro_id: str, body: CheckinIn):
     _astro_or_404(astro_id)
     if PUBLIC:  # demo pública: se valida pero no se guarda
@@ -307,7 +307,7 @@ def post_checkin(astro_id: str, body: CheckinIn):
 
 
 # ------------------------------------------------------------------ alertas (F7)
-@app.get("/api/alerts", tags=["alertas"])
+@app.get("/api/alerts", tags=["alerts"])
 def alerts(astro_id: str | None = None, estado: str | None = None, todas: bool = False):
     day = db.get_mission()["current_day"]
     return services.stored_alerts(astro_id, day_max=day, estado=estado)[: (2000 if todas else 200)]
@@ -320,12 +320,12 @@ class ReviewIn(BaseModel):
     episodio: bool = True
 
 
-@app.patch("/api/alerts/{alert_id}", tags=["alertas"])
+@app.patch("/api/alerts/{alert_id}", tags=["alerts"])
 def review(alert_id: str, body: ReviewIn):
-    _forbid_in_public("Revisar alarmas para todos (en la demo pública se guarda en su navegador)")
+    _forbid_in_public("Reviewing alerts for everyone (in the public demo it is saved in your browser)")
     a = services.review_alert(alert_id, body.estado, body.nota, body.revisor, body.episodio)
     if not a:
-        raise HTTPException(404, "Alerta no encontrada")
+        raise HTTPException(404, "Alert not found")
     return a
 
 
@@ -336,48 +336,48 @@ class ReportIn(BaseModel):
     hasta: int = Field(default=119, ge=0)
 
 
-@app.post("/api/reports", tags=["reportes"], status_code=201)
+@app.post("/api/reports", tags=["reports"], status_code=201)
 def create_report(body: ReportIn):
     if body.astro_id:
         _astro_or_404(body.astro_id)
     if body.hasta < body.desde:
-        raise HTTPException(422, "'hasta' debe ser mayor o igual que 'desde'")
+        raise HTTPException(422, "'hasta' (to) must be greater than or equal to 'desde' (from)")
     # En la demo pública el reporte se genera como vista previa y no se guarda (no afecta a otros visitantes)
     return services.create_report(body.astro_id, body.desde, body.hasta, persist=not PUBLIC)
 
 
-@app.get("/api/reports", tags=["reportes"])
+@app.get("/api/reports", tags=["reports"])
 def reports():
     return services.list_reports()
 
 
-@app.get("/api/reports/{rid}", tags=["reportes"])
+@app.get("/api/reports/{rid}", tags=["reports"])
 def report(rid: int):
     r = services.get_report(rid)
     if not r:
-        raise HTTPException(404, "Reporte no encontrado")
+        raise HTTPException(404, "Report not found")
     return r
 
 
-@app.get("/api/reports/{rid}/csv", tags=["reportes"], response_class=PlainTextResponse)
+@app.get("/api/reports/{rid}/csv", tags=["reports"], response_class=PlainTextResponse)
 def report_csv(rid: int):
     c = services.report_csv(rid)
     if c is None:
-        raise HTTPException(404, "Reporte no encontrado")
+        raise HTTPException(404, "Report not found")
     return PlainTextResponse(c, media_type="text/csv; charset=utf-8",
                              headers={"Content-Disposition": f'attachment; filename="reporte_{rid}.csv"'})
 
 
-@app.post("/api/reports/transmit", tags=["reportes"])
+@app.post("/api/reports/transmit", tags=["reports"])
 def transmit():
     return services.transmit(dry=PUBLIC)
 
 
 # ------------------------------------------------------------------ validación
-@app.get("/api/validation", tags=["validación"])
+@app.get("/api/validation", tags=["validation"])
 def validation():
     if not VALIDATION_PATH.exists():
-        raise HTTPException(404, "No hay validación precalculada. Ejecute: python -m basal.validation")
+        raise HTTPException(404, "No precomputed validation. Run: python -m basal.validation")
     return json.loads(VALIDATION_PATH.read_text(encoding="utf-8"))
 
 
@@ -391,20 +391,20 @@ class ValidationRunIn(BaseModel):
     red: float | None = Field(default=None, ge=1.5, le=8.0)
 
 
-@app.post("/api/validation/run", tags=["validación"])
+@app.post("/api/validation/run", tags=["validation"])
 def validation_run(body: ValidationRunIn):
     from dataclasses import replace
     from .validation import run_custom
     if PUBLIC and body.n_misiones > 10:
-        raise HTTPException(403, "En la demo pública el máximo es 10 misiones por experimento.")
+        raise HTTPException(403, "In the public demo the maximum is 10 missions per experiment.")
     p = services.PARAMS
     p = replace(p, yellow=body.yellow or p.yellow, red=body.red or p.red)
     if p.red <= p.yellow:
-        raise HTTPException(422, "El corte rojo debe ser mayor que el amarillo")
+        raise HTTPException(422, "The Act cutoff must be greater than the Watch cutoff")
     return run_custom(p, body.n_misiones, body.semilla_inicial, body.escenario, body.heterogeneidad, body.faltantes)
 
 
-@app.get("/api/validation/demo", tags=["validación"])
+@app.get("/api/validation/demo", tags=["validation"])
 def validation_demo():
     return services.demo_validation()
 
@@ -417,7 +417,7 @@ if DIST.exists():
     @app.get("/{path:path}", include_in_schema=False)
     def spa(path: str):
         if path.startswith("api/"):
-            raise HTTPException(404, "Ruta de API no encontrada")
+            raise HTTPException(404, "API route not found")
         f = (DIST / path).resolve()
         if path and f.is_file() and DIST in f.parents and re.match(r"^[\w./-]+$", path):
             return FileResponse(f)

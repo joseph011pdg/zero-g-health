@@ -1,40 +1,40 @@
 <template>
   <header class="top no-print">
     <div class="mast">
-      <router-link to="/" class="word" aria-label="BASAL, inicio">
+      <router-link to="/" class="word" aria-label="BASAL, home">
         <img src="/icon.svg" alt="" width="28" height="28" />BASAL
       </router-link>
 
-      <nav class="nav" aria-label="Secciones">
-        <router-link to="/" :class="{ on: (route.path === '/' && route.hash !== '#alarmas') || route.path.startsWith('/persona') }">Tripulación</router-link>
-        <router-link :to="{ path: '/', hash: '#alarmas' }" :class="{ on: route.path === '/' && route.hash === '#alarmas' }">Alarmas</router-link>
-        <router-link to="/tierra" :class="{ on: route.path === '/tierra' }">Reportes<span v-if="s.pendingReports" class="count">{{ s.pendingReports }}</span></router-link>
-        <router-link to="/laboratorio" :class="{ on: route.path.startsWith('/laboratorio') }">Laboratorio</router-link>
+      <nav class="nav" aria-label="Sections">
+        <router-link to="/" :class="{ on: (route.path === '/' && route.hash !== '#alerts') || route.path.startsWith('/crew') }">Crew</router-link>
+        <router-link :to="{ path: '/', hash: '#alerts' }" :class="{ on: route.path === '/' && route.hash === '#alerts' }">Alerts</router-link>
+        <router-link to="/reports" :class="{ on: route.path === '/reports' }">Reports<span v-if="s.pendingReports" class="count">{{ s.pendingReports }}</span></router-link>
+        <router-link to="/lab" :class="{ on: route.path.startsWith('/lab') }">Laboratory</router-link>
       </nav>
 
       <div class="edition" v-if="s.mission">
         <div class="ed-line">
-          <button class="step" @click="s.advance(-1)" :disabled="s.day <= 0" aria-label="Día anterior"><Icon name="prev" :size="11" /></button>
-          <span>Informe de salud a bordo · <b>Día {{ s.day }} de {{ s.mission.dias - 1 }}</b></span>
-          <button class="step" @click="s.advance(1)" :disabled="s.day >= s.mission.dias - 1" aria-label="Día siguiente"><Icon name="next" :size="11" /></button>
+          <button class="step" @click="s.advance(-1)" :disabled="s.day <= 0" aria-label="Previous day"><Icon name="prev" :size="11" /></button>
+          <span><span class="pre">Onboard health report · </span><b>Day {{ s.day }} of {{ s.mission.dias - 1 }}</b></span>
+          <button class="step" @click="s.advance(1)" :disabled="s.day >= s.mission.dias - 1" aria-label="Next day"><Icon name="next" :size="11" /></button>
         </div>
         <div class="ed-sub">
-          <span :class="{ off: link.apagon }">{{ link.apagon ? 'Sin enlace con la Tierra' : `Tierra: ${fmt(link.retraso_min, 1)} min` }}</span>
-          <span class="sys" :class="{ off: s.online === false }">{{ s.online === false ? 'motor local detenido' : 'sistema local operativo' }}</span>
+          <span :class="{ off: link.apagon }">{{ link.apagon ? 'No link with Earth' : `Earth: ${fmt(link.retraso_min, 1)} min` }}</span>
+          <span class="sys" :class="{ off: s.online === false }">{{ s.online === false ? 'local engine stopped' : 'local system running' }}</span>
         </div>
       </div>
 
-      <div class="role" role="group" aria-label="Rol">
-        <button :aria-pressed="s.role === 'astronauta'" @click="s.setRole('astronauta')"><span class="lbl">Astronauta</span><Icon class="ico" name="user" :size="14" /></button>
-        <button :aria-pressed="s.role === 'oficial'" @click="s.setRole('oficial')"><span class="lbl">Oficial médico</span><Icon class="ico" name="stethoscope" :size="14" /></button>
+      <div class="role" role="group" aria-label="Role">
+        <button :aria-pressed="s.role === 'astronauta'" @click="s.setRole('astronauta')" aria-label="Astronaut role"><span class="lbl">Astronaut</span><Icon class="ico" name="user" :size="14" /></button>
+        <button :aria-pressed="s.role === 'oficial'" @click="s.setRole('oficial')" aria-label="Medical Officer role"><span class="lbl">Medical Officer</span><Icon class="ico" name="stethoscope" :size="14" /></button>
       </div>
-      <button class="demo-btn" @click="s.demo = !s.demo" :aria-expanded="s.demo" aria-label="Demo guiada"><Icon name="compass" :size="15" /><span class="lbl">Demo</span></button>
+      <button class="demo-btn" @click="s.demo = !s.demo" :aria-expanded="s.demo" aria-label="Guided demo"><Icon name="compass" :size="15" /><span class="lbl">Demo</span></button>
     </div>
   </header>
 
   <div v-if="s.publico" class="public no-print" role="note">
-    <span>Demo pública · datos simulados · lo que haga aquí queda solo en este navegador</span>
-    <button class="reset" @click="s.run(() => s.resetDemo(), 'Demo restablecida')">Restablecer demo</button>
+    <span>Public demo · simulated data<span class="more"> · what you do here stays in this browser</span></span>
+    <button class="reset" @click="s.run(() => s.resetDemo(), 'Demo reset')">Reset demo</button>
   </div>
 
   <transition name="fade"><GuidedDemo v-if="s.demo" @close="s.demo = false" /></transition>
@@ -42,7 +42,7 @@
   <main>
     <div v-if="s.online === false" class="page">
       <div class="notice err"><Icon name="server" :size="18" />
-        <div><strong>El motor local no responde.</strong> Ejecute <code>.\scripts\start.ps1</code> en la carpeta del proyecto; se reintentará solo.</div>
+        <div><strong>The local engine is not responding.</strong> Run <code>.\scripts\start.ps1</code> in the project folder; it will retry on its own.</div>
       </div>
     </div>
     <router-view v-else-if="s.mission" v-slot="{ Component }">
@@ -50,7 +50,7 @@
     </router-view>
     <div v-else class="page waking" role="status">
       <div class="skeleton" style="height: 220px"></div>
-      <p class="small muted">Despertando el servidor… La primera visita puede tardar hasta un minuto (alojamiento gratuito).</p>
+      <p class="small muted">Waking up the server… The first visit can take up to a minute (free hosting).</p>
     </div>
   </main>
 
@@ -114,5 +114,17 @@ code { font-family: var(--mono); background: #fff; padding: 1px 6px; }
   .role .lbl, .demo-btn .lbl { display: none; }
   .role .ico { display: block; }
 }
-@media (max-width: 480px) { .ed-line > span { font-size: 0.78rem; } .word { font-size: 1.3rem; } .nav { gap: 12px; justify-content: space-between; } .nav a { font-size: 0.88rem; } }
+@media (max-width: 640px) {
+  /* Cabecera compacta: marca + día en una fila; rol, demo y menú en otra */
+  .mast { gap: 8px 12px; padding: 10px 16px; }
+  .ed-line .pre { display: none; }
+  .demo-btn { display: none; }
+  .word { font-size: 1.3rem; }
+  .word img { width: 24px; height: 24px; }
+  .role button { padding: 6px 10px; min-height: 32px; }
+  .nav { gap: 12px; justify-content: space-between; }
+  .nav a { font-size: 0.88rem; }
+  .public { margin: 0; padding: 4px 16px; flex-wrap: nowrap; font-size: 0.76rem; }
+  .public .more { display: none; }
+}
 </style>

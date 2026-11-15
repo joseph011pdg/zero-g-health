@@ -18,15 +18,15 @@ from .indicators import INDICATORS
 HERE = Path(__file__).parent
 RULES = json.loads((HERE / "recomendaciones.json").read_text(encoding="utf-8"))
 EVIDENCE = {e["id"]: e for e in json.loads((HERE / "evidence.json").read_text(encoding="utf-8"))}
-REASON_TXT = {"corte_rojo": "superó el corte rojo", "corte_amarillo": "superó el corte amarillo",
-              "persistencia": "se mantuvo en amarillo varios días seguidos"}
+REASON_TXT = {"corte_rojo": "crossed the Act cutoff", "corte_amarillo": "crossed the Watch cutoff",
+              "persistencia": "stayed at Watch for several days in a row"}
 
 
 def es(x, nd=1) -> str:
-    """Número con coma decimal (es)."""
+    """#NÚMERO: punto decimal (interfaz en inglés)."""
     if x is None:
         return "—"
-    return f"{x:.{nd}f}".replace(".", ",")
+    return f"{x:.{nd}f}"
 
 
 def _num(x, nd=2):
@@ -49,17 +49,17 @@ def change(key: str, row: pd.Series) -> dict:
 
 
 def _explain(c: dict) -> str:
-    sentido = "por encima" if (c["diferencia"] or 0) > 0 else "por debajo"
+    sentido = "above" if (c["diferencia"] or 0) > 0 else "below"
     nd = INDICATORS[c["indicador"]]["decimales"]
-    return (f"{c['nombre']}: {es(c['valor'], nd)} {c['unidad']} frente a su normal de {es(c['linea_base'], nd)} {c['unidad']} "
-            f"(z = {es(abs(c['z'] or 0))}, {sentido} de lo habitual para esta persona).")
+    return (f"{c['nombre']}: {es(c['valor'], nd)} {c['unidad']} vs. their usual {es(c['linea_base'], nd)} {c['unidad']} "
+            f"(z = {es(abs(c['z'] or 0))}, {sentido} what is usual for this person).")
 
 
 def _how(c: dict, p: Params) -> str:
-    base = (f"z robusto = (valor − mediana) / (1,4826 × MAD) = {es(c['z'], 2)} usando {c['referencia']} "
-            f"(n = {c['n_obs']} observaciones válidas, MAD escalado = {es(c['dispersion_mad'], 2)}). ")
-    return base + f"Cortes: vigilar ≥ {es(p.yellow)}, actuar ≥ {es(p.red)} o {p.persist} días seguidos en vigilar; " \
-                  f"{REASON_TXT.get(c['motivo'], '')}. Parámetro experimental ajustado con simulación, no límite clínico."
+    base = (f"robust z = (value − median) / (1.4826 × MAD) = {es(c['z'], 2)} using {c['referencia']} "
+            f"(n = {c['n_obs']} valid observations, scaled MAD = {es(c['dispersion_mad'], 2)}). ")
+    return base + f"Cutoffs: Watch ≥ {es(p.yellow)}, Act ≥ {es(p.red)} or {p.persist} days in a row at Watch; " \
+                  f"{REASON_TXT.get(c['motivo'], '')}. Experimental parameter tuned on simulation, not a clinical limit."
 
 
 def _evidence(ids):
@@ -80,7 +80,7 @@ def alerts_for_day(astro_id: str, results: dict[str, pd.DataFrame], day: int, p:
             "nivel": nivel, "titulo": titulo, "que_cambio": mensaje, "cuanto": cambios,
             "como": " ".join(_how(c, p) for c in cambios), "acciones": acc, "evidencia": _evidence(evid),
             "calidad_datos_pct": calidad,
-            "fiabilidad": "reducida: faltan datos recientes" if calidad < 70 else "normal",
+            "fiabilidad": "reduced: recent data missing" if calidad < 70 else "normal",
             "aviso": RULES["aviso"], "indicadores": list(keys),
         }
 
