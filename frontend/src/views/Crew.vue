@@ -7,25 +7,14 @@
         <h1 v-else-if="needAction.length || watch.length">Alerts up to date; <span class="hl">{{ needAction.length + watch.length }} of {{ s.crew.length }}</span> being followed.</h1>
         <h1 v-else>The whole crew is <span class="hl">within their usual range</span>.</h1>
 
-        <dl class="pitch">
+        <p class="tagline">Each astronaut is compared with <b>their own baseline</b>, on board and without Earth.
+          <button class="what" @click="showPitch = !showPitch" :aria-expanded="showPitch">What is BASAL? {{ showPitch ? '↑' : '↓' }}</button>
+          <i>simulated data</i></p>
+        <dl v-if="showPitch" class="pitch">
           <div><dt>Problem</dt><dd>On the way to Mars a message takes up to 20 min each way and there are blackouts: Earth cannot watch crew health in real time.</dd></div>
           <div><dt>Solution</dt><dd>BASAL compares each astronaut with their own baseline and alerts on board, without Internet, with an explanation and a safe follow-up.</dd></div>
-          <div><dt>Evidence</dt><dd>In simulation it detects <b>98.9%</b> of events with <b>0.78</b> false alarms per 30 astronaut-days (fixed threshold: 88.9% and 1.87). <router-link to="/lab/validation">See validation</router-link> · <i>simulated data</i></dd></div>
+          <div><dt>Evidence</dt><dd>In simulation it detects <b>98.9%</b> of events with <b>0.78</b> false alarms per 30 astronaut-days (fixed threshold: 88.9% and 1.87). <router-link to="/lab/validation">See validation</router-link></dd></div>
         </dl>
-
-        <div class="actions">
-          <button class="ab main" @click="goAlarms"><span><Icon name="bell" :size="16" />Review alerts</span><span class="k num">{{ highPending }}</span></button>
-          <router-link class="ab" :to="`/crew/${s.selected}?action=checkin`"><span><Icon name="smile" :size="16" />Check-in</span><span class="k">{{ short(selName) }}</span></router-link>
-          <router-link class="ab" :to="`/crew/${s.selected}?action=pvt`"><span><Icon name="target" :size="16" />PVT test</span><span class="k">3 min</span></router-link>
-          <router-link class="ab" to="/reports"><span><Icon name="send" :size="16" />Send report</span><span class="k num">{{ s.pendingReports }} queued</span></router-link>
-        </div>
-
-        <div class="tryit" role="group" aria-label="Try the demo">
-          <button class="tb main" @click="s.demo = true"><Icon name="compass" :size="15" />Guided demo</button>
-          <button class="tb" :aria-pressed="s.apagon" @click="toggleApagon">
-            <Icon :name="s.apagon ? 'satellite' : 'signalOff'" :size="15" />{{ s.apagon ? 'Restore link' : 'Simulate blackout' }}</button>
-          <button v-for="sc in SCEN" :key="sc.k" class="tb" @click="goScen(sc)">{{ sc.l }}</button>
-        </div>
 
         <div class="byline">
           <span><Icon name="satellite" :size="14" />{{ link.apagon ? 'No link with Earth' : `Messages to Earth: ${fmt(link.retraso_min, 1)} min` }}</span>
@@ -42,29 +31,23 @@
         <img v-else class="hero-video" src="/img/portada-poster.jpg" alt="" />
         <div class="txt">
           <h2>Crew health monitoring</h2>
-          <p>Each astronaut compared with their own baseline. Explained alerts and follow-up without depending on Earth.</p>
-          <div class="hbtns">
-            <button class="hb p" @click="goAlarms">Review alerts</button>
-            <router-link class="hb" to="/reports">Generate report</router-link>
-          </div>
+          <p>Explained alerts and follow-up without depending on Earth.</p>
         </div>
       </div>
     </section>
 
-    <MissionStrip />
-
     <section aria-labelledby="t-crew">
-      <div class="sec-h"><h2 id="t-crew">Crew</h2><router-link class="go" :to="`/crew/${s.selected}`">See all six indicators →</router-link></div>
+      <div class="sec-h"><h2 id="t-crew">Crew</h2><span class="dotkey">dots: heart rate · HRV · sleep · radiation · attention · mood</span></div>
       <router-link v-for="(p, i) in rows" :key="p.a.id" :to="`/crew/${p.a.id}`" class="person" @click="s.select(p.a.id)">
         <div class="who">
           <b>{{ p.a.nombre }}</b><small>{{ p.a.rol }}</small>
-          <LevelBadge :level="p.a.nivel" class="st" />
           <span class="dots" aria-label="Six indicators">
             <i v-for="(v, k) in p.a.indicadores" :key="k" :class="'d-' + v.nivel" :title="`${s.indicators[k].corto}: ${LEVEL[v.nivel].label}`"></i>
           </span>
           <span v-if="openOf(p.a.id)" class="openep">{{ openOf(p.a.id) }}</span>
         </div>
         <div class="reading" :class="'n-' + p.a.nivel">
+          <span class="say"><LevelBadge :level="p.a.nivel" />{{ sayOf(p) }}</span>
           <span class="v num">{{ fmt(p.v.valor, s.indicators[p.k].decimales) }}</span> <span class="u">{{ s.indicators[p.k].unidad }}</span>
           <span class="d num">Their usual {{ fmt(p.v.linea_base, s.indicators[p.k].decimales) }}<template v-if="p.v.diferencia !== null"> · {{ signed(p.v.diferencia, s.indicators[p.k].decimales) }}</template></span>
         </div>
@@ -76,6 +59,29 @@
         </figure>
       </router-link>
     </section>
+
+    <section class="do">
+      <div>
+        <div class="sec-h"><h2>Actions</h2></div>
+        <div class="actions">
+          <button class="ab main" @click="goAlarms"><span><Icon name="bell" :size="16" />Review alerts</span><span class="k num">{{ highPending }}</span></button>
+          <router-link class="ab" :to="`/crew/${s.selected}?action=checkin`"><span><Icon name="smile" :size="16" />Check-in</span><span class="k">{{ short(selName) }}</span></router-link>
+          <router-link class="ab" :to="`/crew/${s.selected}?action=pvt`"><span><Icon name="target" :size="16" />PVT test</span><span class="k">3 min</span></router-link>
+          <router-link class="ab" to="/reports"><span><Icon name="send" :size="16" />Send report</span><span class="k num">{{ s.pendingReports }} queued</span></router-link>
+        </div>
+      </div>
+      <div>
+        <div class="sec-h"><h2>Try the demo</h2></div>
+        <div class="tryit" role="group" aria-label="Try the demo">
+          <button class="tb main" @click="s.demo = true"><b><Icon name="compass" :size="15" />Guided demo</b><small>9 steps, about 3 minutes</small></button>
+          <button class="tb" :aria-pressed="s.apagon" @click="toggleApagon">
+            <b><Icon :name="s.apagon ? 'satellite' : 'signalOff'" :size="15" />{{ s.apagon ? 'Restore link' : 'Simulate blackout' }}</b><small>lose the link with Earth</small></button>
+          <button v-for="sc in SCEN" :key="sc.k" class="tb" @click="goScen(sc)"><b>{{ sc.l }}</b><small>{{ sc.d }}</small></button>
+        </div>
+      </div>
+    </section>
+
+    <MissionStrip />
 
     <section class="two">
       <div id="alerts">
@@ -141,6 +147,7 @@ const reports = ref([])
 const series = ref({})
 const loading = ref(true)
 const showLow = ref(false)
+const showPitch = ref(false)
 // Bucle suave: fundido corto al final y vuelta al inicio (el plano de cámara no coincide entre fin e inicio)
 const fadeOut = ref(false)
 function softLoop(e) {
@@ -248,10 +255,16 @@ function openOf(id) {
   const a = s.crew.find((x) => x.id === id)
   return `${a?.nivel === 'verde' ? 'Today: normal · ' : ''}Alert from day ${g.rep.day} still open (unacknowledged for ${plural(s.day - g.rep.day, 'day', 'days')})`
 }
+//ESTADO en una frase por tripulante
+function sayOf(p) {
+  if (p.a.alerta_principal) return p.a.alerta_principal
+  if (p.a.nivel === 'verde') return 'All six indicators within their usual range'
+  return `${s.indicators[p.k].corto}: ${LEVEL[p.v.nivel]?.label || ''}`
+}
 const SCEN = [
-  { k: 'B', l: 'See fatigue (B)', day: 54, id: 'A1' },
-  { k: 'C', l: 'See stress (C)', day: 72, id: 'A3' },
-  { k: 'D', l: 'See solar event (D)', day: 87, id: null }
+  { k: 'B', l: 'See fatigue (B)', d: 'day 54, Cmdr. Rivera', day: 54, id: 'A1' },
+  { k: 'C', l: 'See stress (C)', d: 'day 72, Eng. Lindqvist', day: 72, id: 'A3' },
+  { k: 'D', l: 'See solar event (D)', d: 'day 87, whole crew', day: 87, id: null }
 ]
 async function goScen(sc) {
   await s.run(() => s.setDay(sc.day))
@@ -274,12 +287,16 @@ const hhmm = (d) => d.toLocaleTimeString(LOCALE, { hour: '2-digit', minute: '2-d
 <style scoped>
 .page { gap: 34px; }
 .opening { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 40px; padding-top: 6px; }
-.lead { display: grid; gap: 18px; align-content: center; }
+.lead { display: grid; gap: 14px; align-content: center; }
+.tagline { margin: 0; font-size: 1rem; color: var(--text-2); line-height: 1.5; }
+.tagline b { color: var(--ink); font-weight: 600; }
+.tagline i { color: var(--muted); font-size: 0.86rem; }
+.what { background: none; border: 0; padding: 0 4px; font: inherit; color: var(--blue); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 .lead h1 { font-size: 3.1rem; line-height: 1.05; letter-spacing: -0.025em; text-wrap: balance; }
 .lead h1 .hl { color: var(--blue); }
 .byline { display: flex; gap: 18px; flex-wrap: wrap; font-size: 0.82rem; color: var(--muted); }
 .byline span { display: inline-flex; align-items: center; gap: 6px; }
-.hero-img { position: relative; overflow: hidden; min-height: 340px; border-radius: 18px; background: #0b1626; }
+.hero-img { position: relative; overflow: hidden; min-height: 210px; border-radius: 18px; background: #0b1626; }
 .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity .5s ease; }
 .hero-video.out { opacity: 0.15; }
 .hero-img .txt { position: absolute; inset: 0; padding: 30px; display: grid; align-content: center; gap: 14px; max-width: 56%;
@@ -292,12 +309,12 @@ const hhmm = (d) => d.toLocaleTimeString(LOCALE, { hour: '2-digit', minute: '2-d
 .hb:hover { background: rgba(255, 255, 255, .14); }
 .hb.p:hover { background: #e8eef8; }
 
-.person { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1.3fr) minmax(0, 4.5fr); gap: 24px; align-items: center; padding: 18px 0; border-bottom: 1px solid var(--line-soft); color: var(--ink); }
+.person { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 2.4fr) minmax(0, 3.6fr); gap: 24px; align-items: center; padding: 18px 0; border-bottom: 1px solid var(--line-soft); color: var(--ink); }
 .person:hover { background: linear-gradient(90deg, var(--blue-soft), transparent 60%); }
 .who b { font-family: var(--serif); font-size: 1.4rem; font-weight: 600; letter-spacing: -0.01em; display: block; }
 .who small { display: block; color: var(--muted); font-size: 0.86rem; }
 .who .st { margin-top: 8px; }
-.reading .v { font-size: 2.9rem; font-weight: 500; letter-spacing: -0.03em; line-height: 1; color: var(--blue); }
+.reading .v { font-size: 1.7rem; font-weight: 500; letter-spacing: -0.03em; line-height: 1; color: var(--blue); }
 .reading.n-rojo .v { color: var(--red); }
 .reading.n-amarillo .v { color: var(--warn); }
 .reading .u { font-size: 0.92rem; color: var(--muted); margin-left: 1px; }
@@ -332,8 +349,14 @@ figure { margin: 0; }
 .pitch dd { margin: 0; font-size: 0.9rem; color: var(--text-2); line-height: 1.45; }
 .pitch dd b { color: var(--ink); }
 .pitch i { color: var(--muted); }
-.tryit { display: flex; flex-wrap: wrap; gap: 8px; }
-.tb { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--line); background: #fff; color: var(--ink); font: inherit; font-size: 0.84rem; font-weight: 500; padding: 8px 12px; border-radius: 2px; cursor: pointer; min-height: 40px; }
+.do { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 40px; }
+.dotkey { font-size: 0.78rem; color: #c9d8f2; margin-left: auto; }
+.say { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 0.98rem; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+.tryit { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px; padding-top: 12px; }
+.tb { display: grid; gap: 2px; text-align: left; border: 1px solid var(--line); background: #fff; color: var(--ink); font: inherit; font-size: 0.84rem; font-weight: 500; padding: 8px 12px; border-radius: 2px; cursor: pointer; min-height: 40px; }
+.tb b { display: inline-flex; align-items: center; gap: 7px; font-weight: 600; }
+.tb small { font-size: 0.76rem; color: var(--muted); font-weight: 400; }
+.tb.main small, .tb[aria-pressed="true"] small { color: #c9d8f2; }
 .tb:hover { border-color: var(--blue); color: var(--blue); }
 .tb.main { background: var(--blue); border-color: var(--blue); color: #fff; font-weight: 600; }
 .tb.main:hover { background: #0a3480; color: #fff; }
@@ -350,14 +373,21 @@ figure { margin: 0; }
 .colophon { border-top: 1px solid var(--ink); padding-top: 12px; font-size: 0.8rem; color: var(--muted); display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
 
 @media (max-width: 1000px) {
-  .opening, .two { grid-template-columns: 1fr; }
+  .opening, .two, .do { grid-template-columns: 1fr; }
+  .do { gap: 24px; }
   .lead h1 { font-size: 2.4rem; }
 }
 @media (max-width: 640px) {
   .pitch div { grid-template-columns: 1fr; gap: 2px; }
-  .person { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .person { grid-template-columns: 1fr; gap: 8px; }
+  .who { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; }
+  .who .dots { margin-top: 0; }
+  .who .openep { flex-basis: 100%; }
+  .hero-img { min-height: 120px; }
+  .hero-img p { display: none; }
   .person figure { grid-column: 1 / -1; }
-  .reading .v { font-size: 2.2rem; }
+  .reading .v { font-size: 1.5rem; }
+  .dotkey { display: none; }
   .hero-img .txt { max-width: 100%; padding: 22px; }
   .hero-img h2 { font-size: 1.5rem; }
   .actions { grid-template-columns: 1fr; }

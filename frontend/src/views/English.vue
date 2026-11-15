@@ -8,7 +8,7 @@
       <dl class="pitch">
         <div><dt>Problem</dt><dd>On the way to Mars a message takes up to 20 min each way and there are blackouts: Earth cannot watch crew health in real time.</dd></div>
         <div><dt>Solution</dt><dd>Personal baselines (robust z-score: median and MAD of each astronaut's own history) on six indicators, with explainable alerts and an onboard medical-officer workflow.</dd></div>
-        <div><dt>Evidence</dt><dd>On 40 simulated missions held out from tuning, the "act" level detects <b>98.9%</b> of injected events with
+        <div><dt>Evidence</dt><dd>On 40 simulated missions held out from tuning, the "Act" level detects <b>98.9%</b> of injected events with
           <b>0.78</b> false-alarm episodes per 30 astronaut-days. A fixed population threshold: 88.9% and 1.87. <i>Simulated data.</i></dd></div>
       </dl>
     </section>
