@@ -21,6 +21,11 @@
       </div>
 
       <div class="hero-img">
+        <!-- Video real de NASA ("ISS Fly-Through to Cupola"): la Tierra bajo la estación, en bucle suave.
+             Foto fija si el sistema pide reducir movimiento. -->
+        <video v-if="!reduceMotion" class="hero-video" :class="{ out: fadeOut }" src="/img/portada.mp4" poster="/img/portada-poster.jpg"
+               autoplay muted playsinline preload="auto" @timeupdate="softLoop" aria-hidden="true"></video>
+        <img v-else class="hero-video" src="/img/portada-poster.jpg" alt="" />
         <div class="txt">
           <h2>Monitoreo de salud de la tripulación</h2>
           <p>Cada astronauta comparado con su propia línea base. Alertas explicadas y seguimiento sin depender de la Tierra.</p>
@@ -29,7 +34,6 @@
             <router-link class="hb" to="/tierra">Generar reporte</router-link>
           </div>
         </div>
-        <span class="credit">Foto: NASA / Scott Kelly, cúpula de la ISS (2015)</span>
       </div>
     </section>
 
@@ -117,6 +121,17 @@ const reports = ref([])
 const series = ref({})
 const loading = ref(true)
 const showLow = ref(false)
+// Bucle suave: fundido corto al final y vuelta al inicio (el plano de cámara no coincide entre fin e inicio)
+const fadeOut = ref(false)
+function softLoop(e) {
+  const v = e.target
+  if (fadeOut.value || !v.duration) return
+  if (v.currentTime >= v.duration - 0.6) {
+    fadeOut.value = true
+    setTimeout(() => { v.currentTime = 0; v.play(); fadeOut.value = false }, 500)
+  }
+}
+const reduceMotion = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
 
 async function load() {
   try {
@@ -225,12 +240,13 @@ const hhmm = (d) => d.toLocaleTimeString('es', { hour: '2-digit', minute: '2-dig
 .lead h1 .hl { color: var(--blue); }
 .byline { display: flex; gap: 18px; flex-wrap: wrap; font-size: 0.82rem; color: var(--muted); }
 .byline span { display: inline-flex; align-items: center; gap: 6px; }
-.hero-img { position: relative; overflow: hidden; min-height: 340px; border-radius: 18px; background: #0b1626 url(/img/cupola.jpg) center / cover no-repeat; }
+.hero-img { position: relative; overflow: hidden; min-height: 340px; border-radius: 18px; background: #0b1626; }
+.hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity .5s ease; }
+.hero-video.out { opacity: 0.15; }
 .hero-img .txt { position: absolute; inset: 0; padding: 30px; display: grid; align-content: center; gap: 14px; max-width: 56%;
   background: linear-gradient(90deg, rgba(6, 16, 32, .88) 0%, rgba(6, 16, 32, .65) 70%, rgba(6, 16, 32, 0) 100%); color: #fff; }
 .hero-img h2 { font-family: var(--sans); font-size: 1.9rem; line-height: 1.15; letter-spacing: -0.02em; }
 .hero-img p { color: #d5e2f3; }
-.credit { position: absolute; right: 14px; bottom: 10px; font-size: 0.72rem; color: #dbe6f5; text-shadow: 0 1px 2px rgba(0,0,0,.6); }
 .hbtns { display: flex; gap: 10px; flex-wrap: wrap; }
 .hb { border-radius: 10px; padding: 9px 16px; font-weight: 600; font-size: 0.86rem; border: 1px solid #fff; color: #fff; background: transparent; cursor: pointer; }
 .hb.p { background: #fff; color: var(--blue); }

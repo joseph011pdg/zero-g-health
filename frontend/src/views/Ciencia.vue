@@ -63,7 +63,7 @@
           <li>Falta que el oficial médico pueda aceptar una nueva línea base tras una adaptación legítima.</li>
         </ul>
         <p class="tiny muted credits">Imágenes: “The Blue Marble”, NASA/tripulación del Apolo 17, dominio público; “Valles Marineris”, Viking Orbiter, NASA/USGS,
-          dominio público; “ISS-43 Earth view from the cupola”, NASA/Scott Kelly, dominio público; todas vía Wikimedia Commons. BASAL no está afiliado ni respaldado por NASA.</p>
+          dominio público; video “ISS Fly-Through to Cupola (8K)” (NASA); mapas “Blue Marble Next Generation” (NASA) y “Mars Viking MDIM21” (NASA/JPL/USGS); todos de dominio público, vía Wikimedia Commons. BASAL no está afiliado ni respaldado por NASA.</p>
       </div>
     </section>
   </div>

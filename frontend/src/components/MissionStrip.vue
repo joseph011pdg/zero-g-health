@@ -1,7 +1,7 @@
 <template>
   <section class="strip" aria-label="Trayectoria de la misión">
     <figure class="body">
-      <img class="planet earth" src="/img/tierra.jpg" alt="La Tierra (foto del Apolo 17, NASA)" width="76" height="76" />
+      <div class="globe earth" role="img" aria-label="La Tierra girando (mapa Blue Marble de NASA)"></div>
       <figcaption>Tierra</figcaption>
     </figure>
 
@@ -35,7 +35,7 @@
     </div>
 
     <figure class="body">
-      <img class="planet mars" src="/img/marte.jpg" alt="Marte (mosaico Viking, NASA/USGS)" width="66" height="66" />
+      <div class="globe mars" role="img" aria-label="Marte girando (mosaico Viking de NASA/USGS)"></div>
       <figcaption>Marte</figcaption>
     </figure>
   </section>
@@ -69,9 +69,18 @@ const linkText = computed(() => {
 .strip { display: flex; align-items: center; gap: 28px; padding: 18px 26px 14px; background: #fff; border: 1px solid var(--line-soft); border-radius: var(--radius); }
 .body { margin: 0; display: grid; justify-items: center; gap: 8px; flex: none; }
 .body figcaption { font-family: var(--serif); font-size: 0.95rem; color: var(--ink); font-weight: 600; margin: 0; }
-.planet { border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 4px #fff, 0 0 0 5px var(--line-soft), 0 6px 16px rgba(11, 27, 51, .18); }
-.earth { width: 76px; height: 76px; clip-path: circle(46%); }
-.mars { width: 66px; height: 66px; clip-path: circle(49%); }
+/* Globos que giran: el planisferio real se desliza dentro del círculo (oeste → este) */
+.globe { --size: 76px; width: var(--size); height: var(--size); border-radius: 50%; position: relative; overflow: hidden;
+  background-repeat: repeat-x; background-size: calc(var(--size) * 2) var(--size); background-position: 0 0;
+  animation: spin var(--period, 40s) linear infinite;
+  box-shadow: 0 0 0 4px #fff, 0 0 0 5px var(--line-soft), 0 8px 18px rgba(11, 27, 51, .22); }
+.globe::after { content: ''; position: absolute; inset: 0; border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, rgba(255, 255, 255, .28) 0%, rgba(255, 255, 255, 0) 38%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, .55) 100%);
+  box-shadow: inset -6px -4px 12px rgba(0, 0, 0, .35); }
+.earth { --size: 76px; --period: 40s; background-image: url(/img/tierra-mapa.jpg); }
+.mars { --size: 66px; --period: 52s; background-image: url(/img/marte-mapa.jpg); }
+@keyframes spin { to { background-position: calc(var(--size) * 2) 0; } }
+@media (prefers-reduced-motion: reduce) { .globe { animation: none; } }
 .track { flex: 1; display: grid; gap: 6px; min-width: 0; }
 .top { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
 .ttl { font-family: var(--serif); font-size: 1.35rem; font-weight: 600; color: var(--ink); }
@@ -98,7 +107,7 @@ const linkText = computed(() => {
 .ms-labels .bl { color: var(--red); font-weight: 600; }
 @media (max-width: 640px) {
   .strip { gap: 12px; padding: 12px 14px; }
-  .earth { width: 46px; height: 46px; } .mars { width: 40px; height: 40px; }
+  .earth { --size: 46px; } .mars { --size: 40px; }
   .body figcaption { display: none; }
   .ms-labels span:nth-child(2) { display: none; }
   .ttl .date { display: none; }

@@ -1,5 +1,5 @@
 <template>
-  <aside class="demo panel no-print" role="dialog" aria-label="Demo guiada">
+  <aside class="guided panel no-print" role="dialog" aria-label="Demo guiada">
     <div class="row between">
       <div>
         <div class="label">Demo guiada · paso {{ i + 1 }} de {{ STEPS.length }}</div>
@@ -45,7 +45,7 @@ const STEPS = [
     text: 'El encabezado muestra SIN ENLACE. El monitoreo, las alertas y el almacenamiento siguen funcionando a bordo.' },
   { title: 'El oficial médico revisa', day: 97, to: '/', action: 'rol Oficial médico → Alarmas → Reconocer',
     text: 'Alarmas por prioridad: reconocer o posponer 24 h; si una roja lleva 2 días sin reconocer, el sistema pide escalarla.', role: 'oficial' },
-  { title: 'Reporte para la Tierra en cola', day: 97, to: '/tierra', action: 'tocar el chip de la Tierra',
+  { title: 'Reporte para la Tierra en cola', day: 97, to: '/tierra', action: 'abrir Reportes',
     text: 'Genere el reporte: queda pendiente en la cola local. Al volver el enlace (día 105) se puede transmitir (envío simulado).' },
   { title: '¿Cómo sabemos que funciona?', day: 97, to: '/laboratorio/validacion', action: 'abrir el Validation Lab',
     text: 'Comparación con un umbral poblacional fijo en 40 misiones independientes de las usadas para ajustar, incluidos los casos donde no ganamos.' }
@@ -66,7 +66,7 @@ onMounted(() => apply(STEPS[0]))
 </script>
 
 <style scoped>
-.demo { position: fixed; right: 18px; bottom: 18px; width: min(380px, calc(100vw - 36px)); z-index: 40; display: grid; gap: 10px; border: 2px solid var(--blue); box-shadow: 0 20px 50px rgba(11,27,51,.2); }
+.guided { position: fixed; background: #fff; color: var(--ink); right: 18px; bottom: 18px; width: min(380px, calc(100vw - 36px)); z-index: 40; display: grid; gap: 10px; border: 2px solid var(--blue); box-shadow: 0 20px 50px rgba(11,27,51,.2); }
 .dots { display: flex; gap: 5px; }
 .dots span { width: 18px; height: 4px; border-radius: 2px; background: var(--line); }
 .dots span.done { background: var(--blue); opacity: .5; }

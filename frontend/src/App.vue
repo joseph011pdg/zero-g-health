@@ -28,7 +28,7 @@
         <button :aria-pressed="s.role === 'astronauta'" @click="s.setRole('astronauta')"><span class="lbl">Astronauta</span><Icon class="ico" name="user" :size="14" /></button>
         <button :aria-pressed="s.role === 'oficial'" @click="s.setRole('oficial')"><span class="lbl">Oficial médico</span><Icon class="ico" name="stethoscope" :size="14" /></button>
       </div>
-      <button class="demo" @click="demo = !demo" :aria-expanded="demo" aria-label="Demo guiada"><Icon name="compass" :size="15" /><span class="lbl">Demo</span></button>
+      <button class="demo-btn" @click="demo = !demo" :aria-expanded="demo" aria-label="Demo guiada"><Icon name="compass" :size="15" /><span class="lbl">Demo</span></button>
     </div>
   </header>
 
@@ -69,15 +69,15 @@ onMounted(() => s.init())
 
 <style scoped>
 /* Cabecera en azul NASA con texto blanco */
-.top { background: var(--blue); color: #fff; position: sticky; top: 0; z-index: 20; box-shadow: 0 2px 10px rgba(11, 27, 51, .18); }
+.top { background: var(--navy); color: #fff; position: sticky; top: 0; z-index: 20; box-shadow: 0 2px 10px rgba(11, 27, 51, .18); }
 .mast { max-width: 1240px; margin: 0 auto; padding: 14px 40px; display: flex; align-items: center; gap: 30px; }
 .word { display: flex; align-items: center; gap: 10px; font-family: var(--serif); font-size: 1.6rem; font-weight: 600; letter-spacing: -0.01em; color: #fff; flex: none; }
-.word img { border-radius: 50%; box-shadow: 0 0 0 2px #fff; }
+.word img { border-radius: 50%; }
 .nav { display: flex; gap: 24px; }
 .nav a { color: #c9d8f2; font-weight: 500; padding: 4px 0; border-bottom: 2px solid transparent; display: inline-flex; align-items: center; gap: 6px; }
 .nav a:hover { color: #fff; }
 .nav a.on { color: #fff; border-bottom-color: #fff; }
-.count { background: #fff; color: var(--blue); font-size: 0.7rem; font-weight: 600; padding: 0 6px; border-radius: 2px; line-height: 1.5; }
+.count { background: #fff; color: var(--navy); font-size: 0.7rem; font-weight: 600; padding: 0 6px; border-radius: 2px; line-height: 1.5; }
 .edition { margin-left: auto; text-align: right; font-size: 0.82rem; color: #c9d8f2; line-height: 1.4; }
 .edition b { color: #fff; }
 .ed-line { display: flex; align-items: center; gap: 6px; justify-content: flex-end; }
@@ -90,9 +90,9 @@ onMounted(() => s.init())
 .step:disabled { opacity: .35; cursor: not-allowed; }
 .role { display: flex; border: 1px solid #fff; flex: none; }
 .role button { border: 0; background: transparent; padding: 7px 12px; font-size: 0.82rem; font-weight: 600; color: #fff; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; min-height: 34px; }
-.role button[aria-pressed='true'] { background: #fff; color: var(--blue); }
+.role button[aria-pressed='true'] { background: #fff; color: var(--navy); }
 .role .ico { display: none; }
-.demo { border: 0; background: none; color: #fff; font-weight: 600; font-size: 0.86rem; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.demo-btn { border: 0; background: none; color: #fff; font-weight: 600; font-size: 0.86rem; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
 .top :focus-visible { outline-color: #fff; }
 .public { max-width: 1160px; margin: 12px auto 0; padding: 6px 12px; font-size: 0.8rem; color: var(--blue); background: var(--blue-soft); }
 .toasts { position: fixed; bottom: 18px; right: 18px; display: grid; gap: 8px; z-index: 70; }
@@ -104,7 +104,7 @@ code { font-family: var(--mono); background: #fff; padding: 1px 6px; }
   .mast { flex-wrap: wrap; gap: 10px 18px; padding: 12px 16px; }
   .nav { order: 3; width: 100%; gap: 18px; overflow-x: auto; }
   .edition { margin-left: auto; }
-  .role .lbl, .demo .lbl { display: none; }
+  .role .lbl, .demo-btn .lbl { display: none; }
   .role .ico { display: block; }
 }
 @media (max-width: 480px) { .ed-line > span { font-size: 0.78rem; } .word { font-size: 1.3rem; } }

@@ -59,6 +59,14 @@ Registro de avance por fases (para retomar si la sesión se interrumpe). Fecha l
   con crédito en la imagen y en Ciencia.
 - El service worker no se registró en el navegador del panel de pruebas (sí antes); no verificado en un navegador normal.
 
+### Ajustes visuales ✅ (14/11 noche)
+- Corregido: el panel de la demo guiada se rompía (choque de nombre de clase con el botón de la cabecera).
+- Portada: video real de NASA (“ISS Fly-Through to Cupola”, tramo de la Tierra bajo la estación, 0,7×, 1280×720,
+  8,6 MB) en bucle con fundido; foto fija si el sistema pide reducir movimiento. Sin crédito sobre la imagen
+  (créditos en Ciencia). Versiones 1080p de las opciones A, B y C en `videos/` (fuera de git).
+- Franja Tierra–Marte: globos que giran con planisferios reales (Blue Marble, Viking MDIM21).
+- Menú y barras de título en azul marino (#0a1f44); azul NASA para botones y datos.
+
 ## Pendiente (equipo)
 - [x] Publicado: https://github.com/joseph011pdg/basal (público) y https://basal-pxyn.onrender.com (Render, plan free,
       modo público). Cada push a `main` redespliega; recompilar `frontend/dist` antes si cambia la interfaz.
