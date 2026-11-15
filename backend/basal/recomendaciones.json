@@ -12,8 +12,8 @@
     {
       "id": "fatiga",
       "requiere": {"sleep": "amarillo", "pvt": "amarillo"},
-      "titulo": "Fatiga: sueño más corto y más errores de atención",
-      "mensaje": "Durmió menos de lo habitual y aumentaron los errores en la prueba de vigilancia psicomotora. La privación de sueño reduce el desempeño en la PVT.",
+      "titulo": "Fatiga: sueño más corto y más lapsos de atención",
+      "mensaje": "Durmió menos de lo habitual y aumentaron los lapsos en la prueba de vigilancia psicomotora (PVT-B). La privación de sueño reduce el desempeño en la PVT.",
       "acciones": ["Valorar posponer tareas críticas que exijan atención sostenida", "Priorizar el periodo de descanso de esta noche", "Repetir la prueba PVT-B mañana"],
       "evidencia": ["basner2011", "basner2014"]
     },
@@ -44,7 +44,7 @@
       "rojo": {"titulo": "Tasa de dosis muy elevada (posible evento de partículas solares)", "acciones": ["Seguir el procedimiento de la misión ante eventos solares autorizado por el comandante y el oficial médico", "Registrar la dosis acumulada en el reporte para la Tierra"], "evidencia": ["patel2020"]}
     },
     "pvt": {
-      "amarillo": {"titulo": "Más errores de atención de lo habitual", "acciones": ["Pausa breve y repetir la prueba PVT-B más tarde", "Revisar el sueño de la noche anterior"], "evidencia": ["basner2011"]},
+      "amarillo": {"titulo": "Más lapsos de atención de lo habitual", "acciones": ["Pausa breve y repetir la prueba PVT-B más tarde", "Revisar el sueño de la noche anterior"], "evidencia": ["basner2011"]},
       "rojo": {"titulo": "Atención muy reducida para esta persona", "acciones": ["Valorar posponer tareas críticas que exijan atención sostenida", "Descansar y repetir la prueba PVT-B"], "evidencia": ["basner2011", "nasa2013"]}
     },
     "mood": {

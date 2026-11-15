@@ -17,7 +17,7 @@ un **umbral poblacional fijo**?
 | `hrv` | Variabilidad de la FC (RMSSD) | ms | ↓ | Wearable (ECG) nocturno | No existe umbral poblacional aceptado |
 | `sleep` | Duración del sueño | h | ↓ | Actigrafía | ≥ 7 h en adultos (Watson et al., 2015) |
 | `dose` | **Tasa** de dosis | mGy/día | ↑ | Dosímetro | No se usan límites de NASA (ver §6) |
-| `pvt` | Errores PVT-B (lapsos + anticipaciones) | errores | ↑ | Tableta | Lapso ≥ 355 ms (Basner et al., 2011) |
+| `pvt` | Lapsos PVT-B (lapsos + anticipaciones) | lapsos | ↑ | Tableta | Lapso ≥ 355 ms (Basner et al., 2011) |
 | `mood` | Ánimo (autorreporte) | /10 | ↓ | Tableta | Escala propia, no validada |
 
 Cada indicador tiene un **rango de plausibilidad física** (`limits`) que solo sirve para rechazar datos imposibles en la

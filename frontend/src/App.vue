@@ -114,5 +114,5 @@ code { font-family: var(--mono); background: #fff; padding: 1px 6px; }
   .role .lbl, .demo-btn .lbl { display: none; }
   .role .ico { display: block; }
 }
-@media (max-width: 480px) { .ed-line > span { font-size: 0.78rem; } .word { font-size: 1.3rem; } }
+@media (max-width: 480px) { .ed-line > span { font-size: 0.78rem; } .word { font-size: 1.3rem; } .nav { gap: 12px; justify-content: space-between; } .nav a { font-size: 0.88rem; } }
 </style>

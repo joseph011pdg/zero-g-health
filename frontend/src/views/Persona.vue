@@ -136,8 +136,9 @@ const hist = computed(() => (a.value ? s.withAcks(a.value.historial_alertas) : [
 const eps = computed(() => (a.value ? episodes(hist.value, a.value.dia) : []))
 const todayAlerts = computed(() => (a.value ? s.withAcks(a.value.alertas) : []))
 // Episodios abiertos (sin reconocer) que hoy ya no generan alerta
-const openEps = computed(() => eps.value.filter((g) => g.rep.estado === 'pendiente' && g.rep.day < a.value.dia
-  && !todayAlerts.value.some((t) => `${t.astro_id}|${t.episodio}|${t.nivel}` === g.key)))
+// Solo se muestran cuando hoy no hay alertas: así una alerta abierta nunca queda oculta tras un "normal"
+const openEps = computed(() => (todayAlerts.value.length ? [] : eps.value.filter((g) => g.rep.estado === 'pendiente'
+  && g.rep.nivel === 'rojo' && g.rep.day < a.value.dia)))
 const sinceOf = (al) => eps.value.find((g) => g.key === `${al.astro_id}|${al.episodio}|${al.nivel}`)?.since ?? null
 
 async function load() {
@@ -186,9 +187,9 @@ function trendClass(k, t) {
 .switch a.on { border-color: var(--blue); opacity: 1; }
 .switch a:hover { opacity: 1; }
 .switch .st { position: absolute; right: -2px; bottom: -2px; background: #fff; border-radius: 50%; }
-.okp.open { border-left-color: var(--red); }
+.okp.open { border-top-color: var(--red); }
 .openline { display: flex; gap: 6px; align-items: center; color: var(--red); font-weight: 600; margin: 4px 0 -6px; }
-.okp { display: flex; gap: 12px; align-items: flex-start; border-left: 4px solid var(--ok); border-radius: 0 var(--radius) var(--radius) 0; }
+.okp { display: flex; gap: 12px; align-items: flex-start; border-top: 2px solid var(--ok); border-radius: 0; }
 .tiles { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
 @media (max-width: 1100px) { .tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 560px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } .val { font-size: 1.4rem; } }

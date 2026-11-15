@@ -10,7 +10,7 @@
 BASAL is an offline-first health monitoring prototype for long-duration missions such as a Mars transit, where
 Earth is up to ~20 minutes away and links can drop entirely. Instead of comparing astronauts against population
 thresholds, BASAL learns **each crew member's own baseline** for six indicators (resting heart rate, HRV/RMSSD,
-sleep duration, radiation dose rate, PVT-B vigilance errors and self-reported mood) and flags when a person stops
+sleep duration, radiation dose rate, PVT-B lapses and false starts, and self-reported mood) and flags when a person stops
 behaving as they usually do, using a robust z-score (median/MAD) that excludes the current day and past alert days
 from the baseline. Every alert explains **what changed, by how much, how it was detected, which follow-up is
 suggested and which source supports it**, and red alerts are routed to the crew medical officer. A reproducible
@@ -19,6 +19,16 @@ evaluated on a separate set of 40 missions, the personal-baseline "act" level de
 false-alarm episodes per 30 astronaut-days, versus 88.9 % and 1.87 for a fixed population reference range — while
 the fixed threshold raised the alarm earlier on slow or large changes. The lab shows **when personalization helps
 and when it does not**. Everything runs locally (FastAPI + SQLite + Vue 3 PWA) with no internet.
+
+**Try it:** https://basal-pxyn.onrender.com (Spanish UI; one-page English summary at `/en`). On the home page:
+*Demo guiada* (guided tour), *Simular apagón* (simulated communication blackout: detection keeps running and reports
+wait in the queue), and shortcuts to the fatigue (B), stress (C) and solar-event (D) scenarios. In the public demo
+every visitor gets their own day, blackout and alarm acknowledgements (stored in the browser); nothing a visitor
+does changes what others see. *Watch* means "repeat the measurement"; *Act* means "notify the medical officer".
+An alert stays open until it is acknowledged, even if today's values are back to normal.
+
+**Run locally (Windows):** `.\scripts\setup.ps1` once, then `.\scripts\start.ps1` → http://127.0.0.1:8000.
+Tests: `.\scripts\test.ps1`. Educational prototype with simulated data; not a medical device.
 
 ## Problema
 
@@ -95,9 +105,13 @@ El repositorio incluye `render.yaml` (runtime Python, plan gratuito) y la interf
    arranca `uvicorn` en `0.0.0.0:$PORT` con `BASAL_PUBLIC=1`.
 3. Antes de cada push con cambios en la interfaz: `cd frontend; npm run build` (Render no compila el frontend).
 
-Con `BASAL_PUBLIC=1` el estado es compartido entre visitantes, así que se bloquean los cambios de escenario, el
-apagón y la creación de perfiles (403), el reinicio siempre vuelve a la demo canónica (semilla 7, día 38) y los
-experimentos de validación se limitan a 10 misiones. En el plan gratuito el servicio se duerme sin visitas (primera
+Con `BASAL_PUBLIC=1` la base es común, pero **cada visitante tiene su propia sesión**: el día y el apagón simulado
+viajan en las cabeceras `X-Basal-Dia` / `X-Basal-Apagon`, los reconocimientos de alarmas se guardan en el navegador
+(botón "Restablecer demo") y los check-ins, pruebas PVT y reportes se calculan sin guardarse (el reporte se muestra
+como vista previa). Se bloquean los cambios de escenario, la ventana de apagón y la creación de perfiles (403), el
+reinicio siempre vuelve a la demo canónica (semilla 7, día 40) y los experimentos de validación se limitan a 10
+misiones. Un workflow de GitHub Actions (`.github/workflows/keepalive.yml`) hace ping cada ~10 min para que el
+servicio no se duerma; mientras despierta, la interfaz muestra "Despertando el servidor…". En el plan gratuito el servicio se duerme sin visitas (primera
 carga lenta) y la base SQLite se regenera en cada reinicio. La versión de referencia sigue siendo la local, sin Internet.
 
 ## Pruebas
@@ -105,9 +119,9 @@ carga lenta) y la base SQLite se regenera en cada reinicio. La versión de refer
 ```powershell
 .\scripts\test.ps1
 ```
-30 pruebas pytest (mediana, MAD, z, MAD = 0, ausentes, imposibles, calibración, cambios bruscos y graduales,
+32 pruebas pytest (mediana, MAD, z, MAD = 0, ausentes, imposibles, calibración, cambios bruscos y graduales,
 persistencia, no absorción, separación de perfiles, CSV, reproducibilidad, métricas, reportes, cola diferida,
-radiación, persistencia SQLite, API) + compilación de la interfaz. Regenerar la validación científica:
+radiación, persistencia SQLite, API, sesión por cabeceras) + compilación de la interfaz. Regenerar la validación científica:
 `cd backend; .venv\Scripts\python -m basal.validation`.
 
 ## Datos

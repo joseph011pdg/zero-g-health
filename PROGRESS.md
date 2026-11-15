@@ -67,6 +67,21 @@ Registro de avance por fases (para retomar si la sesión se interrumpe). Fecha l
 - Franja Tierra–Marte: globos que giran con planisferios reales (Blue Marble, Viking MDIM21).
 - Menú y barras de título en azul marino (#0a1f44); azul NASA para botones y datos.
 
+### Revisión de Katherine aplicada ✅ (15/11)
+- P0: titular según alarmas abiertas; "Hoy: normal · alerta del día X sigue abierta"; alarmas con indicador, valor
+  frente a su normal, z, desde cuándo, acción y nota al reconocer; demo en el día 40 (el falso positivo del día 32
+  queda fuera de la portada y se explica en el guion); coma decimal en toda la interfaz y gráficas; plurales,
+  "Lapsos PVT"; etiquetas de la trayectoria en dos filas en móvil (revisado a 360 px); estado por sesión en la demo
+  pública (cabeceras `X-Basal-Dia`/`X-Basal-Apagon`, reconocimientos en el navegador, "Restablecer demo");
+  keep-alive con GitHub Actions y mensaje "Despertando el servidor…".
+- P1: bloque problema/solución/prueba; botones Demo guiada, Simular apagón y escenarios B/C/D; seis puntos por
+  tripulante; radiación como % de lo esperado a hoy (mGy vs mSv); reporte de ejemplo precargado y vista previa;
+  página `/en` y resumen en inglés del README ampliado.
+- P2: respuestas a debilidades en JUDGES_QA (cifras verificadas en validation_results.json).
+- P3: título de pestaña por vista.
+- 32 pruebas pytest pasan.
+- Pendiente: invitar a Katherine (abbydpk-oss) como colaboradora en GitHub (requiere iniciar sesión).
+
 ## Pendiente (equipo)
 - [x] Publicado: https://github.com/joseph011pdg/basal (público) y https://basal-pxyn.onrender.com (Render, plan free,
       modo público). Cada push a `main` redespliega; recompilar `frontend/dist` antes si cambia la interfaz.

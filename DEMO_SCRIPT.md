@@ -1,9 +1,11 @@
 # Guion de demostración (≈ 3 minutos)
 
 **Preparación (antes de presentar)**
-1. `.\scripts\start.ps1 -Reset` → se abre `http://127.0.0.1:8000` con la misión demo en el día 38.
+1. `.\scripts\start.ps1 -Reset` → se abre `http://127.0.0.1:8000` con la misión demo en el día 40 (demo pública: https://basal-pxyn.onrender.com,
+   abrirla 5 minutos antes para que el servidor gratuito despierte).
 2. Desactivar el wifi (para mostrar que funciona sin Internet). Pantalla completa del navegador (F11).
-3. Tener abierta la pantalla Tripulación. El botón **Demo** (arriba a la derecha) ejecuta cada paso de verdad.
+3. Tener abierta la pantalla Tripulación. El botón **Demo guiada** de la portada ejecuta cada paso de verdad.
+   Los botones "Ver fatiga (B)", "Ver estrés (C)" y "Ver evento solar (D)" saltan al día de cada escenario.
 
 > Los tiempos son orientativos. Si el tiempo oficial es menor, saltar los bloques marcados *(opcional)*.
 
@@ -19,8 +21,8 @@ puede no ver un cambio importante en alguien cuyo valor normal es bajo… o alar
 como de costumbre. Aquí: cuatro tripulantes ficticios, seis indicadores, todo calculado en este portátil, sin red."
 
 **0:45 – 1:30 · Demostración** — *Pasos 2 a 4 (Cmdte. Rivera)*
-- Día 38: "Todo dentro de lo habitual. Cada indicador muestra su valor y 'su normal'; la gráfica compara su umbral personal con el poblacional."
-- Día 54: "El simulador inyectó una fatiga progresiva desde el día 44. BASAL dispara **Actuar: fatiga**. La alerta dice en una frase qué pasa y qué hacer; en "¿Por qué?" responde: qué cambió (sueño 6 h frente a 6,8 h habituales y más errores en la PVT), cuánto (z = 3 y
+- Día 40: "Todo dentro de lo habitual. Cada indicador muestra su valor y 'su normal'; la gráfica compara su umbral personal con el poblacional."
+- Día 54: "El simulador inyectó una fatiga progresiva desde el día 44. BASAL dispara **Actuar: fatiga**. La alerta dice en una frase qué pasa y qué hacer; en "¿Por qué?" responde: qué cambió (sueño 6 h frente a 6,8 h habituales y más lapsos en la PVT-B), cuánto (z = 3 y
   5,5), cómo se detectó (fórmula con sus números), qué hacer (posponer tareas críticas, descansar, repetir la prueba,
   avisar al oficial médico) y con qué fuente y nivel de evidencia."
 
@@ -29,8 +31,9 @@ como de costumbre. Aquí: cuatro tripulantes ficticios, seis indicadores, todo c
 z = 4,7. BASAL lo marca; el umbral fijo, no."
 
 **1:50 – 2:15 · Sin Tierra** — *Pasos 6 a 8*
-- Día 97: "Apagón de comunicaciones. El sistema sigue monitoreando y guardando."
-- Cambiar al rol **Oficial médico**: "Las alarmas se ordenan por prioridad. Reconozco el episodio de Lindqvist y queda registrado quién y cuándo; la de Tanaka lleva dos días sin reconocer y el sistema pide escalarla. Las amarillas se agrupan para evitar la fatiga de alarmas."
+- Día 97 (o el botón **Simular apagón** de la portada en cualquier día): "Apagón de comunicaciones. El sistema sigue
+  monitoreando y mostrando alarmas; los reportes quedan en cola."
+- Cambiar al rol **Oficial médico**: "Las alarmas se ordenan por prioridad. Reconozco el episodio de Lindqvist y queda registrado quién y cuándo; si una roja lleva dos días sin reconocer, se escala a la oficial médica. Una alerta sigue abierta aunque hoy los valores hayan vuelto a su normal. Las amarillas se agrupan para evitar la fatiga de alarmas."
 - "Generamos el reporte para la Tierra: queda **en cola**. *(opcional: avanzar al día 105 y pulsar "Enviar cola" — envío simulado)*."
 
 **2:15 – 2:45 · Ciencia** — *Paso 9 (Validation Lab)*
@@ -45,6 +48,11 @@ diagnostica: le dice a cada persona, en su idioma, qué cambió en *su* cuerpo y
 está demasiado lejos."
 
 ---
+
+**Nota honesta sobre el día 32** (si alguien revisa el historial de Tanaka): la alarma "actuar" del día 32 no
+corresponde a ningún evento inyectado; es un falso positivo real del detector. Por eso la demo arranca en el día 40,
+fuera de la ventana de 7 días de la portada, y si preguntan se usa para explicar la tasa medida: 0,78 falsas alarmas
+por 30 días-astronauta en el nivel "actuar".
 
 **Si algo falla**: si la interfaz muestra "Motor local no disponible", volver a ejecutar `.\scripts\start.ps1`. Si los
 datos se movieron, `.\scripts\start.ps1 -Reset` restablece exactamente el mismo escenario (semilla 7).

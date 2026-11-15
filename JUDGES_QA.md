@@ -77,3 +77,36 @@ con una sola pregunta; recomendaciones no revisadas por médicos.
 **¿Impacto en la Tierra?**
 Personal en bases antárticas, submarinos y plataformas; comunidades rurales sin médico (Andes, Amazonía); cualquier
 lugar donde la ayuda está lejos y lo importante es saber cuándo una persona **dejó de estar como siempre**.
+
+## Debilidades que mostramos nosotros primero
+Cifras de `backend/basal/data/validation_results.json` (40 misiones de evaluación, datos simulados).
+
+**"El nivel vigilar da muchos avisos."**
+Sí: 26,8 % de los días sanos y 5,04 avisos falsos por 30 días-astronauta. Vigilar significa "repita la medición", no
+"actúe". El nivel actuar tiene 0,78 falsas alarmas por 30 días-astronauta y 3,5 % de los días sanos.
+
+**"El método personal avisa más tarde."**
+En actuar, el retraso medio es 4,34 días frente a 3,16 del umbral fijo; cuando ambos detectan, el fijo avisa en
+promedio 1,44 días antes. A cambio, A detecta 31 eventos que B no ve (B solo 3 que A no ve) con menos de la mitad de
+falsas alarmas. El nivel vigilar sí avisa antes que el fijo (1,49 días de media).
+
+**"En PVT pierden."**
+Sí: 75,9 % de sensibilidad en actuar frente a 93,8 % del umbral fijo. Por eso el sistema combina seis indicadores y
+persistencia en vez de depender de uno.
+
+**"El ánimo es débil."**
+50 % de sensibilidad en actuar. Es una sola pregunta, no un test validado; se usa como apoyo, nunca solo.
+
+**"¿La alarma del día 32 de Tanaka?"**
+Es un falso positivo: no hay evento inyectado ese día. No lo escondemos; es un ejemplo de la tasa de falsas alarmas
+medida y de por qué existen "Posponer" y "Reconocer".
+
+**"¿Radiación: 102 % de qué?"**
+De lo esperado a hoy en el escenario simulado (tasa nominal × días transcurridos), en mGy (dosis absorbida), no en
+mSv (dosis equivalente) ni frente a límites de NASA. El acumulado se informa y no genera alarma; la alarma vigila la
+tasa diaria frente a la normal de cada persona.
+
+**"¿Por qué 'lapsos' y no 'errores'?"**
+Seguimos a Basner et al. (2011): lapso = respuesta ≥ 355 ms; el indicador suma lapsos y anticipaciones (falsos
+arranques) de la PVT-B.
+

@@ -32,7 +32,7 @@ esa persona y explica qué cambió, cuánto, cómo se detectó, qué seguimiento
 ```powershell
 .\scripts\setup.ps1          # venv + pip + npm ci + build (única vez, con Internet)
 .\scripts\start.ps1 [-Reset] # http://127.0.0.1:8000 (sin Internet). -Reset recarga la misión demo
-.\scripts\test.ps1           # pytest (30) + build
+.\scripts\test.ps1           # pytest (32) + build
 cd backend; .venv\Scripts\python -m basal.validation   # regenera config.json y validation_results.json (~3 min)
 ```
 Pruebas usan base temporal (`BASAL_DB`). La base real es `backend/basal.db` (se crea sola, ignorada por git).
