@@ -47,6 +47,8 @@ const PATHS = {
   trendDown: '<path d="M3.5 7 9.5 13l4-4 7 7.5"/><path d="M15 16.5h5.5V11"/>',
   trendFlat: '<path d="M3.5 12h17"/><path d="m16 7.5 4.5 4.5-4.5 4.5"/>',
   info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><path d="M12 7.8h.01"/>',
+  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  bell: '<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/>',
   spark: '<path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8"/>'
 }
 </script>

@@ -10,14 +10,14 @@ use([CanvasRenderer, LineChart, ScatterChart, BarChart, GridComponent, TooltipCo
   MarkLineComponent, LegendComponent, DataZoomComponent])
 
 export const C = {
-  text: '#f5f8fc', muted: '#9db0c6', line: '#22405f', grid: '#17304b', blue: '#54b8e8', ok: '#57c79a',
-  warn: '#f2b85d', red: '#e76a70', mars: '#cf7349', violet: '#a78bfa', gray: '#7d8ea3', surface: '#102238'
+  text: '#0b1b33', muted: '#5a6b82', line: '#d5dde9', grid: '#e8edf4', blue: '#0b3d91', ok: '#1f7a4d',
+  warn: '#c08a00', red: '#b06000', mars: '#b86a3c', violet: '#6a4fc4', gray: '#9aa8bd', surface: '#ffffff'
 }
 export const LEVEL_COLOR = { verde: C.ok, amarillo: C.warn, rojo: C.red, sin_dato: C.gray, calibrando: C.gray }
 
 export const baseTooltip = {
-  backgroundColor: '#0e1f33', borderColor: C.line, textStyle: { color: C.text, fontSize: 12 },
-  extraCssText: 'box-shadow: 0 8px 24px rgba(0,0,0,.45); border-radius: 8px;'
+  backgroundColor: '#ffffff', borderColor: C.line, textStyle: { color: C.text, fontSize: 12 },
+  extraCssText: 'box-shadow: 0 8px 24px rgba(11,27,51,.12); border-radius: 8px;'
 }
 export const axis = (extra = {}) => ({
   axisLine: { lineStyle: { color: C.line } }, axisTick: { show: false },

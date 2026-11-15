@@ -119,3 +119,27 @@ def test_validation_endpoints(client):
     assert v["semillas"] == [4000, 4001] and "global" in v["resultados"]
     d = client.get("/api/validation/demo").json()
     assert "A1" in d["por_astronauta"]
+
+
+def test_acknowledge_episode_and_snooze(fresh):
+    fresh.post("/api/mission/day", json={"day": 72})
+    al = fresh.get("/api/astronauts/A3").json()["alertas"]
+    red = next(a for a in al if a["nivel"] == "rojo")
+    r = fresh.patch(f"/api/alerts/{red['id']}", json={"estado": "reconocida", "revisor": "Oficial médica"}).json()
+    assert r["estado"] == "reconocida" and r["revisor"] == "Oficial médica" and r["revisado_dia"] == 72
+    # Todo el episodio anterior queda reconocido, no solo el día de hoy
+    hist = fresh.get("/api/alerts?astro_id=A3").json()
+    same = [a for a in hist if a["episodio"] == red["episodio"] and a["nivel"] == "rojo" and a["day"] <= 72]
+    assert same and all(a["estado"] == "reconocida" for a in same)
+    # El día siguiente, la alerta del mismo episodio hereda el reconocimiento
+    fresh.post("/api/mission/day", json={"day": 73})
+    nxt = [a for a in fresh.get("/api/alerts?astro_id=A3").json() if a["day"] == 73 and a["episodio"] == red["episodio"] and a["nivel"] == "rojo"]
+    assert all(a["estado"] == "reconocida" and a["heredada"] for a in nxt)
+    # Posponer (misión limpia): vuelve a pendiente al pasar el día
+    fresh.post("/api/sim/reset", json={"seed": 7})
+    fresh.post("/api/mission/day", json={"day": 72})
+    fresh.patch(f"/api/alerts/{red['id']}", json={"estado": "pospuesta"})
+    assert fresh.get("/api/alerts?astro_id=A3&estado=pospuesta").json()
+    fresh.post("/api/mission/day", json={"day": 73})
+    back = [a for a in fresh.get("/api/alerts?astro_id=A3").json() if a["id"] == red["id"]]
+    assert back[0]["estado"] == "pendiente"

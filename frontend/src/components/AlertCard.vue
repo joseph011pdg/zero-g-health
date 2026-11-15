@@ -1,112 +1,106 @@
 <template>
-  <article class="panel alert edge" :class="a.nivel">
+  <article class="alert edge" :class="a.nivel">
     <header class="row between wrap">
       <div class="row">
         <LevelBadge :level="a.nivel" />
         <h3>{{ a.titulo }}</h3>
       </div>
-      <div class="row tiny muted">
-        <span class="mono">{{ a.id }}</span>
-        <span class="state" :class="a.estado">{{ STATE_LABEL[a.estado] || a.estado }}</span>
-      </div>
+      <span class="state" :class="a.estado">{{ STATE_LABEL[a.estado] || a.estado }}</span>
     </header>
 
-    <div class="q">
-      <div class="label">1 · Qué cambió</div>
-      <p class="small">{{ a.que_cambio }}</p>
-    </div>
+    <ul class="todo">
+      <li v-for="(x, i) in a.acciones" :key="i" :class="{ esc: x.includes('oficial médico') }">
+        <Icon :name="x.includes('oficial médico') ? 'stethoscope' : 'check'" :size="15" />{{ x }}
+      </li>
+    </ul>
 
-    <div class="q">
-      <div class="label">2 · Cuánto</div>
-      <div class="table-wrap">
-        <table class="table mini">
-          <thead><tr><th>Indicador</th><th>Hoy</th><th>Línea base</th><th>Cambio</th><th>z</th><th>Datos 14 d</th></tr></thead>
-          <tbody>
-            <tr v-for="c in a.cuanto" :key="c.indicador">
-              <td>{{ c.nombre }}</td>
-              <td class="num strong">{{ c.valor }} <span class="muted">{{ c.unidad }}</span></td>
-              <td class="num">{{ c.linea_base }}</td>
-              <td class="num">{{ signed(c.diferencia, 2) }} <span class="muted" v-if="c.diferencia_pct !== null">({{ signed(c.diferencia_pct, 0) }} %)</span></td>
-              <td class="num strong" :class="'c-' + c.nivel">{{ c.z }}</td>
-              <td class="num">{{ c.calidad_14d_pct }} %</td>
-            </tr>
-          </tbody>
-        </table>
+    <details :open="expanded">
+      <summary><Icon name="info" :size="14" /> ¿Por qué?</summary>
+      <div class="why">
+        <p class="small">{{ a.que_cambio }}</p>
+        <div class="table-wrap">
+          <table class="table mini">
+            <thead><tr><th>Indicador</th><th class="right">Hoy</th><th class="right">Su normal</th><th class="right">Cambio</th><th class="right">z</th></tr></thead>
+            <tbody>
+              <tr v-for="c in a.cuanto" :key="c.indicador">
+                <td>{{ c.nombre }}</td>
+                <td class="num right strong">{{ c.valor }} <span class="muted">{{ c.unidad }}</span></td>
+                <td class="num right">{{ c.linea_base }}</td>
+                <td class="num right">{{ signed(c.diferencia, 2) }}<span class="muted" v-if="c.diferencia_pct !== null"> ({{ signed(c.diferencia_pct, 0) }} %)</span></td>
+                <td class="num right strong" :class="'c-' + c.nivel">{{ c.z }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="tiny muted how">{{ a.como }}</p>
+        <ul class="ev">
+          <li v-for="e in a.evidencia" :key="e.id" class="tiny"><span>{{ e.cita }}</span> <span class="muted">· {{ e.tipo }}. {{ e.nivel }}.</span></li>
+        </ul>
+        <p v-if="a.fiabilidad !== 'normal'" class="tiny c-amarillo">Fiabilidad {{ a.fiabilidad }} ({{ a.calidad_datos_pct }} % de datos en 14 días).</p>
+        <p class="tiny faint">{{ a.aviso }}</p>
       </div>
-    </div>
-
-    <details class="q" :open="expanded">
-      <summary class="label">3 · Cómo se detectó</summary>
-      <p class="small muted how">{{ a.como }}</p>
     </details>
 
-    <div class="q">
-      <div class="label">4 · Seguimiento sugerido</div>
-      <ol class="small todo">
-        <li v-for="(x, i) in a.acciones" :key="i" :class="{ esc: x.includes('oficial médico') }">{{ x }}</li>
-      </ol>
-    </div>
+    <p v-if="!canReview" class="ack small" :class="a.estado === 'pendiente' ? 'pend' : 'done'">
+      <Icon :name="a.estado === 'pendiente' ? 'clock' : 'check'" :size="14" />
+      <template v-if="a.estado === 'pendiente'">{{ a.nivel === 'rojo' ? 'La oficial médica ha sido avisada.' : 'Aviso para vigilar: repita la medición.' }}</template>
+      <template v-else>{{ STATE_LABEL[a.estado] }}<span v-if="a.revisor"> por {{ a.revisor }}</span><span v-if="a.revisado_dia !== null && a.revisado_dia !== undefined"> · día {{ a.revisado_dia }}</span><span v-if="a.nota">: “{{ a.nota }}”</span></template>
+    </p>
 
-    <details class="q" :open="expanded">
-      <summary class="label">5 · Fuente y nivel de evidencia</summary>
-      <ul class="ev">
-        <li v-for="e in a.evidencia" :key="e.id" class="small">
-          <span>{{ e.cita }}</span>
-          <div class="tiny muted"><span class="tag">{{ e.tipo }}</span> Nivel: {{ e.nivel }}</div>
-        </li>
-      </ul>
-    </details>
-
-    <div v-if="a.fiabilidad !== 'normal'" class="notice warn small"><Icon name="info" /> Fiabilidad {{ a.fiabilidad }} ({{ a.calidad_datos_pct }} % de datos en 14 días).</div>
-    <p class="tiny faint">{{ a.aviso }}</p>
-
-    <footer v-if="reviewable" class="review no-print">
-      <input class="input" v-model="nota" placeholder="Nota del oficial médico (opcional)" maxlength="500" />
+    <footer v-if="canReview" class="review no-print">
+      <p v-if="a.estado !== 'pendiente'" class="tiny muted">{{ STATE_LABEL[a.estado] }}<span v-if="a.revisor"> por {{ a.revisor }}</span><span v-if="a.revisado_dia !== null && a.revisado_dia !== undefined"> · día {{ a.revisado_dia }}</span><span v-if="a.nota"> · “{{ a.nota }}”</span></p>
+      <input class="input" v-model="nota" placeholder="Nota (opcional)" maxlength="500" aria-label="Nota del oficial médico" />
       <div class="row wrap">
-        <button class="btn sm" @click="review('revisada')"><Icon name="check" :size="14" /> Revisada</button>
-        <button class="btn sm danger" @click="review('escalada')"><Icon name="stethoscope" :size="14" /> Escalar</button>
-        <button class="btn sm ghost" @click="review('descartada')">Descartar</button>
+        <button class="btn sm primary" @click="review('reconocida')"><Icon name="check" :size="14" /> Reconocer</button>
+        <button class="btn sm" @click="review('pospuesta')"><Icon name="clock" :size="14" /> Posponer 24 h</button>
+        <button class="btn sm danger" @click="review('escalada')">Escalar</button>
+        <button class="btn sm ghost" @click="review('revisada')">Resuelta</button>
         <button v-if="a.estado !== 'pendiente'" class="btn sm ghost" @click="review('pendiente')">Reabrir</button>
       </div>
-      <p v-if="a.nota" class="tiny muted">Nota guardada: “{{ a.nota }}”</p>
     </footer>
   </article>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import Icon from './Icon.vue'
 import LevelBadge from './LevelBadge.vue'
 import { api, useStore, signed, STATE_LABEL } from '../store.js'
 
-const props = defineProps({ a: Object, reviewable: { type: Boolean, default: true }, expanded: Boolean })
+const props = defineProps({ a: Object, reviewable: { type: Boolean, default: undefined }, expanded: Boolean })
 const emit = defineEmits(['changed'])
 const s = useStore()
 const nota = ref(props.a.nota || '')
+// Por defecto, solo el rol de oficial médico ve los controles de revisión
+const canReview = computed(() => (props.reviewable === undefined ? s.isOfficer : props.reviewable))
 
 async function review(estado) {
-  const r = await s.run(() => api(`/alerts/${encodeURIComponent(props.a.id)}`, { method: 'PATCH', body: { estado, nota: nota.value || null } }),
-    `Alerta marcada como ${STATE_LABEL[estado].toLowerCase()}`)
+  const r = await s.run(() => api(`/alerts/${encodeURIComponent(props.a.id)}`, { method: 'PATCH', body: { estado, nota: nota.value || null, revisor: s.officer ? s.officer.nombre : 'Oficial médico' } }),
+    `Alerta: ${STATE_LABEL[estado].toLowerCase()}`)
   emit('changed', r)
 }
 </script>
 
 <style scoped>
-.alert { display: grid; gap: 10px; padding: 14px 16px; }
-.alert h3 { font-size: 0.98rem; }
-.q { display: grid; gap: 4px; }
-.q p { line-height: 1.5; }
-summary { cursor: pointer; list-style: none; }
-summary::before { content: '▸ '; }
-details[open] summary::before { content: '▾ '; }
-.how { font-family: var(--mono); font-size: 0.76rem; line-height: 1.55; margin-top: 4px; }
-.todo { margin: 2px 0 0; padding-left: 20px; line-height: 1.55; }
-.todo li.esc { color: #ffc2c5; font-weight: 600; }
-.ev { margin: 4px 0 0; padding-left: 16px; display: grid; gap: 6px; }
+.alert { display: grid; gap: 10px; padding: 16px 0; background: transparent; border-bottom: 1px solid var(--line-soft); }
+.alert h3 { font-size: 1.15rem; }
+.todo { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 18px; }
+.todo li { display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem; color: var(--text-2); }
+.todo li :deep(svg) { color: var(--blue); }
+.todo li.esc { color: var(--red); font-weight: 600; }
+.todo li.esc :deep(svg) { color: var(--red); }
+summary { cursor: pointer; list-style: none; color: var(--blue); font-size: 0.85rem; font-weight: 500; display: inline-flex; align-items: center; gap: 5px; }
+summary::-webkit-details-marker { display: none; }
+.why { display: grid; gap: 8px; margin-top: 8px; padding: 12px 14px; background: var(--surface-2); border-left: 1px solid var(--ink); }
+.how { font-family: var(--mono); line-height: 1.5; }
+.ev { margin: 0; padding-left: 16px; display: grid; gap: 4px; }
 .mini td, .mini th { padding: 5px 8px; }
-.state { font-family: var(--mono); text-transform: uppercase; letter-spacing: .06em; padding: 2px 7px; border-radius: 5px; border: 1px solid var(--line); }
-.state.revisada { color: var(--ok); border-color: rgba(87,199,154,.4); }
-.state.escalada { color: #ff9a9f; border-color: rgba(231,106,112,.5); }
-.state.descartada { color: var(--gray); }
+.state { font-size: 0.74rem; font-weight: 600; padding: 2px 8px; border-radius: 2px; background: #edf0f5; color: var(--muted); }
+.state.revisada, .state.reconocida { background: var(--ok-soft); color: var(--ok); }
+.state.pospuesta { background: var(--blue-soft); color: var(--blue); }
+.state.escalada { background: var(--red-soft); color: var(--red); }
+.ack { display: flex; gap: 6px; align-items: center; margin: 0; }
+.ack.pend { color: var(--muted); }
+.ack.done { color: var(--ok); }
 .review { display: grid; gap: 8px; border-top: 1px solid var(--line-soft); padding-top: 10px; }
 </style>

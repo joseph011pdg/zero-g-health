@@ -7,3 +7,5 @@ backend/basal.db-journal
 .pytest_cache/
 *.log
 # frontend/dist SE INCLUYE a propósito: Render (runtime Python) sirve la interfaz compilada sin necesitar Node.
+.taste-skill/
+frontend/dist/preview/

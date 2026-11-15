@@ -2,10 +2,8 @@
   <div class="page">
     <div class="page-head">
       <div>
-        <div class="eyebrow">04 · Mission Simulator</div>
-        <h1>Simulador de misión</h1>
-        <p>Genera datos <strong>sintéticos</strong> reproducibles (semilla) con eventos conocidos para probar el detector. Los
-          escenarios no son predicciones clínicas.</p>
+        <h2 class="title">Simulador de misión</h2>
+        <p>Datos <strong>simulados</strong> y reproducibles (semilla) con eventos conocidos. No son predicciones clínicas.</p>
       </div>
     </div>
 
@@ -55,7 +53,7 @@
         </div>
         <div class="notice small" :class="s.mission.comunicacion.apagon ? 'err' : 'info'">
           <Icon :name="s.mission.comunicacion.apagon ? 'signalOff' : 'satellite'" />
-          <span>Hoy: <strong>{{ s.mission.comunicacion.estado }}</strong>{{ s.mission.comunicacion.apagon ? '' : ` · ${s.mission.comunicacion.retraso_min} min por sentido (${s.mission.comunicacion.ida_vuelta_min} min ida y vuelta)` }}.
+          <span>Hoy: <strong>{{ s.mission.comunicacion.estado }}</strong>{{ s.mission.comunicacion.apagon ? '' : ` · ${fmt(s.mission.comunicacion.retraso_min, 1)} min por sentido (${fmt(s.mission.comunicacion.ida_vuelta_min, 1)} min ida y vuelta)` }}.
             Ventana actual: {{ s.mission.apagon[0] ?? '—' }}–{{ s.mission.apagon[1] ?? '—' }}. Durante el apagón el detector sigue
             calculando y los reportes quedan en cola.</span></div>
         <p class="tiny faint">Retraso modelado de forma simplificada (3 → 20 min por sentido). No hay integración real con
@@ -112,7 +110,7 @@
 
 <script setup>
 import { ref, reactive, watch, onBeforeUnmount } from 'vue'
-import { api, useStore } from '../store.js'
+import { api, useStore, fmt } from '../store.js'
 import Icon from '../components/Icon.vue'
 import TrendChart from '../components/TrendChart.vue'
 
@@ -188,9 +186,9 @@ onBeforeUnmount(() => clearTimeout(timer))
 .cellx.rojo { background: var(--red); opacity: 1; }
 .cellx.sin_dato, .cellx.calibrando { background: var(--gray); opacity: .45; }
 .cellx.future { background: var(--surface-3); opacity: .5; }
-.cellx.truth { box-shadow: inset 0 -4px 0 #a78bfa; }
+.cellx.truth { box-shadow: inset 0 -4px 0 #6a4fc4; }
 .legend { gap: 14px; margin-top: 4px; }
 .sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
 .sw.verde { background: var(--ok); } .sw.amarillo { background: var(--warn); } .sw.rojo { background: var(--red); }
-.sw.sin_dato { background: var(--gray); } .sw.future { background: var(--surface-3); } .sw.truthsw { background: #a78bfa; }
+.sw.sin_dato { background: var(--gray); } .sw.future { background: var(--surface-3); } .sw.truthsw { background: #6a4fc4; }
 </style>

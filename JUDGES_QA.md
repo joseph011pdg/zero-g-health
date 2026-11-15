@@ -48,6 +48,12 @@ ni diagnósticos; cada una cita su fuente y nivel de evidencia; las rojas remite
 de la misión; el oficial médico revisa, escala o descarta cada alerta. Las reglas requieren revisión profesional antes
 de cualquier uso real.
 
+**¿Cómo evitan la fatiga de alarmas?**
+Las alarmas tienen dos prioridades con forma y texto propios, las amarillas se agrupan en una sola fila, se reconocen por
+episodio (no cada día) y se pueden posponer 24 h; si una roja lleva 2 días sin reconocer, la interfaz pide escalarla.
+Queda registro de quién reconoció qué y cuándo. Es un diseño inspirado en la gestión de alarmas clínicas, no una
+implementación certificada de esas normas.
+
 **¿Usa inteligencia artificial?**
 No en el sentido de un modelo entrenado. Es estadística robusta y reglas deterministas: explicables, reproducibles y
 validables. No había datos reales etiquetados para entrenar un modelo sin que aprendiera solo los supuestos del

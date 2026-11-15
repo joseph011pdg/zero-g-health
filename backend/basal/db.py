@@ -101,6 +101,11 @@ def data_version() -> int:
 
 def create_schema(con) -> None:
     con.executescript(SCHEMA)
+    # Migración simple: columnas añadidas después del MVP (bases antiguas no las tienen)
+    cols = {r[1] for r in con.execute("PRAGMA table_info(alerts)")}
+    for col, typ in (("revisor", "TEXT"), ("revisado_dia", "INTEGER")):
+        if col not in cols:
+            con.execute(f"ALTER TABLE alerts ADD COLUMN {col} {typ}")
 
 
 def drop_all(con) -> None:

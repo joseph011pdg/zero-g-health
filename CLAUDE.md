@@ -15,7 +15,7 @@ esa persona y explica qué cambió, cuánto, cómo se detectó, qué seguimiento
 - Cortes del semáforo = parámetros (`basal/data/config.json`), ajustados con semillas 1000–1019 y evaluados con
   2000–2039 (`python -m basal.validation`). Actuales: vigilar 2,5 · actuar 4,5 o 3 días en vigilar.
 - Método B (comparador) = intervalo de referencia poblacional (P2,5/P97,5 de días sanos del conjunto de ajuste).
-- Máximo 6 pantallas. Documentación mínima: README, SCIENTIFIC_METHOD, DEMO_SCRIPT, JUDGES_QA (+ PROGRESS).
+- Navegación de 2 menús (Tripulación, Laboratorio) + Persona + Tierra. Documentación mínima: README, SCIENTIFIC_METHOD, DEMO_SCRIPT, JUDGES_QA (+ PROGRESS).
 - No crear subagentes ni skills. P2 (voz, predicción, integraciones) fuera de alcance.
 
 ## Mapa del código
@@ -25,8 +25,8 @@ esa persona y explica qué cambió, cuánto, cómo se detectó, qué seguimiento
 - `ingest.py` validación F2 + CSV. `db.py` esquema SQLite (formato largo con origen). `recommender.py` alertas F7.
 - `services.py` une capas (caché por versión de datos, alertas persistentes con estado, reportes y cola, demo).
 - `main.py` rutas REST (OpenAPI en /docs). `validation.py` ajuste, evaluación, ablación, barrido de heterogeneidad.
-- `frontend/src/views`: Overview (01 + oficial médico), Health (02 + alertas), Registro (03 check-in, PVT-B, ingesta),
-  Simulator (04), Validation (05), Reports (06 reportes + ciencia). `components/GuidedDemo.vue` demo de 9 pasos.
+- `frontend/src/views`: Crew (inicio: franja Tierra–Marte, retratos, Para revisar), Persona (alertas, 6 indicadores, gráfica; Check-in y PVT como paneles `components/*Sheet.vue`), Lab (pestañas Simulator, Validation, Datos, Ciencia), Tierra (reportes y cola). `components/GuidedDemo.vue` demo de 9 pasos.
+- Diseño "Informe científico" (skill impeccable): papel blanco, titulares Source Serif 4, texto IBM Plex Sans (ambas @fontsource, offline), reglas finas, azul NASA (#0B3D91); "Actuar" en ámbar oscuro (#9a5200), sin rojo; imágenes en `frontend/public/img` (Tierra/Marte dominio público con créditos en `credits.json`; retratos SVG propios en `img/crew`). No usar el logotipo de NASA.
 
 ## Comandos (Windows, PowerShell)
 ```powershell

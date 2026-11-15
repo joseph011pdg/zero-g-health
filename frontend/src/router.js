@@ -1,23 +1,20 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Overview from './views/Overview.vue'
-import Health from './views/Health.vue'
-import Registro from './views/Registro.vue'
-import Simulator from './views/Simulator.vue'
-import Validation from './views/Validation.vue'
-import Reports from './views/Reports.vue'
+import Crew from './views/Crew.vue'
+import Persona from './views/Persona.vue'
+import Lab from './views/Lab.vue'
+import Tierra from './views/Tierra.vue'
 
-// 6 pantallas que agrupan las 10 vistas de la propuesta
+// Dos destinos en el menú (Tripulación, Laboratorio); Persona se abre desde un retrato y Tierra desde la cabecera.
 export default createRouter({
   history: createWebHistory(),
   routes: [
-    { path: '/', component: Overview },                         // 01 Mission Overview + 08 Medical Officer
-    { path: '/salud', redirect: () => '/salud/A1' },
-    { path: '/salud/:id', component: Health, props: true },     // 02 Astronaut Health + 05 Alerts & Decisions
-    { path: '/registro', component: Registro },                 // 03 Daily Check-in + 04 Cognitive Test (+ ingesta F2)
-    { path: '/simulador', component: Simulator },               // 06 Mission Simulator
-    { path: '/validacion', component: Validation },             // 07 Scientific Validation Lab
-    { path: '/reportes', component: Reports },                  // 09 Earth Reports + 10 About the Science
+    { path: '/', component: Crew },
+    { path: '/persona/:id', component: Persona, props: true },
+    { path: '/laboratorio', redirect: '/laboratorio/simulador' },
+    { path: '/laboratorio/:tab', component: Lab, props: true },
+    { path: '/tierra', component: Tierra },
+    { path: '/salud/:id', redirect: (to) => `/persona/${to.params.id}` },
     { path: '/:pathMatch(.*)*', redirect: '/' }
   ],
-  scrollBehavior: () => ({ top: 0 })
+  scrollBehavior: (to) => (to.hash ? { el: to.hash, top: 110, behavior: 'smooth' } : { top: 0 })
 })

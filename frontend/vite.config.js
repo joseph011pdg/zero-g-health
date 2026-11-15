@@ -12,13 +12,16 @@ export default defineConfig({
         name: 'BASAL · Monitoreo de salud autónomo',
         short_name: 'BASAL',
         description: 'Monitoreo de salud de astronautas sin conexión con la Tierra',
-        theme_color: '#081525',
-        background_color: '#081525',
+        theme_color: '#0b3d91',
+        background_color: '#f4f6fa',
         display: 'standalone',
         lang: 'es',
         icons: [{ src: 'icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' }]
       },
-      workbox: { navigateFallbackDenylist: [/^\/api/] }
+      workbox: {
+        navigateFallbackDenylist: [/^\/api/, /^\/docs/],
+        globPatterns: ['**/*.{js,css,html,svg,jpg,png,woff,woff2,webmanifest}']
+      }
     })
   ],
   build: { chunkSizeWarningLimit: 1200 },

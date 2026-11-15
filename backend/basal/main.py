@@ -289,13 +289,15 @@ def alerts(astro_id: str | None = None, estado: str | None = None, todas: bool =
 
 
 class ReviewIn(BaseModel):
-    estado: Literal["pendiente", "revisada", "escalada", "descartada"]
+    estado: Literal["pendiente", "reconocida", "pospuesta", "revisada", "escalada", "descartada"]
     nota: str | None = Field(default=None, max_length=500)
+    revisor: str | None = Field(default=None, max_length=80)
+    episodio: bool = True
 
 
 @app.patch("/api/alerts/{alert_id}", tags=["alertas"])
 def review(alert_id: str, body: ReviewIn):
-    a = services.review_alert(alert_id, body.estado, body.nota)
+    a = services.review_alert(alert_id, body.estado, body.nota, body.revisor, body.episodio)
     if not a:
         raise HTTPException(404, "Alerta no encontrada")
     return a

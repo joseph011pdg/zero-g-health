@@ -41,6 +41,24 @@ Registro de avance por fases (para retomar si la sesión se interrumpe). Fecha l
 - `render.yaml` (Python 3.12.8, plan free), modo público `BASAL_PUBLIC=1` probado localmente, `frontend/dist` versionado.
 - Repositorio git inicializado (rama `main`, autor provisional "Equipo BASAL" <basal-team@users.noreply.github.com>).
 
+### Rediseño ✅ (14/11 noche)
+- Tema claro blanco/azul NASA, 2 menús, Check-in/PVT como paneles en Persona, alerta resumida con "¿Por qué?",
+  franja Tierra–Marte (fotos NASA de dominio público) que también controla el día, retratos ilustrados.
+- Revisado en navegador a 1400 px y 375 px sin desbordamiento ni errores de consola.
+
+### Mejoras profesionales ✅ (14/11 noche)
+- Rol Astronauta / Oficial médico; línea de respuesta; alarmas por prioridad con reconocer/posponer por episodio,
+  revisor y aviso de escalado (backend + prueba); menos rojo; gráfica con banda normal y frescura del dato;
+  franja Tierra–Marte con hitos y cuenta del apagón. 31 pruebas pasan; revisado a 1400 y 375 px.
+
+### Diseño "Informe científico" ✅ (14/11 noche)
+- Elegido por el usuario con la skill impeccable: titular serif, botones de acción en lista, foto de cúpula con texto,
+  trayectoria, tripulación como filas con figura, alarmas como hallazgos, tabla de enlace. Sin rojo (ámbar oscuro).
+- Detector de la skill sin hallazgos en los archivos cambiados; revisado a 1400 y 375 px.
+- Foto de la cúpula sustituida por la original de NASA (ISS-43, NASA/Scott Kelly, dominio público, 1600 px),
+  con crédito en la imagen y en Ciencia.
+- El service worker no se registró en el navegador del panel de pruebas (sí antes); no verificado en un navegador normal.
+
 ## Pendiente (equipo)
 - [x] Publicado: https://github.com/joseph011pdg/basal (público) y https://basal-pxyn.onrender.com (Render, plan free,
       modo público). Cada push a `main` redespliega; recompilar `frontend/dist` antes si cambia la interfaz.

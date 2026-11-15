@@ -2,10 +2,8 @@
   <div class="page">
     <div class="page-head">
       <div>
-        <div class="eyebrow">05 · Scientific Validation Lab</div>
-        <h1>¿En qué condiciones la línea base individual detecta mejor?</h1>
-        <p>Método A (línea base individual + z robusto) frente a método B (intervalo de referencia poblacional fijo, igual para
-          todos). Parámetros ajustados con unas semillas y evaluados con otras distintas. Resultados calculados por el código, no editados.</p>
+        <h2 class="title">¿En qué condiciones la línea base individual detecta mejor?</h2>
+        <p>Línea base individual frente a un umbral igual para todos. Ajustado con unas misiones simuladas y evaluado con otras distintas.</p>
       </div>
     </div>
 
@@ -235,8 +233,8 @@ const sweepOpt = computed(() => {
     series: [
       { name: 'Sens. A actuar', type: 'line', data: rows.map((r) => r.A_actuar.sensibilidad_pct), itemStyle: { color: C.ok }, symbolSize: 7 },
       { name: 'Sens. B fijo', type: 'line', data: rows.map((r) => r.B_fijo.sensibilidad_pct), itemStyle: { color: C.mars }, symbolSize: 7 },
-      { name: 'FA A actuar', type: 'bar', yAxisIndex: 1, data: rows.map((r) => r.A_actuar.episodios_falsos_por_30_dias), itemStyle: { color: 'rgba(87,199,154,.35)' }, barWidth: 12 },
-      { name: 'FA B fijo', type: 'bar', yAxisIndex: 1, data: rows.map((r) => r.B_fijo.episodios_falsos_por_30_dias), itemStyle: { color: 'rgba(207,115,73,.35)' }, barWidth: 12 }
+      { name: 'FA A actuar', type: 'bar', yAxisIndex: 1, data: rows.map((r) => r.A_actuar.episodios_falsos_por_30_dias), itemStyle: { color: 'rgba(31,122,77,.25)' }, barWidth: 12 },
+      { name: 'FA B fijo', type: 'bar', yAxisIndex: 1, data: rows.map((r) => r.B_fijo.episodios_falsos_por_30_dias), itemStyle: { color: 'rgba(200,98,58,.25)' }, barWidth: 12 }
     ]
   }
 })

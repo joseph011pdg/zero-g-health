@@ -35,19 +35,18 @@ fijos es una **hipótesis** que se pone a prueba en el Validation Lab, incluidos
 
 | | Función | Dónde |
 |---|---|---|
-| F1 | Perfiles ficticios (4 precargados), crear perfil, registros y línea base por persona | Salud y alertas → "Nuevo perfil" |
-| F2 | Ingesta validada: simulador, formulario, CSV (unidad, rango, día, duplicados, ausentes); origen de cada dato; registro de rechazos | Check-in y PVT → Medición manual / Importar CSV |
-| F3 | PVT-B de 3 min (y demo abreviada de 60 s claramente marcada), reloj monotónico, anticipaciones, lapsos, interrupciones | Check-in y PVT → Prueba PVT-B |
-| F4 | Check-in < 1 min: ánimo, calidad de sueño percibida, notas; historial | Check-in y PVT → Check-in |
-| F5 | Línea base individual: mediana, MAD, n, ventana, diferencia; calibración; exclusión de días en alerta | Salud y alertas (tarjetas) |
-| F6 | z robusto, semáforo con persistencia, línea base inicial para derivas, tendencia, calidad de datos, radiación tasa vs. acumulada | Salud y alertas |
-| F7 | Alertas explicables con fuente y nivel de evidencia, estado de revisión del oficial médico | Salud y alertas · Misión y oficial médico |
-| F8 | Gráficos: valor vs. línea base vs. umbral personal vs. umbral fijo, rangos 14/30/60/toda, alertas marcadas | Salud y alertas |
-| F9 | Simulador con semillas: escenarios A–G, iniciar/pausar/avanzar/reiniciar, apagón configurable, verdad vs. detector | Simulador |
-| F10 | Reporte por astronauta o tripulación, cola de envío diferido que respeta el apagón, JSON/CSV/PDF (imprimir) | Reportes y ciencia |
+| F1 | Perfiles ficticios (4 precargados, con retrato ilustrado), crear perfil, registros y línea base por persona | Tripulación · Laboratorio → Datos |
+| F2 | Ingesta validada: simulador, formulario, CSV (unidad, rango, día, duplicados, ausentes); origen de cada dato; registro de rechazos | Laboratorio → Datos |
+| F3 | PVT-B de 3 min (y demo abreviada de 60 s claramente marcada), reloj monotónico, anticipaciones, lapsos, interrupciones | Persona → botón "Prueba PVT" |
+| F4 | Check-in < 1 min: ánimo, calidad de sueño percibida, notas; historial | Persona → botón "Check-in" |
+| F5 | Línea base individual: mediana, MAD, n, ventana, diferencia; calibración; exclusión de días en alerta | Persona ("Su normal" y "¿Por qué?") |
+| F6 | z robusto, semáforo con persistencia, línea base inicial para derivas, tendencia, calidad de datos, radiación tasa vs. acumulada | Persona |
+| F7 | Alertas explicables (frase + acciones; detalle y fuente en "¿Por qué?"); gestión de alarmas por prioridad: reconocer o posponer 24 h por episodio, registro de quién y cuándo, aviso de escalado a los 2 días | Persona · Tripulación → Alarmas (rol Oficial médico) |
+| F8 | Gráficos: valor sobre la banda de rango normal personal, umbral poblacional opcional, inicio de la alerta anotado, frescura y calidad del dato | Persona |
+| F9 | Simulador con semillas: escenarios A–G, iniciar/pausar/avanzar/reiniciar, apagón configurable, verdad vs. detector | Laboratorio → Simulador · franja Tierra–Marte |
+| F10 | Reporte por astronauta o tripulación, cola de envío diferido que respeta el apagón, JSON/CSV/PDF (imprimir) | Chip "Tierra" de la cabecera |
 
-Pantallas: **01** Misión y oficial médico · **02** Salud y alertas · **03** Check-in y PVT · **04** Simulador ·
-**05** Validation Lab · **06** Reportes y ciencia. Botón **Demo guiada** en la cabecera (9 pasos con acciones reales).
+Selector de rol en la cabecera (**Astronauta** ve su estado y qué hacer; **Oficial médico** ve además las alarmas y los controles de revisión). Navegación: **Tripulación** (con una línea de respuesta: «2 de 4 tripulantes requieren acción») (inicio, con la franja Tierra–Marte y "Para revisar") y **Laboratorio** (simulador, validación, datos y ciencia). Cada astronauta se abre tocando su retrato; los reportes, desde el chip de la Tierra. Botón **Demo** en la cabecera (9 pasos con acciones reales). Diseño claro en blanco y azul; imágenes de la Tierra, Marte y la cúpula de la ISS de dominio público (NASA, vía Wikimedia Commons; créditos en `frontend/public/img/credits.json`) y retratos ilustrados propios.
 
 ## Arquitectura (5 capas, todo local)
 

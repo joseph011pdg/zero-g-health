@@ -177,39 +177,77 @@ def sync_alerts(astro_id: str) -> None:
     _synced[astro_id] = (v, PARAMS.yellow, PARAMS.red)
 
 
+def rule_base(regla: str) -> str:
+    """Tipo de alerta sin el nivel (fc_rojo -> fc): identifica el episodio."""
+    for suf in ("_amarillo", "_rojo"):
+        if regla.endswith(suf):
+            return regla[: -len(suf)]
+    return regla
+
+
+ACK_STATES = {"reconocida", "revisada", "escalada", "descartada"}
+
+
 def stored_alerts(astro_id: str | None = None, day_max: int | None = None, day_min: int = 0,
                   estado: str | None = None, day_eq: int | None = None) -> list[dict]:
+    """Alertas guardadas con su estado efectivo:
+    * una alerta pospuesta vuelve a 'pendiente' cuando pasa el día en que se pospuso;
+    * dentro de un episodio (mismo tipo y nivel en días consecutivos) una alerta nueva hereda el
+      reconocimiento del día anterior, para no pedir lo mismo cada día."""
     ids = [astro_id] if astro_id else [a["id"] for a in db.query("SELECT id FROM astronauts")]
     for i in ids:
         sync_alerts(i)
-    sql, args = "SELECT * FROM alerts WHERE day >= ?", [day_min]
+    today = db.get_mission()["current_day"]
+    sql, args = "SELECT * FROM alerts WHERE 1 = 1", []
     if astro_id:
         sql += " AND astro_id = ?"; args.append(astro_id)
-    if day_max is not None:
-        sql += " AND day <= ?"; args.append(day_max)
-    if day_eq is not None:
-        sql += " AND day = ?"; args.append(day_eq)
-    if estado:
-        sql += " AND estado = ?"; args.append(estado)
-    out = []
-    for r in db.query(sql + " ORDER BY day DESC", args):
+    rows = db.query(sql + " ORDER BY astro_id, regla, day", args)
+    out, prev = [], {}
+    for r in rows:
         a = json.loads(r["payload"])
-        a.update(estado=r["estado"], nota=r["nota"], revisado_ts=r["revisado_ts"])
+        est = r["estado"]
+        if est == "pospuesta" and r["revisado_dia"] is not None and today > r["revisado_dia"]:
+            est = "pendiente"
+        key = (r["astro_id"], rule_base(r["regla"]), r["nivel"])
+        p = prev.get(key)
+        heredada = False
+        if est == "pendiente" and p and p["day"] == r["day"] - 1 and p["estado"] in ACK_STATES | {"pospuesta"}:
+            est, heredada = p["estado"], True
+        a.update(estado=est, nota=r["nota"] or (p["nota"] if heredada else None), revisado_ts=r["revisado_ts"],
+                 revisor=r["revisor"] or (p["revisor"] if heredada else None),
+                 revisado_dia=r["revisado_dia"] if r["revisado_dia"] is not None else (p["revisado_dia"] if heredada else None),
+                 heredada=heredada, episodio=rule_base(r["regla"]))
+        prev[key] = {"day": r["day"], "estado": est, "nota": a["nota"], "revisor": a["revisor"], "revisado_dia": a["revisado_dia"]}
         out.append(a)
+    out = [a for a in out if a["day"] >= day_min and (day_max is None or a["day"] <= day_max)
+           and (day_eq is None or a["day"] == day_eq) and (estado is None or a["estado"] == estado)]
     out.sort(key=lambda a: (-a["day"], -RANK[a["nivel"]]))
     return out
 
 
-def review_alert(alert_id: str, estado: str, nota: str | None) -> dict | None:
-    if not db.one("SELECT id FROM alerts WHERE id = ?", (alert_id,)):
-        return None
-    with db.tx() as con:
-        con.execute("UPDATE alerts SET estado = ?, nota = ?, revisado_ts = CURRENT_TIMESTAMP WHERE id = ?",
-                    (estado, nota, alert_id))
+def review_alert(alert_id: str, estado: str, nota: str | None, revisor: str | None = None,
+                 episodio: bool = True) -> dict | None:
+    """Cambia el estado de una alerta. Con episodio=True se aplica también a las alertas anteriores del
+    mismo tipo y astronauta que sigan pendientes (reconocer el episodio, no cada día por separado)."""
     r = db.one("SELECT * FROM alerts WHERE id = ?", (alert_id,))
-    a = json.loads(r["payload"])
-    a.update(estado=r["estado"], nota=r["nota"], revisado_ts=r["revisado_ts"])
-    return a
+    if not r:  # quizá aún no se materializaron (p. ej., justo después de reiniciar)
+        for a in db.query("SELECT id FROM astronauts"):
+            sync_alerts(a["id"])
+        r = db.one("SELECT * FROM alerts WHERE id = ?", (alert_id,))
+    if not r:
+        return None
+    today = db.get_mission()["current_day"]
+    with db.tx() as con:
+        targets = [alert_id]
+        if episodio:
+            base = rule_base(r["regla"])
+            for o in con.execute("SELECT id, regla FROM alerts WHERE astro_id = ? AND day <= ? AND estado IN ('pendiente', 'pospuesta')",
+                                 (r["astro_id"], r["day"])).fetchall():
+                if rule_base(o["regla"]) == base:
+                    targets.append(o["id"])
+        con.executemany("UPDATE alerts SET estado = ?, nota = ?, revisor = ?, revisado_dia = ?, revisado_ts = CURRENT_TIMESTAMP "
+                        "WHERE id = ?", [(estado, nota, revisor, today, t) for t in set(targets)])
+    return next((a for a in stored_alerts(r["astro_id"]) if a["id"] == alert_id), None)
 
 
 def _f(x, nd=2):
@@ -257,8 +295,7 @@ def crew() -> dict:
     for a in db.query("SELECT * FROM astronauts ORDER BY id"):
         res = analysis(a["id"])
         al = stored_alerts(a["id"], day_eq=day)
-        pend = db.one("SELECT COUNT(*) n FROM alerts WHERE astro_id=? AND day<=? AND estado='pendiente'",
-                      (a["id"], day))["n"]
+        pend = sum(1 for x in stored_alerts(a["id"], day_max=day) if x["estado"] == "pendiente")
         st = indicator_status(res, day)
         q = [v["calidad_14d_pct"] for v in st.values() if v["calidad_14d_pct"] is not None]
         out.append({**a, "nivel": LEVELS[global_level(res, day)], "indice": health_index(res, day),

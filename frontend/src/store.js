@@ -25,6 +25,10 @@ export async function api(path, opts = {}) {
   return ct.includes('json') ? res.json() : res.text()
 }
 
+function readRole() {
+  try { return localStorage.getItem('basal.role') || 'oficial' } catch { return 'oficial' }
+}
+
 export const useStore = defineStore('basal', {
   state: () => ({
     mission: null,
@@ -33,13 +37,18 @@ export const useStore = defineStore('basal', {
     selected: 'A1',
     online: null,
     publico: false,
+    role: readRole(), // 'astronauta' | 'oficial'
+    updatedAt: null,
+    pendingReports: 0,
     error: null,
     toasts: [],
     tick: 0 // se incrementa cuando cambian los datos: las vistas recargan
   }),
   getters: {
     day: (s) => s.mission?.dia ?? 0,
-    selectedAstro: (s) => s.crew.find((a) => a.id === s.selected)
+    selectedAstro: (s) => s.crew.find((a) => a.id === s.selected),
+    officer: (s) => s.crew.find((a) => /m[eé]dic/i.test(a.rol)),
+    isOfficer: (s) => s.role === 'oficial'
   },
   actions: {
     async init() {
@@ -62,9 +71,11 @@ export const useStore = defineStore('basal', {
       } catch { this.online = false }
     },
     async refresh() {
-      const [m, c] = await Promise.all([api('/mission'), api('/crew')])
+      const [m, c, r] = await Promise.all([api('/mission'), api('/crew'), api('/reports')])
       this.crew = c.tripulacion
       this.mission = m
+      this.pendingReports = r.filter((x) => x.estado === 'pendiente').length
+      this.updatedAt = new Date()
       if (!this.crew.find((a) => a.id === this.selected) && this.crew.length) this.selected = this.crew[0].id
       this.tick++
     },
@@ -77,6 +88,10 @@ export const useStore = defineStore('basal', {
       await this.refresh()
     },
     select(id) { this.selected = id },
+    setRole(r) {
+      this.role = r
+      try { localStorage.setItem('basal.role', r) } catch { /* sin almacenamiento: solo en memoria */ }
+    },
     toast(msg, kind = 'ok') {
       const id = Math.random()
       this.toasts.push({ id, msg, kind })
@@ -102,12 +117,15 @@ export const LEVEL = {
   calibrando: { label: 'Calibrando', icon: 'dashed' },
   sin_dato: { label: 'Sin dato', icon: 'minus' }
 }
+export const RANK_LEVEL = { sin_dato: -1, calibrando: -1, verde: 0, amarillo: 1, rojo: 2 }
 export const IND_ICON = { rhr: 'heart', hrv: 'activity', sleep: 'moon', dose: 'radiation', pvt: 'target', mood: 'smile' }
 export const SRC_LABEL = { sintetico: 'sintético', manual: 'manual', csv: 'CSV', pvt: 'PVT-B', pvt_abreviada: 'PVT abreviada', real: 'real' }
-export const STATE_LABEL = { pendiente: 'Pendiente', revisada: 'Revisada', escalada: 'Escalada', descartada: 'Descartada' }
+export const STATE_LABEL = { pendiente: 'Sin reconocer', reconocida: 'Reconocida', pospuesta: 'Pospuesta 24 h', revisada: 'Resuelta', escalada: 'Escalada', descartada: 'Descartada' }
 
-export const fmt = (v, d = 1) => (v === null || v === undefined || Number.isNaN(v) ? '—' : Number(v).toFixed(d))
-export const signed = (v, d = 1) => (v === null || v === undefined ? '—' : `${v > 0 ? '+' : ''}${Number(v).toFixed(d)}`)
+const nf = (v, d) => Number(v).toLocaleString('es', { minimumFractionDigits: d, maximumFractionDigits: d })
+// Cifras con coma decimal (es)
+export const fmt = (v, d = 1) => (v === null || v === undefined || Number.isNaN(v) ? '—' : nf(v, d))
+export const signed = (v, d = 1) => (v === null || v === undefined ? '—' : `${v > 0 ? '+' : v < 0 ? '−' : ''}${nf(Math.abs(v), d)}`)
 
 export function download(name, content, type = 'application/json') {
   const blob = new Blob([content], { type })
