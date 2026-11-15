@@ -8,7 +8,7 @@
       <div class="grid">
         <h2>Cada astronauta se compara consigo mismo</h2>
         <div class="formula mono">z = (valor de hoy − mediana de sus 14 días previos) / (1,4826 × MAD)</div>
-        <p class="small">Vigilar si z ≥ {{ p.yellow }} · Actuar si z ≥ {{ p.red }} o {{ p.persist }} días seguidos en vigilar. Son parámetros
+        <p class="small">Vigilar si z ≥ {{ nn(p.yellow) }} · Actuar si z ≥ {{ nn(p.red) }} o {{ p.persist }} días seguidos en vigilar. Son parámetros
           experimentales ({{ p.origen }}), no límites médicos.</p>
       </div>
     </section>
@@ -42,7 +42,7 @@
         <tbody><tr v-for="(c, k) in s.indicators" :key="k">
           <td class="strong"><Icon :name="IND_ICON[k]" :size="14" /> {{ c.corto }} <span class="muted">({{ c.unidad }})</span></td>
           <td class="small">{{ c.sensor }}</td><td>{{ c.direction > 0 ? 'sube' : 'baja' }}</td>
-          <td class="num right">{{ c.umbral_fijo }}</td><td class="small muted">{{ c.clinical }}</td></tr></tbody>
+          <td class="num right">{{ nn(c.umbral_fijo, Math.max(1, c.decimales)) }}</td><td class="small muted">{{ c.clinical }}</td></tr></tbody>
       </table></div>
     </section>
 
@@ -71,7 +71,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { api, useStore, IND_ICON } from '../store.js'
+import { api, useStore, nn, IND_ICON } from '../store.js'
 import Icon from '../components/Icon.vue'
 const s = useStore()
 const ev = ref([])

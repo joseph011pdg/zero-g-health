@@ -14,7 +14,7 @@
         <div><span class="label">Ajuste</span><div class="small">semillas {{ v.protocolo.semillas_ajuste.join('–') }} · 20 misiones</div></div>
         <div><span class="label">Evaluación (independiente)</span><div class="small">semillas {{ v.protocolo.semillas_evaluacion.join('–') }} ·
           {{ v.protocolo.misiones_evaluacion }} misiones × {{ v.protocolo.astronautas_por_mision }} astronautas × {{ v.protocolo.dias_por_mision }} días</div></div>
-        <div><span class="label">Cortes elegidos</span><div class="small mono">vigilar |z| ≥ {{ v.parametros.yellow }} · actuar ≥ {{ v.parametros.red }} o {{ v.parametros.persist }} días</div></div>
+        <div><span class="label">Cortes elegidos</span><div class="small mono">vigilar |z| ≥ {{ nn(v.parametros.yellow) }} · actuar ≥ {{ nn(v.parametros.red) }} o {{ v.parametros.persist }} días</div></div>
         <div><span class="label">Criterio de ajuste</span><div class="small">{{ v.protocolo.restriccion_ajuste }}; máxima sensibilidad "actuar"</div></div>
         <div><span class="label">Eventos evaluados</span><div class="small">{{ g.B_fijo.eventos }} eventos · {{ g.B_fijo.dias_sanos.toLocaleString('es') }} días sanos</div></div>
       </section>
@@ -23,10 +23,10 @@
         <div v-for="(label, m) in v.metodos" :key="m" class="panel method" :class="m">
           <div class="label">{{ label }}</div>
           <div class="kpis">
-            <div class="kpi"><span class="v">{{ g[m].sensibilidad_pct }}<small>%</small></span><span class="tiny muted">sensibilidad (eventos)</span></div>
-            <div class="kpi"><span class="v">{{ g[m].retraso_medio_dias }}<small>d</small></span><span class="tiny muted">retraso medio · mediana {{ g[m].retraso_mediano_dias }} d</span></div>
-            <div class="kpi"><span class="v">{{ g[m].episodios_falsos_por_30_dias }}</span><span class="tiny muted">falsas alarmas / 30 días-astronauta</span></div>
-            <div class="kpi"><span class="v">{{ g[m].falsas_alarmas_dias_pct }}<small>%</small></span><span class="tiny muted">días sanos con alerta</span></div>
+            <div class="kpi"><span class="v">{{ nn(g[m].sensibilidad_pct) }} <small>%</small></span><span class="tiny muted">sensibilidad (eventos)</span></div>
+            <div class="kpi"><span class="v">{{ nn(g[m].retraso_medio_dias) }} <small>d</small></span><span class="tiny muted">retraso medio · mediana {{ nn(g[m].retraso_mediano_dias) }} d</span></div>
+            <div class="kpi"><span class="v">{{ nn(g[m].episodios_falsos_por_30_dias) }}</span><span class="tiny muted">falsas alarmas / 30 días-astronauta</span></div>
+            <div class="kpi"><span class="v">{{ nn(g[m].falsas_alarmas_dias_pct) }} <small>%</small></span><span class="tiny muted">días sanos con alerta</span></div>
           </div>
         </div>
       </section>
@@ -56,11 +56,11 @@
             <thead><tr><th></th><th>Vigilar</th><th>Actuar</th></tr></thead>
             <tbody>
               <tr v-for="r in ANT" :key="r.k"><td class="small">{{ r.l }}</td>
-                <td class="num">{{ v.evaluacion.anticipacion.A_vigilar[r.k] }}</td><td class="num">{{ v.evaluacion.anticipacion.A_actuar[r.k] }}</td></tr>
+                <td class="num">{{ nn(v.evaluacion.anticipacion.A_vigilar[r.k]) }}</td><td class="num">{{ nn(v.evaluacion.anticipacion.A_actuar[r.k]) }}</td></tr>
             </tbody>
           </table>
           <p class="tiny muted">Anticipación media positiva = A avisa antes que B. El nivel "actuar" exige más evidencia
-            (corte {{ v.parametros.red }} o persistencia) y por eso, en promedio, avisa <strong>después</strong> que el umbral fijo en
+            (corte {{ nn(v.parametros.red) }} o persistencia) y por eso, en promedio, avisa <strong>después</strong> que el umbral fijo en
             los eventos que ambos detectan, a cambio de menos falsas alarmas y de detectar eventos que B no ve.</p>
         </div>
       </section>
@@ -72,11 +72,11 @@
             <thead><tr><th>Indicador</th><th>Eventos</th><th>A vigilar</th><th>A actuar</th><th>B fijo</th><th>FA A act.</th><th>FA B</th></tr></thead>
             <tbody><tr v-for="(x, k) in v.evaluacion.por_indicador.B_fijo" :key="k">
               <td>{{ s.indicators[k]?.corto || k }}</td><td class="num">{{ x.eventos_que_lo_afectan }}</td>
-              <td class="num">{{ v.evaluacion.por_indicador.A_vigilar[k].sensibilidad_pct ?? '—' }}</td>
-              <td class="num">{{ v.evaluacion.por_indicador.A_actuar[k].sensibilidad_pct ?? '—' }}</td>
-              <td class="num">{{ x.sensibilidad_pct ?? '—' }}</td>
-              <td class="num">{{ v.evaluacion.por_indicador.A_actuar[k].falsas_alarmas_dias_pct }}</td>
-              <td class="num">{{ x.falsas_alarmas_dias_pct }}</td></tr></tbody>
+              <td class="num">{{ nn(v.evaluacion.por_indicador.A_vigilar[k].sensibilidad_pct) }}</td>
+              <td class="num">{{ nn(v.evaluacion.por_indicador.A_actuar[k].sensibilidad_pct) }}</td>
+              <td class="num">{{ nn(x.sensibilidad_pct) }}</td>
+              <td class="num">{{ nn(v.evaluacion.por_indicador.A_actuar[k].falsas_alarmas_dias_pct) }}</td>
+              <td class="num">{{ nn(x.falsas_alarmas_dias_pct) }}</td></tr></tbody>
           </table></div>
         </div>
         <div class="panel">
@@ -84,8 +84,8 @@
           <table class="table">
             <thead><tr><th>Variante</th><th>Sens. actuar</th><th>Retraso</th><th>FA/30 d</th></tr></thead>
             <tbody><tr v-for="(x, k) in v.ablacion" :key="k" :class="{ hl: k === 'completo' }">
-              <td class="small">{{ ABL[k] }}</td><td class="num">{{ x.A_actuar.sensibilidad_pct }} %</td>
-              <td class="num">{{ x.A_actuar.retraso_medio_dias }} d</td><td class="num">{{ x.A_actuar.episodios_falsos_por_30_dias }}</td></tr></tbody>
+              <td class="small">{{ ABL[k] }}</td><td class="num">{{ nn(x.A_actuar.sensibilidad_pct) }} %</td>
+              <td class="num">{{ nn(x.A_actuar.retraso_medio_dias) }} d</td><td class="num">{{ nn(x.A_actuar.episodios_falsos_por_30_dias) }}</td></tr></tbody>
           </table>
           <p class="tiny muted">La línea base inicial es la que permite detectar deterioros lentos (escenario E): sin ella la
             sensibilidad "actuar" cae de forma marcada, a cambio de menos falsas alarmas.</p>
@@ -97,9 +97,9 @@
         <div class="table-wrap"><table class="table">
           <thead><tr><th>Amarillo</th><th>Rojo</th><th>Sens. vigilar</th><th>FA vigilar /30 d</th><th>Sens. actuar</th><th>Retraso actuar</th><th>FA actuar /30 d</th><th>Cumple</th></tr></thead>
           <tbody><tr v-for="(r, i) in v.ajuste" :key="i" :class="{ hl: r.yellow === v.parametros.yellow && r.red === v.parametros.red }">
-            <td class="num">{{ r.yellow }}</td><td class="num">{{ r.red }}</td><td class="num">{{ r.vigilar.sensibilidad_pct }} %</td>
-            <td class="num">{{ r.vigilar.episodios_falsos_por_30_dias }}</td><td class="num">{{ r.actuar.sensibilidad_pct }} %</td>
-            <td class="num">{{ r.actuar.retraso_medio_dias }} d</td><td class="num">{{ r.actuar.episodios_falsos_por_30_dias }}</td>
+            <td class="num">{{ nn(r.yellow) }}</td><td class="num">{{ nn(r.red) }}</td><td class="num">{{ nn(r.vigilar.sensibilidad_pct) }} %</td>
+            <td class="num">{{ nn(r.vigilar.episodios_falsos_por_30_dias) }}</td><td class="num">{{ nn(r.actuar.sensibilidad_pct) }} %</td>
+            <td class="num">{{ nn(r.actuar.retraso_medio_dias) }} d</td><td class="num">{{ nn(r.actuar.episodios_falsos_por_30_dias) }}</td>
             <td>{{ r.cumple_restriccion ? 'sí' : 'no' }}</td></tr></tbody>
         </table></div>
       </section>
@@ -113,7 +113,7 @@
             <label class="field"><span>Escenario</span><select class="input" v-model="ex.escenario">
               <option :value="null">Mixto</option><option value="B">B · fatiga progresiva</option><option value="C">C · estrés fisiológico</option>
               <option value="D">D · evento solar</option><option value="E">E · cambio conductual</option></select></label>
-            <label class="field"><span>Heterogeneidad ({{ ex.heterogeneidad }}×)</span><input type="range" min="0.25" max="2.5" step="0.25" v-model.number="ex.heterogeneidad" /></label>
+            <label class="field"><span>Heterogeneidad ({{ nn(ex.heterogeneidad) }}×)</span><input type="range" min="0.25" max="2.5" step="0.25" v-model.number="ex.heterogeneidad" /></label>
             <label class="field"><span>Datos faltantes ({{ Math.round(ex.faltantes * 100) }} %)</span><input type="range" min="0" max="0.4" step="0.05" v-model.number="ex.faltantes" /></label>
             <label class="field"><span>Cortes amarillo / rojo</span>
               <div class="row"><input class="input" type="number" step="0.5" v-model.number="ex.yellow" /><input class="input" type="number" step="0.5" v-model.number="ex.red" /></div></label>
@@ -126,12 +126,12 @@
           <p v-if="!exRes" class="small muted">Ejecute un experimento para ver los resultados aquí.</p>
           <template v-else>
             <p class="tiny muted mono">semillas {{ exRes.semillas.join('–') }} · {{ exRes.astronautas }} astronautas · escenario {{ exRes.escenario }} ·
-              heterogeneidad {{ exRes.heterogeneidad }}× · faltantes {{ Math.round(exRes.faltantes * 100) }} % · cortes {{ exRes.parametros.yellow }}/{{ exRes.parametros.red }} · {{ exRes.segundos }} s</p>
+              heterogeneidad {{ nn(exRes.heterogeneidad) }}× · faltantes {{ Math.round(exRes.faltantes * 100) }} % · cortes {{ nn(exRes.parametros.yellow) }}/{{ nn(exRes.parametros.red) }} · {{ nn(exRes.segundos) }} s</p>
             <table class="table">
               <thead><tr><th>Método</th><th>Eventos</th><th>Sens.</th><th>Retraso</th><th>FA/30 d</th><th>FA % días</th></tr></thead>
               <tbody><tr v-for="(x, m) in exRes.resultados.global" :key="m"><td class="small">{{ v.metodos[m] }}</td>
-                <td class="num">{{ x.eventos }}</td><td class="num">{{ x.sensibilidad_pct }} %</td><td class="num">{{ x.retraso_medio_dias ?? '—' }} d</td>
-                <td class="num">{{ x.episodios_falsos_por_30_dias }}</td><td class="num">{{ x.falsas_alarmas_dias_pct }} %</td></tr></tbody>
+                <td class="num">{{ x.eventos }}</td><td class="num">{{ nn(x.sensibilidad_pct) }} %</td><td class="num">{{ nn(x.retraso_medio_dias) }} d</td>
+                <td class="num">{{ nn(x.episodios_falsos_por_30_dias) }}</td><td class="num">{{ nn(x.falsas_alarmas_dias_pct) }} %</td></tr></tbody>
             </table>
           </template>
         </div>
@@ -143,9 +143,9 @@
           <thead><tr><th>Astronauta</th><th>Eventos</th><th>A actuar: detectados · FA/30 d</th><th>A vigilar: detectados · FA/30 d</th><th>B fijo: detectados · FA/30 d</th></tr></thead>
           <tbody><tr v-for="(x, id) in demo.por_astronauta" :key="id">
             <td>{{ id }} · {{ x.nombre }}</td><td class="small">{{ x.eventos.map((e) => `${e.escenario} (D${e.start}–${e.end})`).join(', ') || '—' }}</td>
-            <td class="num">{{ x.metodos.A_actuar.detectados }}/{{ x.metodos.A_actuar.eventos }} · {{ x.metodos.A_actuar.episodios_falsos_por_30_dias }}</td>
-            <td class="num">{{ x.metodos.A_vigilar.detectados }}/{{ x.metodos.A_vigilar.eventos }} · {{ x.metodos.A_vigilar.episodios_falsos_por_30_dias }}</td>
-            <td class="num">{{ x.metodos.B_fijo.detectados }}/{{ x.metodos.B_fijo.eventos }} · {{ x.metodos.B_fijo.episodios_falsos_por_30_dias }}</td></tr></tbody>
+            <td class="num">{{ x.metodos.A_actuar.detectados }}/{{ x.metodos.A_actuar.eventos }} · {{ nn(x.metodos.A_actuar.episodios_falsos_por_30_dias) }}</td>
+            <td class="num">{{ x.metodos.A_vigilar.detectados }}/{{ x.metodos.A_vigilar.eventos }} · {{ nn(x.metodos.A_vigilar.episodios_falsos_por_30_dias) }}</td>
+            <td class="num">{{ x.metodos.B_fijo.detectados }}/{{ x.metodos.B_fijo.eventos }} · {{ nn(x.metodos.B_fijo.episodios_falsos_por_30_dias) }}</td></tr></tbody>
         </table></div>
       </section>
 
@@ -164,7 +164,7 @@
           <ul class="small defs">
             <li>Todos los datos son <strong>sintéticos</strong>: el resultado depende de los supuestos del simulador (diferencias entre personas mayores que la variación diaria, forma y tamaño de los eventos).</li>
             <li>No hay validación con datos reales de astronautas ni validación clínica. Mostrar que el método funciona en datos simulados no prueba que funcione en vuelo.</li>
-            <li>El nivel "vigilar" genera ~{{ g.A_vigilar.episodios_falsos_por_30_dias }} avisos falsos por 30 días por astronauta al vigilar 6 indicadores: es un aviso para repetir la medición, no para actuar.</li>
+            <li>El nivel "vigilar" genera ~{{ nn(g.A_vigilar.episodios_falsos_por_30_dias) }} avisos falsos por 30 días por astronauta al vigilar 6 indicadores: es un aviso para repetir la medición, no para actuar.</li>
             <li>El comparador B es un intervalo poblacional estimado en la misma población simulada; umbrales clínicos reales (p. ej., FC &gt; 100 lpm) serían aún menos sensibles a cambios individuales.</li>
             <li>Ventana de 14 días y min. 7 observaciones fijadas por diseño (no ajustadas).</li>
           </ul>
@@ -177,7 +177,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import VChart from 'vue-echarts'
-import { api, useStore } from '../store.js'
+import { api, useStore, nn } from '../store.js'
 import { C, baseTooltip, axis } from '../charts.js'
 import Icon from '../components/Icon.vue'
 
@@ -197,7 +197,7 @@ const ANT = [{ k: 'eventos_detectados_por_ambos', l: 'Eventos detectados por amb
 
 const g = computed(() => v.value.evaluacion.global)
 const fixedTxt = computed(() => Object.entries(v.value.parametros.fixed)
-  .map(([k, x]) => `${s.indicators[k]?.corto || k} ${x} ${s.indicators[k]?.unidad || ''}`).join(' · '))
+  .map(([k, x]) => `${s.indicators[k]?.corto || k} ${nn(x, Math.max(1, s.indicators[k]?.decimales ?? 1))} ${s.indicators[k]?.unidad || ''}`).join(' · '))
 
 onMounted(async () => {
   try {
@@ -211,21 +211,21 @@ function scenOpt(field, unit) {
   const ps = v.value.evaluacion.por_escenario
   const scs = Object.keys(ps.B_fijo)
   return {
-    animation: true, tooltip: { ...baseTooltip, trigger: 'axis', valueFormatter: (x) => `${x} ${unit}` },
+    animation: true, tooltip: { ...baseTooltip, trigger: 'axis', valueFormatter: (x) => `${nn(x)} ${unit}` },
     legend: { top: 0, textStyle: { color: C.muted, fontSize: 11 } }, grid: { left: 40, right: 10, top: 34, bottom: 30 },
     xAxis: { type: 'category', data: scs.map((k) => `${k} · ${v.value.escenarios[k]}`), ...axis({ splitLine: { show: false } }),
       axisLabel: { color: C.muted, fontSize: 10, interval: 0, formatter: (x) => x.split(' · ')[1].replace(' (evento solar)', '') } },
     yAxis: { type: 'value', ...axis() },
     series: Object.keys(v.value.metodos).map((m) => ({ name: v.value.metodos[m], type: 'bar', barGap: '10%',
       data: scs.map((k) => ps[m][k][field]), itemStyle: { color: COL[m], borderRadius: [3, 3, 0, 0] },
-      label: { show: true, position: 'top', color: C.muted, fontSize: 9 } }))
+      label: { show: true, position: 'top', color: C.muted, fontSize: 9, formatter: (q) => nn(q.value) } }))
   }
 }
 const sweepOpt = computed(() => {
   const rows = v.value.heterogeneidad
-  const xs = rows.map((r) => `${r.heterogeneidad}×`)
+  const xs = rows.map((r) => `${nn(r.heterogeneidad)}×`)
   return {
-    tooltip: { ...baseTooltip, trigger: 'axis' }, legend: { top: 0, textStyle: { color: C.muted, fontSize: 11 } },
+    tooltip: { ...baseTooltip, trigger: 'axis', valueFormatter: (x) => nn(x) }, legend: { top: 0, textStyle: { color: C.muted, fontSize: 11 } },
     grid: { left: 40, right: 44, top: 34, bottom: 30 },
     xAxis: { type: 'category', data: xs, name: 'heterogeneidad', nameLocation: 'middle', nameGap: 22, nameTextStyle: { color: C.muted }, ...axis({ splitLine: { show: false } }) },
     yAxis: [{ type: 'value', min: 50, max: 100, name: 'sens. %', nameTextStyle: { color: C.muted }, ...axis() },

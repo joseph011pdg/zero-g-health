@@ -7,7 +7,7 @@ from basal import db
 def test_health_and_mission(fresh):
     assert fresh.get("/api/health").json()["ok"]
     m = fresh.get("/api/mission").json()
-    assert m["dia"] == 38 and m["dias"] == 120
+    assert m["dia"] == 40 and m["dias"] == 120
     assert m["parametros"]["red"] > m["parametros"]["yellow"]
 
 
@@ -143,3 +143,17 @@ def test_acknowledge_episode_and_snooze(fresh):
     fresh.post("/api/mission/day", json={"day": 73})
     back = [a for a in fresh.get("/api/alerts?astro_id=A3").json() if a["id"] == red["id"]]
     assert back[0]["estado"] == "pendiente"
+
+
+def test_session_day_and_blackout_headers(fresh):
+    """Demo pública: día y apagón por sesión, sin cambiar el estado compartido."""
+    m = fresh.get("/api/mission", headers={"X-Basal-Dia": "72"}).json()
+    assert m["dia"] == 72
+    assert fresh.get("/api/mission").json()["dia"] == 40  # la base no cambió
+    a = fresh.get("/api/astronauts/A3", headers={"X-Basal-Dia": "72"}).json()
+    assert a["dia"] == 72 and a["alertas"]
+    off = fresh.get("/api/mission", headers={"X-Basal-Apagon": "1"}).json()["comunicacion"]
+    assert off["apagon"] and off["simulado"]
+    t = fresh.post("/api/reports/transmit", headers={"X-Basal-Apagon": "1"}).json()
+    assert t["enviados"] == 0
+    assert fresh.get("/api/reports").json()  # reporte de ejemplo precargado

@@ -2,12 +2,21 @@ import { defineStore } from 'pinia'
 
 export class ApiError extends Error {}
 
+// Estado por sesión (demo pública): cada visitante mueve su propio día y su apagón simulado
+// sin cambiar lo que ven los demás. Viaja al backend en cabeceras.
+function ssGet(k) { try { return sessionStorage.getItem(k) } catch { return null } }
+function ssSet(k, v) { try { v === null ? sessionStorage.removeItem(k) : sessionStorage.setItem(k, v) } catch { /* solo memoria */ } }
+export const session = { dia: ssGet('basal.dia') === null ? null : +ssGet('basal.dia'), apagon: ssGet('basal.apagon') === '1' }
+
 export async function api(path, opts = {}) {
   let res
+  const headers = { 'Content-Type': 'application/json' }
+  if (session.dia !== null) headers['X-Basal-Dia'] = String(session.dia)
+  if (session.apagon) headers['X-Basal-Apagon'] = '1'
   try {
     res = await fetch(`/api${path}`, {
       method: opts.method || 'GET',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: opts.body ? JSON.stringify(opts.body) : undefined
     })
   } catch (e) {
@@ -25,6 +34,10 @@ export async function api(path, opts = {}) {
   return ct.includes('json') ? res.json() : res.text()
 }
 
+function readAcks() {
+  try { return JSON.parse(localStorage.getItem('basal.acks') || '{}') } catch { return {} }
+}
+
 function readRole() {
   try { return localStorage.getItem('basal.role') || 'oficial' } catch { return 'oficial' }
 }
@@ -40,8 +53,11 @@ export const useStore = defineStore('basal', {
     role: readRole(), // 'astronauta' | 'oficial'
     updatedAt: null,
     pendingReports: 0,
+    apagon: session.apagon, // apagón simulado solo en esta sesión
+    acks: readAcks(), // demo pública: reconocimientos guardados en este navegador
     error: null,
     toasts: [],
+    demo: false, // panel de demo guiada abierto
     tick: 0 // se incrementa cuando cambian los datos: las vistas recargan
   }),
   getters: {
@@ -55,6 +71,7 @@ export const useStore = defineStore('basal', {
       try {
         this.indicators = await api('/indicators')
         this.publico = !!(await api('/health')).publico
+        if (!this.publico && session.dia !== null) { session.dia = null; ssSet('basal.dia', null) }
         await this.refresh()
         this.online = true
         this.error = null
@@ -80,12 +97,60 @@ export const useStore = defineStore('basal', {
       this.tick++
     },
     async setDay(day) {
-      await api('/mission/day', { method: 'POST', body: { day } })
+      if (this.publico) {
+        session.dia = Math.max(0, Math.min(day, (this.mission?.dias ?? 120) - 1))
+        ssSet('basal.dia', String(session.dia))
+      } else {
+        await api('/mission/day', { method: 'POST', body: { day } })
+      }
       await this.refresh()
     },
     async advance(n) {
+      if (this.publico) return this.setDay(this.day + n)
       await api('/mission/advance', { method: 'POST', body: { n } })
       await this.refresh()
+    },
+    async setApagon(on) {
+      this.apagon = !!on
+      session.apagon = this.apagon
+      ssSet('basal.apagon', on ? '1' : null)
+      await this.refresh()
+    },
+    async resetDemo() {
+      session.dia = null; session.apagon = false; this.apagon = false
+      ssSet('basal.dia', null); ssSet('basal.apagon', null)
+      this.acks = {}
+      try { localStorage.removeItem('basal.acks') } catch { /* nada */ }
+      if (!this.publico) await api('/sim/reset', { method: 'POST', body: {} })
+      await this.refresh()
+    },
+    // Revisión de una alarma. En la demo pública se guarda solo en este navegador.
+    async review(a, estado, nota = null) {
+      const revisor = this.officer ? this.officer.nombre : 'Oficial médico'
+      if (this.publico) {
+        const key = `${a.astro_id}|${a.episodio}|${a.nivel}`
+        const acks = { ...this.acks }
+        if (estado === 'pendiente') delete acks[key]
+        else acks[key] = { estado, nota: nota || null, revisor, revisado_dia: this.day, desde: a.day }
+        this.acks = acks
+        try { localStorage.setItem('basal.acks', JSON.stringify(acks)) } catch { /* solo memoria */ }
+        this.tick++
+        return { ...a, ...(acks[key] || { estado: 'pendiente', nota: null, revisor: null, revisado_dia: null }) }
+      }
+      const r = await api(`/alerts/${encodeURIComponent(a.id)}`, { method: 'PATCH', body: { estado, nota: nota || null, revisor } })
+      await this.refresh()
+      return r
+    },
+    // Aplica los reconocimientos locales (demo pública) con la misma lógica de episodio del backend:
+    // hereda hacia adelante y una alarma pospuesta vuelve a pendiente pasado su día.
+    withAcks(list) {
+      if (!this.publico || !list) return list
+      return list.map((a) => {
+        const k = this.acks[`${a.astro_id}|${a.episodio}|${a.nivel}`]
+        if (!k || a.day < k.desde || a.day > k.revisado_dia + 10) return a
+        if (k.estado === 'pospuesta' && this.day > k.revisado_dia) return a
+        return { ...a, estado: k.estado, nota: k.nota, revisor: k.revisor, revisado_dia: k.revisado_dia }
+      })
     },
     select(id) { this.selected = id },
     setRole(r) {
@@ -125,6 +190,8 @@ export const STATE_LABEL = { pendiente: 'Sin reconocer', reconocida: 'Reconocida
 const nf = (v, d) => Number(v).toLocaleString('es', { minimumFractionDigits: d, maximumFractionDigits: d })
 // Cifras con coma decimal (es)
 export const fmt = (v, d = 1) => (v === null || v === undefined || Number.isNaN(v) ? '—' : nf(v, d))
+// Número con coma decimal sin fijar decimales (cifras de validación)
+export const nn = (v, max = 2) => (v === null || v === undefined || Number.isNaN(Number(v)) ? '—' : Number(v).toLocaleString('es', { maximumFractionDigits: max }))
 export const signed = (v, d = 1) => (v === null || v === undefined ? '—' : `${v > 0 ? '+' : v < 0 ? '−' : ''}${nf(Math.abs(v), d)}`)
 
 export function download(name, content, type = 'application/json') {
@@ -136,3 +203,27 @@ export function download(name, content, type = 'application/json') {
   a.remove()
   setTimeout(() => URL.revokeObjectURL(url), 1000)
 }
+
+// Episodios de alarma: misma persona, tipo y nivel en días consecutivos. Devuelve la alerta más
+// reciente (rep) y el día en que empezó (since). Solo episodios con alguna alerta en los últimos 7 días.
+export function episodes(alerts, day) {
+  const map = new Map()
+  for (const a of alerts || []) {
+    if (a.day <= day - 7 || a.day > day) continue
+    const key = `${a.astro_id}|${a.episodio}|${a.nivel}`
+    if (!map.has(key)) map.set(key, [])
+    map.get(key).push(a)
+  }
+  const out = []
+  for (const [key, list] of map) {
+    list.sort((x, y) => y.day - x.day)
+    let first = list[0].day
+    for (const x of list.slice(1)) { if (x.day === first - 1) first = x.day; else break }
+    out.push({ key, rep: list[0], since: first, astro_id: list[0].astro_id })
+  }
+  const order = (g) => (g.rep.estado === 'pendiente' ? 0 : 1)
+  return out.sort((a, b) => order(a) - order(b) || RANK_LEVEL[b.rep.nivel] - RANK_LEVEL[a.rep.nivel] || b.rep.day - a.rep.day)
+}
+
+// "1 aviso" / "2 avisos"
+export const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`

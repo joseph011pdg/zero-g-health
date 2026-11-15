@@ -16,7 +16,7 @@
       <span v-else-if="phase === 'early'" class="early">Demasiado pronto</span>
       <div v-else-if="phase === 'done'" class="result">
         <div class="cols-3">
-          <div class="kpi"><span class="v">{{ medianRt }}<small>ms</small></span><span class="tiny muted">Reacción típica</span></div>
+          <div class="kpi"><span class="v">{{ medianRt }} <small>ms</small></span><span class="tiny muted">Reacción típica</span></div>
           <div class="kpi"><span class="v">{{ lapses }}</span><span class="tiny muted">Lentas (≥ 355 ms)</span></div>
           <div class="kpi"><span class="v">{{ falseStarts + fastCount }}</span><span class="tiny muted">Anticipadas</span></div>
         </div>
@@ -40,7 +40,7 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import Sheet from './Sheet.vue'
 import Icon from './Icon.vue'
-import { api, useStore } from '../store.js'
+import { api, useStore, plural } from '../store.js'
 
 const props = defineProps({ astro: Object })
 const emit = defineEmits(['close', 'saved'])
@@ -110,7 +110,7 @@ async function save() {
     const r = await s.run(() => api(`/astronauts/${props.astro.id}/pvt`, { method: 'POST', body: {
       modo: mode.value, duracion_s: durS, rts: rts.value, anticipaciones: falseStarts.value,
       sin_respuesta: noResp.value, interrupciones: interruptions.value } }))
-    s.toast(r.valido ? `Prueba guardada: ${r.errores} errores` : `Prueba inválida: ${r.motivo_invalido}`, r.valido ? 'ok' : 'err')
+    s.toast(r.valido ? `${s.publico ? 'Prueba calculada (demo pública: no se guarda)' : 'Prueba guardada'}: ${plural(r.errores, 'lapso', 'lapsos')}` : `Prueba inválida: ${r.motivo_invalido}`, r.valido ? 'ok' : 'err')
     await s.refresh()
     emit('saved')
     emit('close')

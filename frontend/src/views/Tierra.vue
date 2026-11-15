@@ -22,12 +22,13 @@
             <label class="field"><span>Desde el día</span><input class="input" type="number" min="0" :max="s.day" v-model.number="f.desde" /></label>
             <label class="field"><span>Hasta el día</span><input class="input" type="number" min="0" :max="s.day" v-model.number="f.hasta" /></label>
           </div>
-          <button class="btn primary" :disabled="busy">Generar y poner en cola</button>
+          <button class="btn primary" :disabled="busy">{{ s.publico ? 'Previsualizar reporte' : 'Generar y poner en cola' }}</button>
+          <p class="tiny muted">Lo que vería la oficial médica en Tierra: resumen por persona, alarmas, acciones y lo que quedó sin reconocer.</p>
         </form>
         <div class="panel list">
           <button v-for="r in reports" :key="r.id" class="ritem" :class="{ sel: cur?.id === r.id }" @click="open(r.id)">
             <span class="strong small">#{{ r.id }} · {{ r.astro_id ? crewName(r.astro_id) : 'Tripulación' }}</span>
-            <span class="tag" :class="r.estado === 'pendiente' ? '' : 'manual'">{{ r.estado }}</span>
+            <span class="tag" :class="r.estado === 'pendiente' ? '' : 'manual'">{{ r.estado === 'pendiente' ? 'en cola' : r.estado }}</span>
             <span class="tiny muted">Días {{ r.desde }}–{{ r.hasta }}</span>
           </button>
           <p v-if="!reports.length" class="small muted">Aún no hay reportes.</p>
@@ -36,16 +37,16 @@
 
       <article v-if="cur" class="panel report">
         <div class="row between wrap no-print">
-          <span class="tag">{{ cur.estado }}</span>
+          <span class="tag">{{ cur.estado === 'pendiente' ? 'en cola · se enviará cuando haya enlace' : cur.estado }}</span>
           <div class="row wrap">
             <button class="btn sm" @click="exportJson"><Icon name="download" :size="13" /> JSON</button>
-            <button class="btn sm" @click="exportCsv"><Icon name="download" :size="13" /> CSV</button>
+            <button v-if="cur.id" class="btn sm" @click="exportCsv"><Icon name="download" :size="13" /> CSV</button>
             <button class="btn sm" @click="print"><Icon name="printer" :size="13" /> PDF</button>
           </div>
         </div>
         <header>
           <h2>{{ c.mision }}</h2>
-          <p class="small muted">Reporte #{{ cur.id }} · días {{ c.periodo.desde }}–{{ c.periodo.hasta }} · generado el día {{ c.generado_dia }}</p>
+          <p class="small muted">{{ cur.id ? `Reporte #${cur.id}` : 'Vista previa (demo pública: no se guarda)' }} · días {{ c.periodo.desde }}–{{ c.periodo.hasta }} · generado el día {{ c.generado_dia }}</p>
         </header>
         <section v-for="p in c.tripulantes" :key="p.astronauta.id" class="person">
           <div class="row wrap">
@@ -57,11 +58,11 @@
             <thead><tr><th>Indicador</th><th class="right">Media</th><th class="right">Último</th><th class="right">Su normal</th><th class="right">Días vigilar / actuar</th><th class="right">Datos</th></tr></thead>
             <tbody><tr v-for="(x, k) in p.indicadores" :key="k"><td>{{ x.nombre }}</td><td class="num right">{{ fmt(x.media, 2) }}</td>
               <td class="num right">{{ fmt(x.ultimo_valor, 2) }}</td><td class="num right">{{ fmt(x.linea_base_final, 2) }}</td>
-              <td class="num right">{{ x.dias_amarillo }} / {{ x.dias_rojo }}</td><td class="num right">{{ x.completitud_pct }} %</td></tr></tbody>
+              <td class="num right">{{ x.dias_amarillo }} / {{ x.dias_rojo }}</td><td class="num right">{{ nn(x.completitud_pct) }} %</td></tr></tbody>
           </table></div>
           <p class="small muted">{{ p.seguimiento.alertas_revisadas }} alertas revisadas, {{ p.seguimiento.alertas_pendientes }} pendientes ·
             {{ p.seguimiento.checkins }} check-ins · {{ p.seguimiento.pruebas_pvt }} pruebas PVT · {{ p.calidad_datos.registros_rechazados }} datos rechazados ·
-            radiación {{ p.radiacion.acumulada_medida_mgy }} mGy</p>
+            radiación {{ fmt(p.radiacion.acumulada_medida_mgy, 1) }} mGy</p>
         </section>
       </article>
       <div v-else class="panel muted small">Genere un reporte para verlo aquí.</div>
@@ -71,7 +72,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { api, useStore, fmt, download } from '../store.js'
+import { api, useStore, fmt, nn, download } from '../store.js'
 import Icon from '../components/Icon.vue'
 import Avatar from '../components/Avatar.vue'
 import LevelBadge from '../components/LevelBadge.vue'
@@ -93,8 +94,8 @@ async function create() {
   busy.value = true
   try {
     f.value.hasta = Math.min(f.value.hasta, s.day)
-    cur.value = await s.run(() => api('/reports', { method: 'POST', body: f.value }), 'Reporte en cola')
-    await load()
+    cur.value = await s.run(() => api('/reports', { method: 'POST', body: f.value }), s.publico ? 'Vista previa generada' : 'Reporte en cola')
+    if (!s.publico) await load()
   } finally { busy.value = false }
 }
 async function transmit() {
@@ -105,7 +106,7 @@ async function transmit() {
     await load(); if (cur.value) await open(cur.value.id)
   } finally { busy.value = false }
 }
-function exportJson() { download(`reporte_${cur.value.id}.json`, JSON.stringify(cur.value, null, 2)) }
+function exportJson() { download(`reporte_${cur.value.id ?? 'vista_previa'}.json`, JSON.stringify(cur.value, null, 2)) }
 async function exportCsv() { download(`reporte_${cur.value.id}.csv`, await api(`/reports/${cur.value.id}/csv`), 'text/csv') }
 function print() { window.print() }
 </script>

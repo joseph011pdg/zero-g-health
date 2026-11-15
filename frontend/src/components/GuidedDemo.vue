@@ -31,12 +31,12 @@ const i = ref(0)
 const busy = ref(false)
 
 const STEPS = [
-  { title: 'Cuatro astronautas, cuatro líneas base', day: 38, to: '/', role: 'oficial', action: 'ir al día 38 y abrir la vista de misión',
+  { title: 'Cuatro astronautas, cuatro líneas base', day: 40, to: '/', role: 'oficial', action: 'ir al día 40 y abrir la vista de misión',
     text: 'Cada tripulante ficticio tiene sus propios valores habituales. El sistema aprendió los primeros 14 días de cada uno.' },
-  { title: 'Situación inicial estable', day: 38, to: '/persona/A1', select: 'A1', role: 'astronauta', action: 'rol Astronauta: abrir a la Cmdte. Rivera',
+  { title: 'Situación inicial estable', day: 40, to: '/persona/A1', select: 'A1', role: 'astronauta', action: 'rol Astronauta: abrir a la Cmdte. Rivera',
     text: 'Seis indicadores dentro de su rango habitual. Debajo, cada indicador frente a su propio normal.' },
   { title: 'Comienza un cambio progresivo', day: 49, to: '/persona/A1', select: 'A1', action: 'avanzar al día 49',
-    text: 'El simulador inyectó una fatiga progresiva desde el día 44: el sueño baja poco a poco y aumentan los errores de la PVT.' },
+    text: 'El simulador inyectó una fatiga progresiva desde el día 44: el sueño baja poco a poco y aumentan los lapsos de la PVT-B.' },
   { title: 'Desviación relevante y alerta explicada', day: 54, to: '/persona/A1', select: 'A1', action: 'avanzar al día 54',
     text: 'La alerta dice qué cambió, cuánto (z robusto frente a su línea base), cómo se detectó, qué seguimiento se sugiere y con qué fuente.' },
   { title: 'Otro patrón: estrés fisiológico', day: 72, to: '/persona/A3', select: 'A3', action: 'abrir al Ing. Lindqvist en el día 72',

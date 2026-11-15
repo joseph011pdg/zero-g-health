@@ -97,7 +97,7 @@ p { margin: 0; }
 .label { font-size: 0.8rem; color: var(--muted); font-weight: 500; }
 .kpi { display: grid; gap: 2px; }
 .kpi .v { font-size: 1.7rem; font-weight: 500; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; color: var(--blue); }
-.kpi .v small { font-size: 0.85rem; color: var(--muted); font-weight: 500; margin-left: 3px; }
+.kpi .v small { font-size: 0.85rem; color: var(--muted); font-weight: 500; margin-left: 0; }
 
 /* Botones: rectangulares, borde de tinta; principal azul sólido */
 .btn { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; background: #fff; border: 1px solid var(--ink); border-radius: var(--radius-sm); padding: 8px 15px; font-weight: 600; font-size: 0.88rem; cursor: pointer; transition: background .15s, color .15s, border-color .15s; color: var(--ink); }

@@ -43,7 +43,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { useStore, fmt } from '../store.js'
+import { useStore, fmt, plural } from '../store.js'
 import Icon from './Icon.vue'
 
 const s = useStore()
@@ -58,8 +58,9 @@ const milestones = computed(() => {
 const linkText = computed(() => {
   const c = m.value.comunicacion
   const [a, b] = m.value.apagon
-  if (c.apagon) return `Sin enlace · vuelve en ${b - s.day + 1} día(s)`
-  if (hasBlackout.value && s.day < a) return `Mensajes tardan ${fmt(c.retraso_min, 1)} min · apagón en ${a - s.day} días`
+  if (c.simulado) return 'Sin enlace · apagón simulado'
+  if (c.apagon) return `Sin enlace · vuelve en ${plural(b - s.day + 1, 'día', 'días')}`
+  if (hasBlackout.value && s.day < a) return `Mensajes tardan ${fmt(c.retraso_min, 1)} min · apagón en ${plural(a - s.day, 'día', 'días')}`
   return `Mensajes tardan ${fmt(c.retraso_min, 1)} min`
 })
 </script>
@@ -110,6 +111,10 @@ const linkText = computed(() => {
   .earth { --size: 46px; } .mars { --size: 40px; }
   .body figcaption { display: none; }
   .ms-labels span:nth-child(2) { display: none; }
+  /* "Sin enlace" en una segunda fila para no montarse con "Llegada" */
+  .ms-labels { height: 32px; }
+  .ms-labels .bl { top: 16px; }
+  .top { flex-wrap: wrap; }
   .ttl .date { display: none; }
   .ttl { font-size: 1.1rem; }
 }

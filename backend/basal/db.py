@@ -11,6 +11,7 @@ import json
 import os
 import sqlite3
 from contextlib import contextmanager
+from contextvars import ContextVar
 from pathlib import Path
 
 DB_PATH = Path(os.environ.get("BASAL_DB", Path(__file__).resolve().parent.parent / "basal.db"))
@@ -114,8 +115,17 @@ def drop_all(con) -> None:
         con.execute(f"DROP TABLE IF EXISTS {t}")
 
 
+# Estado por sesión (demo pública): día y apagón llegan por cabecera y solo afectan a esa petición
+SESSION_DAY: ContextVar[int | None] = ContextVar("SESSION_DAY", default=None)
+SESSION_BLACKOUT: ContextVar[bool] = ContextVar("SESSION_BLACKOUT", default=False)
+
+
 def get_mission() -> dict:
     m = one("SELECT * FROM mission WHERE id = 1")
     if m:
         m["assignments"] = json.loads(m["assignments"] or "{}")
+        d = SESSION_DAY.get()
+        if d is not None:
+            m["current_day"] = max(0, min(int(d), m["days"] - 1))
+        m["forzar_apagon"] = SESSION_BLACKOUT.get()
     return m

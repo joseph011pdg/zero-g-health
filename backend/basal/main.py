@@ -27,6 +27,24 @@ app = FastAPI(title="BASAL · Monitoreo de salud autónomo", version="2.0",
               description="Prototipo educativo con datos sintéticos. No es un dispositivo médico.")
 app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
                    allow_methods=["*"], allow_headers=["*"])
+
+
+@app.middleware("http")
+async def session_state(request, call_next):
+    """Día y apagón por sesión: X-Basal-Dia y X-Basal-Apagon solo afectan a esta petición."""
+    t1 = t2 = None
+    dia = request.headers.get("x-basal-dia")
+    if dia is not None and dia.strip().lstrip("-").isdigit():
+        t1 = db.SESSION_DAY.set(int(dia))
+    if request.headers.get("x-basal-apagon") == "1":
+        t2 = db.SESSION_BLACKOUT.set(True)
+    try:
+        return await call_next(request)
+    finally:
+        if t1 is not None:
+            db.SESSION_DAY.reset(t1)
+        if t2 is not None:
+            db.SESSION_BLACKOUT.reset(t2)
 services.init_db()
 
 # Modo público (demo en línea, p. ej. Render): BASAL_PUBLIC=1. El estado es compartido entre visitantes,
@@ -75,6 +93,7 @@ class DayIn(BaseModel):
 
 @app.post("/api/mission/day", tags=["misión"])
 def set_day(body: DayIn):
+    _forbid_in_public("Cambiar el día para todos (en la demo pública el día es por sesión)")
     m = db.get_mission()
     db.execute("UPDATE mission SET current_day = ? WHERE id = 1", (min(body.day, m["days"] - 1),))
     return services.mission()
@@ -86,6 +105,7 @@ class AdvanceIn(BaseModel):
 
 @app.post("/api/mission/advance", tags=["misión"])
 def advance(body: AdvanceIn):
+    _forbid_in_public("Cambiar el día para todos (en la demo pública el día es por sesión)")
     m = db.get_mission()
     return set_day(DayIn(day=max(0, min(m["current_day"] + body.n, m["days"] - 1))))
 
@@ -208,6 +228,7 @@ class MeasurementIn(BaseModel):
 
 @app.post("/api/measurements", tags=["ingesta"])
 def post_measurement(body: MeasurementIn):
+    _forbid_in_public("Guardar mediciones")
     rec = body.model_dump()
     if rec["day"] is None:
         rec["day"] = db.get_mission()["current_day"]
@@ -224,6 +245,7 @@ class CsvIn(BaseModel):
 
 @app.post("/api/ingest/csv", tags=["ingesta"])
 def ingest_csv(body: CsvIn):
+    _forbid_in_public("Importar CSV")
     rows, err = ingest.parse_csv(body.csv)
     if err:
         raise HTTPException(422, err)
@@ -265,7 +287,7 @@ def post_pvt(astro_id: str, body: PvtIn):
     if any(r < 0 or r > 30000 for r in body.rts):
         raise HTTPException(422, "Tiempos de reacción fuera de rango")
     return services.save_pvt(astro_id, body.modo, body.duracion_s, body.rts, body.anticipaciones,
-                             body.interrupciones, body.sin_respuesta)
+                             body.interrupciones, body.sin_respuesta, persist=not PUBLIC)
 
 
 class CheckinIn(BaseModel):
@@ -278,6 +300,9 @@ class CheckinIn(BaseModel):
 @app.post("/api/astronauts/{astro_id}/checkin", tags=["registro"])
 def post_checkin(astro_id: str, body: CheckinIn):
     _astro_or_404(astro_id)
+    if PUBLIC:  # demo pública: se valida pero no se guarda
+        return {"dia": db.get_mission()["current_day"], "recibidos": 1, "insertados": 0, "reemplazados": 0,
+                "duplicados": 0, "rechazados": [], "demo_publica": True}
     return services.save_checkin(astro_id, body.animo, body.calidad_sueno, body.notas, body.segundos)
 
 
@@ -297,6 +322,7 @@ class ReviewIn(BaseModel):
 
 @app.patch("/api/alerts/{alert_id}", tags=["alertas"])
 def review(alert_id: str, body: ReviewIn):
+    _forbid_in_public("Revisar alarmas para todos (en la demo pública se guarda en su navegador)")
     a = services.review_alert(alert_id, body.estado, body.nota, body.revisor, body.episodio)
     if not a:
         raise HTTPException(404, "Alerta no encontrada")
@@ -316,7 +342,8 @@ def create_report(body: ReportIn):
         _astro_or_404(body.astro_id)
     if body.hasta < body.desde:
         raise HTTPException(422, "'hasta' debe ser mayor o igual que 'desde'")
-    return services.create_report(body.astro_id, body.desde, body.hasta)
+    # En la demo pública el reporte se genera como vista previa y no se guarda (no afecta a otros visitantes)
+    return services.create_report(body.astro_id, body.desde, body.hasta, persist=not PUBLIC)
 
 
 @app.get("/api/reports", tags=["reportes"])
@@ -343,7 +370,7 @@ def report_csv(rid: int):
 
 @app.post("/api/reports/transmit", tags=["reportes"])
 def transmit():
-    return services.transmit()
+    return services.transmit(dry=PUBLIC)
 
 
 # ------------------------------------------------------------------ validación

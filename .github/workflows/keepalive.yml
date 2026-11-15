@@ -1,0 +1,14 @@
+# Mantiene despierta la demo pública en Render (plan gratuito: se duerme tras ~15 min sin visitas).
+# GitHub Actions no garantiza el minuto exacto del cron; el intervalo real puede ser mayor.
+name: keep-alive
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Ping /api/health
+        run: curl -fsS --max-time 90 --retry 2 https://basal-pxyn.onrender.com/api/health || true

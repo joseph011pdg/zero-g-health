@@ -2,15 +2,29 @@
   <div class="page">
     <section class="opening">
       <div class="lead">
-        <h1 v-if="needAction.length"><span class="hl">{{ needAction.length }} de {{ s.crew.length }}</span> tripulantes requieren acción.</h1>
-        <h1 v-else-if="watch.length">Sin acciones urgentes; <span class="hl">{{ watch.length }}</span> para vigilar.</h1>
+        <h1 v-if="highPending"><span class="hl">{{ highPending === 1 ? '1 alarma requiere' : `${highPending} alarmas requieren` }}</span> atención.</h1>
+        <h1 v-else-if="lowPending">Sin alarmas urgentes; <span class="hl">{{ plural(lowPending, 'aviso', 'avisos') }}</span> para vigilar.</h1>
+        <h1 v-else-if="needAction.length || watch.length">Alarmas al día; <span class="hl">{{ needAction.length + watch.length }} de {{ s.crew.length }}</span> en seguimiento.</h1>
         <h1 v-else>Toda la tripulación <span class="hl">dentro de lo habitual</span>.</h1>
+
+        <dl class="pitch">
+          <div><dt>Problema</dt><dd>Hacia Marte un mensaje tarda hasta 20 min por sentido y hay apagones: la Tierra no puede vigilar la salud en tiempo real.</dd></div>
+          <div><dt>Solución</dt><dd>BASAL compara a cada astronauta con su propia línea base y avisa a bordo, sin Internet, con una explicación y una acción segura.</dd></div>
+          <div><dt>Prueba</dt><dd>En simulación detecta el <b>98,9 %</b> de los eventos con <b>0,78</b> falsas alarmas por 30 días-astronauta (umbral fijo: 88,9 % y 1,87). <router-link to="/laboratorio/validacion">Ver validación</router-link> · <i>datos simulados</i></dd></div>
+        </dl>
 
         <div class="actions">
           <button class="ab main" @click="goAlarms"><span><Icon name="bell" :size="16" />Revisar alarmas</span><span class="k num">{{ highPending }}</span></button>
           <router-link class="ab" :to="`/persona/${s.selected}?accion=checkin`"><span><Icon name="smile" :size="16" />Check-in</span><span class="k">{{ short(selName) }}</span></router-link>
           <router-link class="ab" :to="`/persona/${s.selected}?accion=pvt`"><span><Icon name="target" :size="16" />Prueba PVT</span><span class="k">3 min</span></router-link>
           <router-link class="ab" to="/tierra"><span><Icon name="send" :size="16" />Enviar reporte</span><span class="k num">{{ s.pendingReports }} en cola</span></router-link>
+        </div>
+
+        <div class="tryit" role="group" aria-label="Probar la demo">
+          <button class="tb main" @click="s.demo = true"><Icon name="compass" :size="15" />Demo guiada</button>
+          <button class="tb" :aria-pressed="s.apagon" @click="toggleApagon">
+            <Icon :name="s.apagon ? 'satellite' : 'signalOff'" :size="15" />{{ s.apagon ? 'Restablecer enlace' : 'Simular apagón' }}</button>
+          <button v-for="sc in SCEN" :key="sc.k" class="tb" @click="goScen(sc)">{{ sc.l }}</button>
         </div>
 
         <div class="byline">
@@ -45,9 +59,13 @@
         <div class="who">
           <b>{{ p.a.nombre }}</b><small>{{ p.a.rol }}</small>
           <LevelBadge :level="p.a.nivel" class="st" />
+          <span class="dots" aria-label="Seis indicadores">
+            <i v-for="(v, k) in p.a.indicadores" :key="k" :class="'d-' + v.nivel" :title="`${s.indicators[k].corto}: ${LEVEL[v.nivel].label}`"></i>
+          </span>
+          <span v-if="openOf(p.a.id)" class="openep">{{ openOf(p.a.id) }}</span>
         </div>
         <div class="reading" :class="'n-' + p.a.nivel">
-          <span class="v num">{{ fmt(p.v.valor, s.indicators[p.k].decimales) }}</span><span class="u">{{ s.indicators[p.k].unidad }}</span>
+          <span class="v num">{{ fmt(p.v.valor, s.indicators[p.k].decimales) }}</span> <span class="u">{{ s.indicators[p.k].unidad }}</span>
           <span class="d num">Su normal {{ fmt(p.v.linea_base, s.indicators[p.k].decimales) }}<template v-if="p.v.diferencia !== null"> · {{ signed(p.v.diferencia, s.indicators[p.k].decimales) }}</template></span>
         </div>
         <figure>
@@ -68,6 +86,7 @@
           <div v-for="g in high" :key="g.key" class="find" :class="{ done: g.rep.estado !== 'pendiente' }">
             <div class="ftxt">
               <h3><span class="pr">ALTA</span>{{ short(crewName(g.rep.astro_id)) }}: {{ g.rep.titulo }}</h3>
+              <span class="fact">{{ factText(g.rep) }}</span>
               <span class="meta" :class="metaClass(g)">{{ statusText(g) }}</span>
             </div>
             <div v-if="s.isOfficer" class="facts">
@@ -79,11 +98,11 @@
             </div>
           </div>
           <div v-if="low.length" class="watchrow">
-            <button class="act-l" @click="showLow = !showLow" :aria-expanded="showLow">{{ lowPending }} avisos para vigilar {{ showLow ? '↑' : '→' }}</button>
+            <button class="act-l" @click="showLow = !showLow" :aria-expanded="showLow">{{ plural(lowPending, 'aviso', 'avisos') }} para vigilar{{ low.length > lowPending ? ` (${low.length - lowPending} ya revisados)` : '' }} {{ showLow ? '↑' : '→' }}</button>
           </div>
           <div v-if="showLow" class="lowlist">
             <router-link v-for="g in low" :key="g.key" :to="`/persona/${g.rep.astro_id}`" class="lowitem">
-              <span class="pw">VIGILAR</span><span>{{ short(crewName(g.rep.astro_id)) }}: {{ g.rep.titulo }}</span><span class="muted small">{{ STATE_LABEL[g.rep.estado] }}</span>
+              <span class="pw">VIGILAR</span><span>{{ short(crewName(g.rep.astro_id)) }}: {{ g.rep.titulo }}</span><span class="muted small">{{ factText(g.rep) }} · {{ STATE_LABEL[g.rep.estado] }}</span>
             </router-link>
           </div>
         </template>
@@ -101,14 +120,14 @@
       </div>
     </section>
 
-    <footer class="colophon"><span>Datos simulados · prototipo educativo, no es un dispositivo médico</span><span>Funciona a bordo, sin conexión</span></footer>
+    <footer class="colophon"><span>Datos simulados · prototipo educativo, no es un dispositivo médico</span><span>Funciona a bordo, sin conexión · <router-link to="/en" lang="en">English summary</router-link></span></footer>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, watch as vwatch } from 'vue'
 import { useRouter } from 'vue-router'
-import { api, useStore, fmt, signed, STATE_LABEL, RANK_LEVEL } from '../store.js'
+import { api, useStore, fmt, signed, plural, episodes, STATE_LABEL, RANK_LEVEL, LEVEL } from '../store.js'
 import Icon from '../components/Icon.vue'
 import LevelBadge from '../components/LevelBadge.vue'
 import TrendChart from '../components/TrendChart.vue'
@@ -166,15 +185,17 @@ const rows = computed(() => s.crew.map((a) => {
 const blackoutText = computed(() => {
   const [a, b] = s.mission.apagon
   if (a === null || a === undefined) return ''
-  if (link.value.apagon) return `Enlace vuelve en ${b - s.day + 1} días`
-  if (s.day < a) return `Apagón en ${a - s.day} días`
+  if (link.value.simulado) return 'Apagón simulado: los reportes esperan en cola'
+  if (link.value.apagon) return `Enlace vuelve en ${plural(b - s.day + 1, 'día', 'días')}`
+  if (s.day < a) return `Apagón en ${plural(a - s.day, 'día', 'días')}`
   return ''
 })
 const blackoutCell = computed(() => {
   const [a, b] = s.mission.apagon
   if (a === null || a === undefined) return '—'
-  if (link.value.apagon) return `día ${b + 1} · en ${b - s.day + 1} días`
-  if (s.day < a) return `día ${a} · en ${a - s.day} días`
+  if (link.value.simulado) return 'al desactivar el apagón simulado'
+  if (link.value.apagon) return `día ${b + 1} · en ${plural(b - s.day + 1, 'día', 'días')}`
+  if (s.day < a) return `día ${a} · en ${plural(a - s.day, 'día', 'días')}`
   return 'superado'
 })
 const lastSent = computed(() => {
@@ -182,25 +203,9 @@ const lastSent = computed(() => {
   return d.length ? `día ${Math.max(...d)}` : '—'
 })
 
-// Episodios de alarma: misma persona, tipo y nivel; se muestra el más reciente
-const groups = computed(() => {
-  const map = new Map()
-  for (const a of alerts.value) {
-    if (a.day <= s.day - 7) continue
-    const key = `${a.astro_id}|${a.episodio}|${a.nivel}`
-    if (!map.has(key)) map.set(key, [])
-    map.get(key).push(a)
-  }
-  const out = []
-  for (const [key, list] of map) {
-    list.sort((x, y) => y.day - x.day)
-    let first = list[0].day
-    for (const x of list.slice(1)) { if (x.day === first - 1) first = x.day; else break }
-    out.push({ key, rep: list[0], since: first })
-  }
-  const order = (g) => (g.rep.estado === 'pendiente' ? 0 : 1)
-  return out.sort((a, b) => order(a) - order(b) || b.rep.day - a.rep.day)
-})
+// Episodios de alarma (misma persona, tipo y nivel en días consecutivos); en la demo pública
+// se aplican los reconocimientos guardados en este navegador
+const groups = computed(() => episodes(s.withAcks(alerts.value), s.day))
 const high = computed(() => groups.value.filter((g) => g.rep.nivel === 'rojo'))
 const low = computed(() => groups.value.filter((g) => g.rep.nivel === 'amarillo'))
 const highPending = computed(() => high.value.filter((g) => g.rep.estado === 'pendiente').length)
@@ -210,17 +215,45 @@ function statusText(g) {
   const a = g.rep
   if (a.estado === 'pendiente') {
     const d = s.day - g.since
-    return d >= 2 ? `${d} días sin reconocer · escalar` : `Sin reconocer desde el día ${g.since}`
+    return d >= 2 ? `${d} días sin reconocer · se escala a la oficial médica` : `Sin reconocer desde el día ${g.since}`
   }
   if (a.estado === 'pospuesta') return `Pospuesta hasta el día ${a.revisado_dia + 1}`
   return `${STATE_LABEL[a.estado]}${a.revisor ? ` por ${a.revisor}` : ''}${a.revisado_dia != null ? ` · día ${a.revisado_dia}` : ''}`
 }
 const metaClass = (g) => (g.rep.estado === 'pendiente' ? 'pend' : g.rep.estado === 'pospuesta' ? 'muted' : 'ok')
 async function act(a, estado) {
-  await s.run(() => api(`/alerts/${encodeURIComponent(a.id)}`, { method: 'PATCH', body: { estado, revisor: s.officer ? s.officer.nombre : 'Oficial médico' } }),
-    estado === 'reconocida' ? 'Alarma reconocida' : 'Alarma pospuesta 24 h')
-  await load()
-  await s.refresh()
+  const nota = estado === 'reconocida' ? window.prompt('Nota para el registro (opcional):', '') : null
+  if (nota === null && estado === 'reconocida') return // cancelado
+  await s.run(() => s.review(a, estado, nota),
+    `${estado === 'reconocida' ? 'Alarma reconocida' : 'Alarma pospuesta 24 h'}${s.publico ? ' (solo en este navegador)' : ''}`)
+  if (!s.publico) await load()
+}
+// Qué indicador y cuánto: "Lapsos PVT: 5 lapsos frente a su normal de 1 (z = 4,8)"
+function factText(a) {
+  return (a.cuanto || []).map((c) => {
+    const d = s.indicators[c.indicador]?.decimales ?? 1
+    return `${s.indicators[c.indicador]?.corto || c.nombre}: ${fmt(c.valor, d)} ${c.unidad} frente a su normal de ${fmt(c.linea_base, d)} (z = ${fmt(c.z, 1)})`
+  }).join(' · ')
+}
+// Episodio de alarma abierto aunque hoy los valores hayan vuelto a su normal
+function openOf(id) {
+  const g = groups.value.find((x) => x.astro_id === id && x.rep.estado === 'pendiente' && x.rep.nivel === 'rojo' && x.rep.day < s.day)
+  if (!g) return ''
+  const a = s.crew.find((x) => x.id === id)
+  return `${a?.nivel === 'verde' ? 'Hoy: normal · ' : ''}Alerta del día ${g.rep.day} sigue abierta (sin reconocer hace ${plural(s.day - g.rep.day, 'día', 'días')})`
+}
+const SCEN = [
+  { k: 'B', l: 'Ver fatiga (B)', day: 54, id: 'A1' },
+  { k: 'C', l: 'Ver estrés (C)', day: 72, id: 'A3' },
+  { k: 'D', l: 'Ver evento solar (D)', day: 87, id: null }
+]
+async function goScen(sc) {
+  await s.run(() => s.setDay(sc.day))
+  if (sc.id) { s.select(sc.id); router.push(`/persona/${sc.id}`) }
+}
+function toggleApagon() {
+  const on = !s.apagon
+  s.run(() => s.setApagon(on), on ? 'Apagón simulado: los datos y alarmas siguen; los reportes quedan en cola' : 'Enlace restablecido')
 }
 function goAlarms() {
   if (!s.isOfficer) s.setRole('oficial')
@@ -261,7 +294,7 @@ const hhmm = (d) => d.toLocaleTimeString('es', { hour: '2-digit', minute: '2-dig
 .reading .v { font-size: 2.9rem; font-weight: 500; letter-spacing: -0.03em; line-height: 1; color: var(--blue); }
 .reading.n-rojo .v { color: var(--red); }
 .reading.n-amarillo .v { color: var(--warn); }
-.reading .u { font-size: 0.92rem; color: var(--muted); margin-left: 4px; }
+.reading .u { font-size: 0.92rem; color: var(--muted); margin-left: 1px; }
 .reading .d { display: block; font-size: 0.82rem; color: var(--text-2); margin-top: 6px; }
 figure { margin: 0; }
 
@@ -287,6 +320,25 @@ figure { margin: 0; }
 .kv th, .kv td { padding: 12px 0; border-bottom: 1px solid var(--line-soft); }
 .kv th { text-align: left; font-weight: 500; color: var(--text-2); }
 .kv td { text-align: right; font-weight: 600; }
+.pitch { margin: 0; display: grid; gap: 8px; border-left: 2px solid var(--blue); padding-left: 14px; }
+.pitch div { display: grid; grid-template-columns: 78px minmax(0, 1fr); gap: 10px; }
+.pitch dt { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--blue); padding-top: 3px; }
+.pitch dd { margin: 0; font-size: 0.9rem; color: var(--text-2); line-height: 1.45; }
+.pitch dd b { color: var(--ink); }
+.pitch i { color: var(--muted); }
+.tryit { display: flex; flex-wrap: wrap; gap: 8px; }
+.tb { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--line); background: #fff; color: var(--ink); font: inherit; font-size: 0.84rem; font-weight: 500; padding: 8px 12px; border-radius: 2px; cursor: pointer; min-height: 40px; }
+.tb:hover { border-color: var(--blue); color: var(--blue); }
+.tb.main { background: var(--blue); border-color: var(--blue); color: #fff; font-weight: 600; }
+.tb.main:hover { background: #0a3480; color: #fff; }
+.tb[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: #fff; }
+.dots { display: flex; gap: 5px; margin-top: 8px; }
+.dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--ok); }
+.dots i.d-amarillo { background: var(--warn); }
+.dots i.d-rojo { background: var(--red); }
+.dots i.d-sin_dato, .dots i.d-calibrando { background: transparent; border: 1.5px solid var(--muted); }
+.openep { display: block; margin-top: 6px; font-size: 0.78rem; font-weight: 600; color: var(--red); line-height: 1.35; }
+.fact { display: block; margin-top: 4px; font-size: 0.84rem; color: var(--text-2); }
 .colophon { border-top: 1px solid var(--ink); padding-top: 12px; font-size: 0.8rem; color: var(--muted); display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
 
 @media (max-width: 1000px) {
@@ -294,6 +346,7 @@ figure { margin: 0; }
   .lead h1 { font-size: 2.4rem; }
 }
 @media (max-width: 640px) {
+  .pitch div { grid-template-columns: 1fr; gap: 2px; }
   .person { grid-template-columns: 1fr 1fr; gap: 12px; }
   .person figure { grid-column: 1 / -1; }
   .reading .v { font-size: 2.2rem; }

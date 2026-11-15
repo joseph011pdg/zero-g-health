@@ -22,7 +22,7 @@ from .simulator import CREW, DEMO_ASSIGNMENTS, DEMO_CREW_EVENTS, POP, SCENARIOS,
 MISSION_NAME = "BASAL-M1 · Tránsito a Marte (misión simulada)"
 START_DATE = date(2035, 6, 1)
 DAYS = 120
-DEMO_DAY = 38
+DEMO_DAY = 40  # la alarma del día 32 de A4 es un falso positivo del ruido: fuera de la ventana de 7 días
 BLACKOUT = (95, 104)
 NOMINAL_DOSE = POP["dose"][0]  # mGy/día del escenario simulado (supuesto)
 
@@ -63,6 +63,8 @@ def init_db(reset: bool = False, seed: int = 7, assignments: dict | None = None,
     _synced.clear()
     if empty:
         _load_synthetic([a["id"] for a in CREW], seed)
+        # Reporte de ejemplo ya en cola para la demo (última semana)
+        create_report(None, max(0, current_day - 6), current_day)
 
 
 def _load_synthetic(astro_ids: list[str], seed: int) -> dict:
@@ -116,9 +118,10 @@ def mission() -> dict:
 def comms(day: int, m: dict) -> dict:
     """Modelo simplificado: retraso de 3 a 20 min por sentido a lo largo de la misión + apagón."""
     delay = round(3 + 17 * day / max(m["days"] - 1, 1), 1)
-    off = m["blackout_start"] is not None and m["blackout_start"] <= day <= m["blackout_end"]
+    forced = bool(m.get("forzar_apagon"))
+    off = forced or (m["blackout_start"] is not None and m["blackout_start"] <= day <= m["blackout_end"])
     return {"retraso_min": delay, "ida_vuelta_min": round(2 * delay, 1), "apagon": off,
-            "estado": "SIN ENLACE" if off else "Enlace diferido",
+            "estado": "SIN ENLACE" if off else "Enlace diferido", "simulado": forced,
             "nota": "Simulación: no hay integración real con comunicaciones espaciales."}
 
 
@@ -283,9 +286,10 @@ def radiation(res, day: int) -> dict:
     return {"acumulada_medida_mgy": round(measured, 2), "dias_sin_lectura": missing,
             "presupuesto_escenario_mgy": round(expected, 2),
             "porcentaje_del_presupuesto": round(100 * measured / expected, 1) if expected else None,
-            "supuesto": f"Presupuesto del ESCENARIO simulado: {NOMINAL_DOSE} mGy/día × días transcurridos "
-                        "(orden de magnitud coherente con 300–450 mGy en ~3 años; Patel et al., 2020). "
-                        "No es un límite de exposición de NASA."}
+            "tasa_nominal": NOMINAL_DOSE, "dias": day + 1,
+            "supuesto": f"Esperado a hoy en el escenario simulado: {str(NOMINAL_DOSE).replace('.', ',')} mGy/día × "
+                        f"{day + 1} días = {str(round(expected, 1)).replace('.', ',')} mGy. Dosis absorbida (mGy), no dosis "
+                        "equivalente (mSv). No es un límite de exposición de NASA; el acumulado se informa y no genera alarma."}
 
 
 def crew() -> dict:
@@ -343,7 +347,7 @@ LAPSE_MS, FALSE_START_MS = 355, 100  # definiciones PVT-B (Basner et al., 2011)
 
 
 def save_pvt(astro_id: str, modo: str, duracion_s: float, rts: list[float], anticipaciones: int,
-             interrupciones: int, sin_respuesta: int) -> dict:
+             interrupciones: int, sin_respuesta: int, persist: bool = True) -> dict:
     day = db.get_mission()["current_day"]
     valid_rts = [r for r in rts if r >= FALSE_START_MS]
     fast = [r for r in rts if r < FALSE_START_MS]  # respuestas < 100 ms = anticipación
@@ -361,6 +365,10 @@ def save_pvt(astro_id: str, modo: str, duracion_s: float, rts: list[float], anti
     errores_3min = round(errores * scale, 1)
     srt = sorted(valid_rts)
     slow10 = float(np.mean(srt[-max(1, len(srt) // 10):])) if srt else None
+    if not persist:  # demo pública: se calcula el resultado pero no se guarda
+        return {"id": None, "dia": day, "valido": valido, "motivo_invalido": motivo, "lapsos": lapsos,
+                "anticipaciones": antic, "errores": errores, "errores_equivalentes_3min": errores_3min,
+                "guardado_en_indicador": False, "demo_publica": True}
     with db.tx() as con:
         cur = con.execute(
             "INSERT INTO pvt_tests (astro_id, day, modo, duracion_s, n_estimulos, rt_media, rt_mediana, rt_lenta10, "
@@ -438,11 +446,14 @@ def build_report(astro_id: str | None, desde: int, hasta: int) -> dict:
             "tripulantes": people}
 
 
-def create_report(astro_id: str | None, desde: int, hasta: int) -> dict:
+def create_report(astro_id: str | None, desde: int, hasta: int, persist: bool = True) -> dict:
     m = db.get_mission()
     hasta = min(hasta, m["current_day"])
     desde = max(0, min(desde, hasta))
     content = build_report(astro_id, desde, hasta)
+    if not persist:  # demo pública: vista previa sin guardar
+        return {"id": None, "astro_id": astro_id, "desde": desde, "hasta": hasta, "dia_creacion": m["current_day"],
+                "estado": "vista previa", "dia_envio": None, "contenido": content}
     rid = db.execute("INSERT INTO reports (astro_id, desde, hasta, dia_creacion, contenido) VALUES (?,?,?,?,?)",
                      (astro_id, desde, hasta, m["current_day"], json.dumps(content, ensure_ascii=False)))
     return get_report(rid)
@@ -461,16 +472,17 @@ def list_reports() -> list[dict]:
                     "ORDER BY id DESC")
 
 
-def transmit() -> dict:
+def transmit(dry: bool = False) -> dict:
     m = db.get_mission()
     c = comms(m["current_day"], m)
     pending = db.query("SELECT id FROM reports WHERE estado = 'pendiente'")
     if c["apagon"]:
         return {"enviados": 0, "en_cola": len(pending), "comunicacion": c,
                 "mensaje": "Sin enlace con la Tierra: los reportes permanecen en la cola local."}
-    with db.tx() as con:
-        con.execute("UPDATE reports SET estado = 'enviado (simulado)', dia_envio = ? WHERE estado = 'pendiente'",
-                    (m["current_day"],))
+    if not dry:
+        with db.tx() as con:
+            con.execute("UPDATE reports SET estado = 'enviado (simulado)', dia_envio = ? WHERE estado = 'pendiente'",
+                        (m["current_day"],))
     return {"enviados": len(pending), "en_cola": 0, "comunicacion": c,
             "mensaje": f"Envío SIMULADO: llegarían a la Tierra en ~{c['retraso_min']} min."}
 

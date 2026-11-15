@@ -28,13 +28,16 @@
         <button :aria-pressed="s.role === 'astronauta'" @click="s.setRole('astronauta')"><span class="lbl">Astronauta</span><Icon class="ico" name="user" :size="14" /></button>
         <button :aria-pressed="s.role === 'oficial'" @click="s.setRole('oficial')"><span class="lbl">Oficial médico</span><Icon class="ico" name="stethoscope" :size="14" /></button>
       </div>
-      <button class="demo-btn" @click="demo = !demo" :aria-expanded="demo" aria-label="Demo guiada"><Icon name="compass" :size="15" /><span class="lbl">Demo</span></button>
+      <button class="demo-btn" @click="s.demo = !s.demo" :aria-expanded="s.demo" aria-label="Demo guiada"><Icon name="compass" :size="15" /><span class="lbl">Demo</span></button>
     </div>
   </header>
 
-  <div v-if="s.publico" class="public no-print" role="note">Demo pública en línea · datos simulados · compartida entre visitantes</div>
+  <div v-if="s.publico" class="public no-print" role="note">
+    <span>Demo pública · datos simulados · lo que haga aquí queda solo en este navegador</span>
+    <button class="reset" @click="s.run(() => s.resetDemo(), 'Demo restablecida')">Restablecer demo</button>
+  </div>
 
-  <transition name="fade"><GuidedDemo v-if="demo" @close="demo = false" /></transition>
+  <transition name="fade"><GuidedDemo v-if="s.demo" @close="s.demo = false" /></transition>
 
   <main>
     <div v-if="s.online === false" class="page">
@@ -45,7 +48,10 @@
     <router-view v-else-if="s.mission" v-slot="{ Component }">
       <transition name="fade" mode="out-in"><component :is="Component" /></transition>
     </router-view>
-    <div v-else class="page"><div class="skeleton" style="height: 220px"></div></div>
+    <div v-else class="page waking" role="status">
+      <div class="skeleton" style="height: 220px"></div>
+      <p class="small muted">Despertando el servidor… La primera visita puede tardar hasta un minuto (alojamiento gratuito).</p>
+    </div>
   </main>
 
   <div class="toasts" aria-live="polite">
@@ -54,7 +60,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore, fmt } from './store.js'
 import Icon from './components/Icon.vue'
@@ -62,7 +68,6 @@ import GuidedDemo from './components/GuidedDemo.vue'
 
 const s = useStore()
 const route = useRoute()
-const demo = ref(false)
 const link = computed(() => s.mission?.comunicacion || {})
 onMounted(() => s.init())
 </script>
@@ -94,7 +99,9 @@ onMounted(() => s.init())
 .role .ico { display: none; }
 .demo-btn { border: 0; background: none; color: #fff; font-weight: 600; font-size: 0.86rem; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
 .top :focus-visible { outline-color: #fff; }
-.public { max-width: 1160px; margin: 12px auto 0; padding: 6px 12px; font-size: 0.8rem; color: var(--blue); background: var(--blue-soft); }
+.public { max-width: 1160px; margin: 12px auto 0; padding: 6px 12px; font-size: 0.8rem; color: var(--navy); background: var(--blue-soft); display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.public .reset { background: none; border: 0; color: var(--blue); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 4px 0; font: inherit; font-weight: 600; }
+.waking p { text-align: center; }
 .toasts { position: fixed; bottom: 18px; right: 18px; display: grid; gap: 8px; z-index: 70; }
 .toast { background: #fff; border: 1px solid var(--ink); padding: 10px 14px; font-size: 0.88rem; max-width: 380px; box-shadow: 0 8px 24px rgba(11, 27, 51, .14); }
 .toast.err { border-color: var(--red); color: #6e3b00; }

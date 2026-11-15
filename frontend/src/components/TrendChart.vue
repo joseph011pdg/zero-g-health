@@ -9,6 +9,7 @@
 import { computed } from 'vue'
 import VChart from 'vue-echarts'
 import { C, LEVEL_COLOR, baseTooltip, axis } from '../charts.js'
+import { fmt } from '../store.js'
 
 const props = defineProps({
   data: { type: Array, default: () => [] },
@@ -83,10 +84,10 @@ const option = computed(() => {
         const p = d[ps[0].dataIndex]
         if (!p) return ''
         const i = ps[0].dataIndex
-        const v = p.valor === null ? 'sin dato' : `${Number(p.valor).toFixed(nd)} ${props.unidad}`
-        const range = lower[i] === null ? '—' : `${lower[i].toFixed(nd)}–${(lower[i] + width[i]).toFixed(nd)}`
+        const v = p.valor === null ? 'sin dato' : `${fmt(p.valor, nd)} ${props.unidad}`
+        const range = lower[i] === null ? '—' : `${fmt(lower[i], nd)}–${fmt(lower[i] + width[i], nd)}`
         return `<b>Día ${p.day}</b><br/>${props.nombre}: <b>${v}</b><br/>Su rango normal: ${range}<br/>` +
-          `<b style="color:${LEVEL_COLOR[p.nivel]}">${LABEL[p.nivel]}</b>${p.z !== null ? ` · z ${p.z}` : ''}` +
+          `<b style="color:${LEVEL_COLOR[p.nivel]}">${LABEL[p.nivel]}</b>${p.z !== null ? ` · z ${fmt(p.z, 1)}` : ''}` +
           (p.fijo ? '<br/><span style="color:#c8623a">Fuera del umbral poblacional</span>' : '')
       }
     },

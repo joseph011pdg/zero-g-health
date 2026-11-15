@@ -33,11 +33,11 @@
             <select class="input" v-model="sa.escenario">
               <option v-for="(v, k) in scen.escenarios" :key="k" :value="k">{{ k }} · {{ v.nombre }}</option></select></label>
           <label class="field"><span>Día de inicio</span><input class="input" type="number" min="15" max="115" v-model.number="sa.inicio" :disabled="!scen.con_evento?.includes(sa.escenario)" /></label>
-          <label class="field"><span>Intensidad ({{ sa.intensidad }}×)</span><input type="range" min="0.3" max="2" step="0.1" v-model.number="sa.intensidad" :disabled="!scen.con_evento?.includes(sa.escenario)" /></label>
+          <label class="field"><span>Intensidad ({{ fmt(sa.intensidad, 1) }}×)</span><input type="range" min="0.3" max="2" step="0.1" v-model.number="sa.intensidad" :disabled="!scen.con_evento?.includes(sa.escenario)" /></label>
         </div>
         <p class="small muted">{{ scen.escenarios?.[sa.escenario]?.desc }}</p>
         <div class="row"><button class="btn primary" @click="applyScenario" :disabled="s.publico"><Icon name="spark" :size="14" /> Aplicar (regenera sus datos sintéticos)</button></div>
-        <p v-if="s.publico" class="tiny c-amarillo">Deshabilitado en la demo pública (afectaría a todos los visitantes). Disponible en la versión local.</p>
+        <p v-if="s.publico" class="tiny c-amarillo">En la demo pública no se regeneran datos (afectaría a todos). Pruebe los escenarios ya cargados desde la portada: fatiga (B), estrés (C) y evento solar (D).</p>
         <p class="tiny faint">Se conservan los registros manuales de la persona. Los datos pasan por la misma ingesta validada.</p>
       </div>
 
@@ -98,7 +98,7 @@
             <tr v-for="(e, i) in events" :key="i">
               <td>{{ e.astro_id }}</td><td><span class="tag">{{ e.escenario }}</span> {{ e.nombre }}</td>
               <td class="mono">D{{ e.start }}</td><td class="mono">D{{ e.end }}</td><td class="tiny">{{ e.afecta }}</td>
-              <td class="num">{{ e.intensidad }}×</td>
+              <td class="num">{{ fmt(e.intensidad, 1) }}×</td>
               <td class="tiny">{{ s.day < e.start ? 'futuro' : s.day <= e.end ? 'en curso' : 'terminado' }}</td>
             </tr>
           </tbody>
@@ -145,6 +145,7 @@ async function loop() {
 }
 async function step(n) { await s.run(() => s.advance(n)) }
 async function resetDemo() {
+  if (s.publico) { playing.value = false; await s.run(() => s.resetDemo(), 'Demo restablecida en este navegador'); return }
   if (!confirm('¿Reiniciar la misión de demostración? Se borran check-ins, pruebas, revisiones y reportes de esta base local.')) return
   playing.value = false
   await s.run(() => api('/sim/reset', { method: 'POST', body: { seed: seed.value } }), `Misión reiniciada (semilla ${seed.value})`)

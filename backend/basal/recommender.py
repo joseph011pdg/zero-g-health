@@ -22,6 +22,13 @@ REASON_TXT = {"corte_rojo": "superó el corte rojo", "corte_amarillo": "superó 
               "persistencia": "se mantuvo en amarillo varios días seguidos"}
 
 
+def es(x, nd=1) -> str:
+    """Número con coma decimal (es)."""
+    if x is None:
+        return "—"
+    return f"{x:.{nd}f}".replace(".", ",")
+
+
 def _num(x, nd=2):
     return None if x is None or (isinstance(x, float) and math.isnan(x)) else round(float(x), nd)
 
@@ -43,15 +50,16 @@ def change(key: str, row: pd.Series) -> dict:
 
 def _explain(c: dict) -> str:
     sentido = "por encima" if (c["diferencia"] or 0) > 0 else "por debajo"
-    return (f"{c['nombre']}: {c['valor']} {c['unidad']} frente a una línea base de {c['linea_base']} {c['unidad']} "
-            f"({abs(c['z'] or 0):.1f} desviaciones robustas {sentido} de lo habitual para esta persona).")
+    nd = INDICATORS[c["indicador"]]["decimales"]
+    return (f"{c['nombre']}: {es(c['valor'], nd)} {c['unidad']} frente a su normal de {es(c['linea_base'], nd)} {c['unidad']} "
+            f"(z = {es(abs(c['z'] or 0))}, {sentido} de lo habitual para esta persona).")
 
 
 def _how(c: dict, p: Params) -> str:
-    base = (f"z robusto = (valor − mediana) / (1,4826 × MAD) = {c['z']} usando {c['referencia']} "
-            f"(n = {c['n_obs']} observaciones válidas, MAD escalado = {c['dispersion_mad']}). ")
-    return base + f"Cortes: amarillo ≥ {p.yellow}, rojo ≥ {p.red} o {p.persist} días seguidos en amarillo; " \
-                  f"{REASON_TXT.get(c['motivo'], '')}."
+    base = (f"z robusto = (valor − mediana) / (1,4826 × MAD) = {es(c['z'], 2)} usando {c['referencia']} "
+            f"(n = {c['n_obs']} observaciones válidas, MAD escalado = {es(c['dispersion_mad'], 2)}). ")
+    return base + f"Cortes: vigilar ≥ {es(p.yellow)}, actuar ≥ {es(p.red)} o {p.persist} días seguidos en vigilar; " \
+                  f"{REASON_TXT.get(c['motivo'], '')}. Parámetro experimental ajustado con simulación, no límite clínico."
 
 
 def _evidence(ids):

@@ -35,7 +35,7 @@ async function save() {
   try {
     await s.run(() => api(`/astronauts/${props.astro.id}/checkin`, { method: 'POST', body: {
       animo: animo.value, calidad_sueno: sueno.value, notas: notas.value || null,
-      segundos: t0 ? (performance.now() - t0) / 1000 : null } }), `Check-in guardado (día ${s.day})`)
+      segundos: t0 ? (performance.now() - t0) / 1000 : null } }), s.publico ? `Check-in recibido (demo pública: no se guarda)` : `Check-in guardado (día ${s.day})`)
     await s.refresh()
     emit('saved')
     emit('close')
