@@ -23,7 +23,7 @@ export default defineConfig({
         skipWaiting: true,
         clientsClaim: true,
         cleanupOutdatedCaches: true,
-        navigateFallbackDenylist: [/^\/api/, /^\/docs/],
+        navigateFallbackDenylist: [/^\/api/, /^\/docs/, /\.pdf$/],
         globPatterns: ['**/*.{js,css,html,svg,jpg,png,woff,woff2,webmanifest}']
       }
     })
