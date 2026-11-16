@@ -69,7 +69,12 @@ onMounted(() => { if (props.ready) btn.value?.focus() })
 .veil { position: absolute; inset: 0; background:
   radial-gradient(ellipse 55% 45% at 50% 50%, rgba(10, 31, 68, .55) 0%, rgba(10, 31, 68, .3) 70%, rgba(10, 31, 68, .5) 100%); }
 .name, .lead-line { text-shadow: 0 2px 18px rgba(6, 16, 32, .55); }
-.center { position: relative; display: grid; justify-items: center; gap: 14px; text-align: center; max-width: 560px; }
+/* RECUADRO de vidrio: blanco translúcido con desenfoque, para leer logo y texto sobre el video */
+.center { position: relative; display: grid; justify-items: center; gap: 14px; text-align: center; max-width: 680px;
+  padding: 34px 44px 28px; border-radius: 18px; background: rgba(255, 255, 255, .14); border: 1px solid rgba(255, 255, 255, .32);
+  -webkit-backdrop-filter: blur(12px) saturate(1.15); backdrop-filter: blur(12px) saturate(1.15);
+  box-shadow: 0 24px 60px rgba(6, 16, 32, .35); animation: mark-in 520ms var(--ease-out) both; }
+@media (max-width: 640px) { .center { padding: 26px 20px 22px; border-radius: 14px; } }
 .mono { font-family: var(--serif); font-weight: 600; font-size: 44px; fill: #ffffff; }
 .mark { filter: drop-shadow(0 10px 30px rgba(6, 16, 32, .6)); }
 
