@@ -41,7 +41,7 @@
       </section>
 
       <section class="tiles" aria-label="Indicadores">
-        <button v-for="(v, k) in a.indicadores" :key="k" class="panel tile" :class="[v.nivel, { sel: ind === k }]" @click="ind = k" :aria-pressed="ind === k">
+        <button v-for="(v, k, ti) in a.indicadores" :key="k" class="panel tile rise" :style="{ '--i': ti }" :class="[v.nivel, { sel: ind === k }]" @click="ind = k" :aria-pressed="ind === k">
           <div class="row between">
             <span class="row label"><Icon :name="IND_ICON[k]" :size="15" />{{ s.indicators[k].corto }}</span>
             <LevelBadge :level="v.nivel" icon-only />

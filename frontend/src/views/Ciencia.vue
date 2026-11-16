@@ -63,7 +63,7 @@
           <li>Not built yet: a way for the Medical Officer to accept a new baseline after a legitimate adaptation.</li>
         </ul>
         <p class="tiny muted credits">Images: “The Blue Marble”, NASA/Apollo 17 crew, public domain; “Valles Marineris”, Viking Orbiter, NASA/USGS,
-          public domain; video “ISS Fly-Through to Cupola (8K)” (NASA); maps “Blue Marble Next Generation” (NASA) and “Mars Viking MDIM21” (NASA/JPL/USGS); all public domain, via Wikimedia Commons. BASAL is not affiliated with or endorsed by NASA.</p>
+          public domain; video “ISS Fly-Through to Cupola (8K)” (NASA); maps “Blue Marble Next Generation” (NASA) and “Mars Viking MDIM21” (NASA/JPL/USGS); all public domain, via Wikimedia Commons. Zero G Health is not affiliated with or endorsed by NASA.</p>
       </div>
     </section>
     <p class="tiny muted">Simulated data · educational prototype, not a medical device.</p>

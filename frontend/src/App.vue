@@ -1,8 +1,8 @@
 <template>
   <header class="top no-print">
     <div class="mast">
-      <router-link to="/" class="word" aria-label="BASAL, home">
-        <img src="/icon.svg" alt="" width="28" height="28" />BASAL
+      <router-link to="/" class="word" aria-label="Zero G Health, home">
+        <Logo :size="30" inverse label="" />Zero G <em>Health</em>
       </router-link>
 
       <nav class="nav" aria-label="Sections">
@@ -15,7 +15,7 @@
       <div class="edition" v-if="s.mission">
         <div class="ed-line">
           <button class="step" @click="s.advance(-1)" :disabled="s.day <= 0" aria-label="Previous day"><Icon name="prev" :size="11" /></button>
-          <span><span class="pre">Onboard health report · </span><b>Day {{ s.day }} of {{ s.mission.dias - 1 }}</b></span>
+          <span><span class="pre">Onboard health report · </span><b>Day {{ s.day }}<span class="of"> of {{ s.mission.dias - 1 }}</span></b></span>
           <button class="step" @click="s.advance(1)" :disabled="s.day >= s.mission.dias - 1" aria-label="Next day"><Icon name="next" :size="11" /></button>
         </div>
         <div class="ed-sub">
@@ -54,21 +54,29 @@
     </div>
   </main>
 
+  <Splash v-if="splash" :ready="!!s.mission || s.online === false" @done="closeSplash" />
+
   <div class="toasts" aria-live="polite">
     <div v-for="t in s.toasts" :key="t.id" class="toast" :class="t.kind">{{ t.msg }}</div>
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore, fmt } from './store.js'
 import Icon from './components/Icon.vue'
 import GuidedDemo from './components/GuidedDemo.vue'
+import Logo from './components/Logo.vue'
+import Splash from './components/Splash.vue'
 
 const s = useStore()
 const route = useRoute()
 const link = computed(() => s.mission?.comunicacion || {})
+//INICIO: pantalla de bienvenida una vez por sesión
+function seen() { try { return sessionStorage.getItem('zg.splash') === '1' } catch { return false } }
+const splash = ref(!seen())
+function closeSplash() { splash.value = false; try { sessionStorage.setItem('zg.splash', '1') } catch { /* solo memoria */ } }
 onMounted(() => s.init())
 </script>
 
@@ -77,7 +85,8 @@ onMounted(() => s.init())
 .top { background: var(--navy); color: #fff; position: sticky; top: 0; z-index: 20; box-shadow: 0 2px 10px rgba(11, 27, 51, .18); }
 .mast { max-width: 1240px; margin: 0 auto; padding: 14px 40px; display: flex; align-items: center; gap: 30px; }
 .word { display: flex; align-items: center; gap: 10px; font-family: var(--serif); font-size: 1.6rem; font-weight: 600; letter-spacing: -0.01em; color: #fff; flex: none; }
-.word img { border-radius: 50%; }
+.word em { font-style: normal; color: #f2c27a; }
+.word { white-space: nowrap; }
 .nav { display: flex; gap: 24px; }
 .nav a { color: #c9d8f2; font-weight: 500; padding: 4px 0; border-bottom: 2px solid transparent; display: inline-flex; align-items: center; gap: 6px; }
 .nav a:hover { color: #fff; }
@@ -127,5 +136,14 @@ code { font-family: var(--mono); background: #fff; padding: 1px 6px; }
   .nav { gap: 12px; justify-content: space-between; }
   .nav a { font-size: 0.88rem; }
   .public { font-size: 0.76rem; }
+}
+@media (max-width: 420px) {
+  .word { font-size: 1.08rem; gap: 7px; }
+  .word :deep(svg) { width: 24px; height: 24px; }
+  .mast { gap: 8px 8px; }
+  .ed-line { gap: 4px; }
+  .ed-line > span { font-size: 0.74rem; }
+  .ed-line .of { display: none; }
+  .role button { padding: 6px 8px; }
 }
 </style>

@@ -28,7 +28,7 @@ const router = createRouter({
 //TÍTULO de pestaña por vista ("BASAL · Alerts")
 router.afterEach((to) => {
   const t = to.path === '/' && to.hash === '#alerts' ? 'Alerts' : to.meta.title
-  document.title = t ? `BASAL · ${t}` : 'BASAL'
+  document.title = t ? `Zero G Health · ${t}` : 'Zero G Health'
 })
 
 export default router

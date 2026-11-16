@@ -25,6 +25,7 @@
   --mars: #b86a3c;
   --gray: #6b7a90;
   --radius: 6px;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --radius-sm: 4px;
   --mono: ui-monospace, 'Cascadia Mono', Consolas, monospace;
   --serif: 'Source Serif 4', Georgia, serif;
@@ -175,7 +176,19 @@ figcaption b { color: var(--ink); font-weight: 600; }
 @keyframes sk { from { background-position: 200% 0; } to { background-position: -200% 0; } }
 .fade-enter-active, .fade-leave-active { transition: opacity .16s cubic-bezier(.16,1,.3,1); }
 .fade-enter-from, .fade-leave-to { opacity: 0; }
-@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+/* ENTRADA escalonada: filas y tarjetas aparecen 50 ms una tras otra (--i = índice) */
+.rise { animation: rise 280ms var(--ease-out) both; animation-delay: calc(var(--i, 0) * 50ms); }
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fade-only { from { opacity: 0; } to { opacity: 1; } }
+/* RESPUESTA al pulsar botones */
+.btn, .ab, .tb, .act-p, .hb, .tabs button { transition-property: background-color, color, border-color, transform; transition-duration: 150ms; transition-timing-function: ease; }
+.btn:active, .ab:active, .tb:active, .act-p:active, .hb:active, .tabs button:active { transform: scale(0.97); transition: transform 140ms var(--ease-out); }
+/* Movimiento reducido: menos y más suave, no cero (solo opacidad) */
+@media (prefers-reduced-motion: reduce) {
+  .rise { animation-name: fade-only; animation-delay: 0ms; }
+  .skeleton { animation: none; }
+  .btn:active, .ab:active, .tb:active, .act-p:active, .hb:active, .tabs button:active { transform: none; }
+}
 
 .avatar-img { border-radius: 50%; display: block; background: #dfe8f6; }
 .planet { border-radius: 50%; object-fit: cover; display: block; }

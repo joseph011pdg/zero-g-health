@@ -48,7 +48,7 @@
           <h2>{{ c.mision }}</h2>
           <p class="small muted">{{ cur.id ? `Report #${cur.id}` : 'Preview (public demo: not saved)' }} · days {{ c.periodo.desde }}–{{ c.periodo.hasta }} · generated on day {{ c.generado_dia }}</p>
         </header>
-        <section v-for="p in c.tripulantes" :key="p.astronauta.id" class="person">
+        <section v-for="(p, pi) in c.tripulantes" :key="p.astronauta.id" class="person rise" :style="{ '--i': pi }">
           <div class="row wrap phead" :class="'n-' + p.nivel_final">
             <Avatar :id="p.astronauta.id" :name="p.astronauta.nombre" :size="40" />
             <h3 class="grow">{{ p.astronauta.nombre }} <span class="muted small">· {{ p.astronauta.rol }}</span></h3>

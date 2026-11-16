@@ -20,7 +20,7 @@
       </section>
 
       <section class="cols-3">
-        <div v-for="(label, m) in v.metodos" :key="m" class="panel method" :class="m">
+        <div v-for="(label, m, mi) in v.metodos" :key="m" class="panel method rise" :style="{ '--i': mi }" :class="m">
           <div class="label">{{ label }}</div>
           <div class="kpis">
             <div class="kpi"><span class="v">{{ nn(g[m].sensibilidad_pct) }} <small>%</small></span><span class="tiny muted">sensitivity (events)</span></div>

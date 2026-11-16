@@ -1,9 +1,9 @@
 <template>
   <div class="page en" lang="en">
-    <header class="page-head"><h1>BASAL · Autonomous crew health monitoring</h1></header>
+    <header class="page-head"><h1>Zero G Health · Autonomous crew health monitoring</h1></header>
 
     <section class="intro">
-      <p class="lede">Each astronaut is compared with <b>their own baseline</b>. BASAL flags when a health indicator stops being
+      <p class="lede">Each astronaut is compared with <b>their own baseline</b>. Zero G Health flags when a health indicator stops being
         normal for that person, explains what changed and suggests a conservative follow-up — on board, without Internet.</p>
       <dl class="pitch">
         <div><dt>Problem</dt><dd>On the way to Mars a message takes up to 20 min each way and there are blackouts: Earth cannot watch crew health in real time.</dd></div>

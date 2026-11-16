@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <section class="opening">
+    <section class="opening rise">
       <div class="lead">
         <h1 v-if="highPending"><span class="hl">{{ highPending === 1 ? '1 alert needs' : `${highPending} alerts need` }}</span> attention.</h1>
         <h1 v-else-if="lowPending">No urgent alerts; <span class="hl">{{ plural(lowPending, 'notice', 'notices') }}</span> to watch.</h1>
@@ -8,11 +8,11 @@
         <h1 v-else>The whole crew is <span class="hl">within their usual range</span>.</h1>
 
         <p class="tagline">Each astronaut is compared with <b>their own baseline</b>, on board and without Earth.
-          <button class="what" @click="showPitch = !showPitch" :aria-expanded="showPitch">What is BASAL? {{ showPitch ? '↑' : '↓' }}</button>
+          <button class="what" @click="showPitch = !showPitch" :aria-expanded="showPitch">What is Zero G Health? {{ showPitch ? '↑' : '↓' }}</button>
           <i>simulated data</i></p>
         <dl v-if="showPitch" class="pitch">
           <div><dt>Problem</dt><dd>On the way to Mars a message takes up to 20 min each way and there are blackouts: Earth cannot watch crew health in real time.</dd></div>
-          <div><dt>Solution</dt><dd>BASAL compares each astronaut with their own baseline and alerts on board, without Internet, with an explanation and a safe follow-up.</dd></div>
+          <div><dt>Solution</dt><dd>Zero G Health compares each astronaut with their own baseline and alerts on board, without Internet, with an explanation and a safe follow-up.</dd></div>
           <div><dt>Evidence</dt><dd>In simulation it detects <b>98.9%</b> of events with <b>0.78</b> false alarms per 30 astronaut-days (fixed threshold: 88.9% and 1.87). <router-link to="/lab/validation">See validation</router-link></dd></div>
         </dl>
 
@@ -38,7 +38,7 @@
 
     <section aria-labelledby="t-crew">
       <div class="sec-h"><h2 id="t-crew">Crew</h2><span class="dotkey">dots: heart rate · HRV · sleep · radiation · attention · mood</span></div>
-      <router-link v-for="(p, i) in rows" :key="p.a.id" :to="`/crew/${p.a.id}`" class="person" @click="s.select(p.a.id)">
+      <router-link v-for="(p, i) in rows" :key="p.a.id" :to="`/crew/${p.a.id}`" class="person rise" :style="{ '--i': i }" @click="s.select(p.a.id)">
         <div class="who">
           <b>{{ p.a.nombre }}</b><small>{{ p.a.rol }}</small>
           <span class="dots" aria-label="Six indicators">
@@ -90,7 +90,7 @@
         <div v-if="loading" class="skeleton" style="min-height: 80px" />
         <p v-else-if="!high.length && !low.length" class="empty"><Icon name="check" :size="15" class="c-verde" /> No alerts in the last 7 days.</p>
         <template v-else>
-          <div v-for="g in high" :key="g.key" class="find" :class="{ done: g.rep.estado !== 'pendiente' }">
+          <div v-for="(g, gi) in high" :key="g.key" class="find rise" :style="{ '--i': gi }" :class="{ done: g.rep.estado !== 'pendiente' }">
             <div class="ftxt">
               <h3><span class="pr">ACT</span>{{ short(crewName(g.rep.astro_id)) }}: {{ g.rep.titulo }}</h3>
               <span class="fact">{{ factText(g.rep) }}</span>
@@ -127,7 +127,7 @@
       </div>
     </section>
 
-    <footer class="colophon"><span>Simulated data · educational prototype, not a medical device</span><span>Runs on board with no Internet (local version) · <router-link to="/about">About BASAL</router-link></span></footer>
+    <footer class="colophon"><span>Simulated data · educational prototype, not a medical device</span><span>Runs on board with no Internet (local version) · <router-link to="/about">About Zero G Health</router-link></span></footer>
   </div>
 </template>
 

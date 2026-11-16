@@ -9,10 +9,10 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icon.svg'],
       manifest: {
-        name: 'BASAL · Autonomous crew health monitoring',
-        short_name: 'BASAL',
+        name: 'Zero G Health · Autonomous crew health monitoring',
+        short_name: 'Zero G Health',
         description: 'Astronaut health monitoring without a link to Earth',
-        theme_color: '#0b3d91',
+        theme_color: '#0a1f44',
         background_color: '#f4f6fa',
         display: 'standalone',
         lang: 'en',
