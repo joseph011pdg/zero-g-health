@@ -10,7 +10,7 @@
     <div class="center">
       <div class="logo-wrap">
         <svg class="mark" width="104" height="104" viewBox="0 0 84 84" aria-hidden="true">
-          <rect x="2" y="2" width="80" height="80" fill="#0b3d91" stroke="rgba(255,255,255,.4)" stroke-width="1.5" />
+          <rect x="2" y="2" width="80" height="80" fill="#0a1f44" stroke="rgba(255,255,255,.55)" stroke-width="1.5" />
           <text x="40" y="58" text-anchor="middle" class="mono">0G</text>
           <path class="cross" d="M60 18v10M55 23h10" stroke="#f2a93b" stroke-width="3.5" stroke-linecap="round" />
           <path class="base" d="M12 70h60" stroke="#ffffff" stroke-opacity=".6" stroke-width="2" />
@@ -71,7 +71,7 @@ onMounted(() => { if (props.ready) btn.value?.focus() })
 .name, .lead-line { text-shadow: 0 2px 18px rgba(6, 16, 32, .55); }
 .center { position: relative; display: grid; justify-items: center; gap: 14px; text-align: center; max-width: 560px; }
 .mono { font-family: var(--serif); font-weight: 600; font-size: 44px; fill: #ffffff; }
-.mark { filter: drop-shadow(0 10px 30px rgba(11, 61, 145, .55)); }
+.mark { filter: drop-shadow(0 10px 30px rgba(6, 16, 32, .6)); }
 
 /* ENTRADA: marca → cruz y línea base → nombre → texto → botón (escalonado) */
 .mark { animation: mark-in 520ms var(--ease-out) both; }
@@ -81,11 +81,11 @@ onMounted(() => { if (props.ready) btn.value?.focus() })
 .name em { font-style: normal; color: #f2c27a; }
 .lead-line { color: #c9d8f2; font-size: 1.02rem; line-height: 1.5; animation: rise 420ms var(--ease-out) 460ms both; }
 .cta { display: grid; justify-items: center; gap: 12px; margin-top: 10px; animation: rise 420ms var(--ease-out) 560ms both; }
-.enter { background: var(--blue); color: #fff; border: 1px solid rgba(255, 255, 255, .3); border-radius: var(--radius-sm); padding: 12px 26px; font: inherit; font-weight: 600; font-size: 1rem; cursor: pointer; min-height: 46px;
+.enter { background: var(--navy); color: #fff; border: 1px solid rgba(255, 255, 255, .55); border-radius: var(--radius-sm); padding: 12px 26px; font: inherit; font-weight: 600; font-size: 1rem; cursor: pointer; min-height: 46px;
   transition: transform 140ms var(--ease-out), background-color 150ms ease, opacity 150ms ease; }
 .enter:active { transform: scale(0.97); }
 .enter:disabled { opacity: .7; cursor: progress; }
-@media (hover: hover) and (pointer: fine) { .enter:not(:disabled):hover { background: #1650b8; } }
+@media (hover: hover) and (pointer: fine) { .enter:not(:disabled):hover { background: #13306a; } }
 .note { font-size: 0.78rem; color: #9fb2d1; }
 
 @keyframes mark-in { from { opacity: 0; transform: scale(0.94); } to { opacity: 1; transform: scale(1); } }

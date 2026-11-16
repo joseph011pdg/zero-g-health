@@ -18,8 +18,8 @@ defineProps({ size: { type: Number, default: 28 }, inverse: Boolean, blue: Boole
 .mono { font-family: var(--serif); font-weight: 600; font-size: 44px; fill: #ffffff; }
 .cross { stroke: #f2a93b; fill: none; }
 .base { stroke: #ffffff; opacity: .4; }
-/* Versión azul NASA con letras blancas y borde fino: se distingue sobre el azul marino */
-.blue .bg { fill: var(--blue); stroke: rgba(255, 255, 255, .35); stroke-width: 2; }
+/* Versión azul marino con letras blancas y borde blanco fino: se distingue sobre la cabecera */
+.blue .bg { fill: var(--navy); stroke: rgba(255, 255, 255, .55); stroke-width: 2; }
 .blue .base { stroke: #ffffff; opacity: .55; }
 /* Versión sobre fondo azul marino: cuadro blanco, letras marino */
 .inverse .bg { fill: #ffffff; }
