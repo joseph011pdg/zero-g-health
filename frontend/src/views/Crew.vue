@@ -24,7 +24,7 @@
       </div>
 
       <div class="hero-img">
-        <!-- Video real de NASA ("ISS Fly-Through to Cupola"): la Tierra bajo la estación, en bucle suave.
+        <!-- Video real de NASA ("Aurora Borealis from Space (4K)"): auroras vistas desde la ISS, en bucle suave.
              Foto fija si el sistema pide reducir movimiento. -->
         <video v-if="!reduceMotion" class="hero-video" :class="{ out: fadeOut }" src="/img/portada.mp4" poster="/img/portada-poster.jpg"
                autoplay muted playsinline preload="auto" @timeupdate="softLoop" aria-hidden="true"></video>
