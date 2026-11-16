@@ -97,7 +97,7 @@ Registro de avance por fases (para retomar si la sesión se interrumpe). Fecha l
 - 32 pruebas pytest pasan.
 
 ## Pendiente (equipo)
-- [x] Publicado: https://github.com/joseph011pdg/basal (público) y https://basal-pxyn.onrender.com (Render, plan free,
+- [x] Publicado: https://github.com/joseph011pdg/zero-g-health (público) y https://basal-pxyn.onrender.com (Render, plan free,
       modo público). Cada push a `main` redespliega; recompilar `frontend/dist` antes si cambia la interfaz.
 - [ ] Ensayar la demo con el guion y grabar el video (2–3 min); capturas para la entrega.
 - [ ] Revisar la página oficial del reto y los campos de entrega de Space Apps 2026 (no verificados en esta sesión).

@@ -1,12 +1,12 @@
-# BASAL · Autonomous health monitoring for astronauts
+# Zero G Health · Autonomous health monitoring for astronauts
 
 **NASA Space Apps Challenge 2026 · Create Health Monitoring Software for Astronauts on Space Missions**
 
 > Educational and research prototype with **simulated data**. It is not a medical device, does not diagnose and is
 > not clinically validated. It does not represent and is not endorsed by NASA.
 
-**Live demo:** https://basal-pxyn.onrender.com · **Code:** https://github.com/joseph011pdg/basal ·
-Spanish versions of the docs: `*_ES.md`.
+**Live demo:** https://basal-pxyn.onrender.com · **Code:** https://github.com/joseph011pdg/zero-g-health ·
+Spanish versions of the docs: `*_ES.md`. Project codename: BASAL (internal code and file names keep it).
 
 ## Summary
 

@@ -96,7 +96,7 @@ y en otra terminal `cd frontend; npm run dev` (http://localhost:5173, proxy `/ap
 
 ## Demo pública en línea (Render)
 
-**URL: https://basal-pxyn.onrender.com** · código: https://github.com/joseph011pdg/basal
+**URL: https://basal-pxyn.onrender.com** · código: https://github.com/joseph011pdg/zero-g-health
 
 
 El repositorio incluye `render.yaml` (runtime Python, plan gratuito) y la interfaz ya compilada en `frontend/dist`.
