@@ -1,8 +1,8 @@
-# Render deployment (Blueprint). BASAL public online demo.
+# Render deployment (Blueprint). Zero G Health public online demo (service renamed from "basal" in the dashboard).
 # The interface is already compiled in frontend/dist (rebuild with `npm run build` before every push).
 services:
   - type: web
-    name: basal
+    name: zero-g-health
     runtime: python
     plan: free
     buildCommand: pip install -r backend/requirements.txt
