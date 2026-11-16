@@ -181,17 +181,21 @@ onBeforeUnmount(() => clearTimeout(timer))
 .daybig { color: var(--navy); font-weight: 600; }
 .input.sm { width: auto; padding: 5px 8px; }
 .daybig { font-size: 1.5rem; font-weight: 700; margin-left: 8px; }
-.strip-wrap { display: grid; gap: 4px; margin-bottom: 12px; }
-.strip { display: grid; grid-template-columns: 90px 1fr; align-items: center; gap: 8px; }
-.cells { display: grid; gap: 1px; height: 16px; }
-.cellx { display: block; height: 100%; border-radius: 1px; background: var(--ok); opacity: .75; position: relative; }
-.cellx.amarillo { background: var(--warn); opacity: 1; }
-.cellx.rojo { background: var(--red); opacity: 1; }
-.cellx.sin_dato, .cellx.calibrando { background: var(--gray); opacity: .45; }
-.cellx.future { background: var(--surface-3); opacity: .5; }
-.cellx.truth { box-shadow: inset 0 -4px 0 #6a4fc4; }
-.legend { gap: 14px; margin-top: 4px; }
-.sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
-.sw.verde { background: var(--ok); } .sw.amarillo { background: var(--warn); } .sw.rojo { background: var(--red); }
-.sw.sin_dato { background: var(--gray); } .sw.future { background: var(--surface-3); } .sw.truthsw { background: #6a4fc4; }
+/* MAPA de días: panel azul marino con colores vivos (normal verde, vigilar amarillo, actuar naranja, sin rojo) */
+.strip-wrap { display: grid; gap: 5px; margin-bottom: 14px; background: var(--navy); padding: 14px 16px 12px; border-radius: var(--radius); }
+.strip { display: grid; grid-template-columns: 96px 1fr; align-items: center; gap: 10px; }
+.strip .name { color: #c9d8f2 !important; font-weight: 500; }
+.cells { display: grid; gap: 2px; height: 20px; }
+.cellx { display: block; height: 100%; border-radius: 2px; background: #1fb57a; position: relative; transition: transform 150ms var(--ease-out); }
+.cellx.amarillo { background: #ffc233; }
+.cellx.rojo { background: #ff7a1a; }
+.cellx.sin_dato, .cellx.calibrando { background: repeating-linear-gradient(135deg, #4a5f85 0 3px, #2c3f63 3px 6px); }
+.cellx.future { background: rgba(255, 255, 255, .08); }
+.cellx.truth { box-shadow: inset 0 -5px 0 #b48cff, 0 0 6px rgba(180, 140, 255, .55); }
+@media (hover: hover) and (pointer: fine) { .cellx:hover { transform: scaleY(1.25); } }
+.legend { gap: 16px; margin-top: 8px; color: #c9d8f2 !important; }
+.sw { display: inline-block; width: 11px; height: 11px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+.sw.verde { background: #1fb57a; } .sw.amarillo { background: #ffc233; } .sw.rojo { background: #ff7a1a; }
+.sw.sin_dato { background: repeating-linear-gradient(135deg, #4a5f85 0 3px, #2c3f63 3px 6px); } .sw.future { background: rgba(255, 255, 255, .15); } .sw.truthsw { background: #b48cff; }
+@media (prefers-reduced-motion: reduce) { .cellx:hover { transform: none; } }
 </style>

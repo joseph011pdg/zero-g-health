@@ -33,7 +33,7 @@
           <div class="row wrap small"><span class="c-verde strong">{{ csvRes.insertados }} new</span>
             <span>{{ csvRes.reemplazados }} replaced</span><span class="c-amarillo strong">{{ csvRes.rechazados.length }} rejected</span></div>
           <ul v-if="csvRes.rechazados.length" class="rej tiny">
-            <li v-for="(r, i) in csvRes.rechazados" :key="i"><span class="mono">{{ r.astro_id }} · {{ r.day }} · {{ r.indicator }} · {{ r.value }}</span> — {{ r.motivo }}</li>
+            <li v-for="(r, i) in csvRes.rechazados" :key="i"><span class="mono">{{ r.astro_id }} · {{ r.day }} · {{ r.indicator }} · {{ r.value }}</span>: {{ r.motivo }}</li>
           </ul>
         </div>
       </div>

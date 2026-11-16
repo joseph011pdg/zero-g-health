@@ -3,21 +3,21 @@
   <div class="splash" :class="{ out: leaving }" role="dialog" aria-modal="true" aria-labelledby="sp-title" @keydown.enter="enter" @keydown.esc="enter">
     <!-- Video de NASA (dominio público, "ISS Fly-Through to Cupola"): la Tierra en órbita junto al panel solar.
          Distinto al de la portada. Bucle con fundido; foto fija si se pide reducir movimiento. -->
-    <video v-if="!reduceMotion" class="bg" :class="{ dim: fading }" src="/img/bienvenida.mp4" poster="/img/bienvenida-poster.jpg"
+    <video v-if="!reduceMotion" class="bg" :class="{ dim: fading }" :src="videoSrc" poster="/img/bienvenida-poster.jpg"
            autoplay muted playsinline preload="auto" @timeupdate="softLoop" aria-hidden="true"></video>
     <img v-else class="bg" src="/img/bienvenida-poster.jpg" alt="" aria-hidden="true" />
     <div class="veil" aria-hidden="true"></div>
     <div class="center">
       <div class="logo-wrap">
         <svg class="mark" width="104" height="104" viewBox="0 0 84 84" aria-hidden="true">
-          <rect x="2" y="2" width="80" height="80" fill="#ffffff" />
+          <rect x="2" y="2" width="80" height="80" fill="#0b3d91" stroke="rgba(255,255,255,.4)" stroke-width="1.5" />
           <text x="40" y="58" text-anchor="middle" class="mono">0G</text>
-          <path class="cross" d="M60 18v10M55 23h10" stroke="#c9780a" stroke-width="3.5" stroke-linecap="round" />
-          <path class="base" d="M12 70h60" stroke="#0a1f44" stroke-width="2" />
+          <path class="cross" d="M60 18v10M55 23h10" stroke="#f2a93b" stroke-width="3.5" stroke-linecap="round" />
+          <path class="base" d="M12 70h60" stroke="#ffffff" stroke-opacity=".6" stroke-width="2" />
         </svg>
       </div>
       <h1 id="sp-title" class="name">Zero G <em>Health</em></h1>
-      <p class="lead-line">Every astronaut compared with their own baseline — on board, without Earth.</p>
+      <p class="lead-line">Every astronaut compared with their own baseline. On board, without Earth.</p>
       <div class="cta">
         <button ref="btn" class="enter" @click="enter" :disabled="!ready">
           {{ ready ? 'Enter mission' : 'Waking up the server…' }}
@@ -35,6 +35,8 @@ const props = defineProps({ ready: Boolean })
 const emit = defineEmits(['done'])
 const leaving = ref(false)
 const fading = ref(false)
+//CALIDAD: 1080p en pantallas grandes, 720p en celulares (carga más rápida)
+const videoSrc = typeof window !== 'undefined' && window.innerWidth >= 900 ? '/img/bienvenida-1080.mp4' : '/img/bienvenida.mp4'
 const reduceMotion = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
 //BUCLE suave: fundido corto al final y vuelta al inicio (el último plano no coincide con el primero)
 function softLoop(e) {
@@ -65,10 +67,11 @@ onMounted(() => { if (props.ready) btn.value?.focus() })
 .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; animation: settle 1600ms var(--ease-out) both; transition: opacity 450ms ease; }
 .bg.dim { opacity: .2; }
 .veil { position: absolute; inset: 0; background:
-  radial-gradient(ellipse 70% 60% at 50% 50%, rgba(10, 31, 68, .5) 0%, rgba(10, 31, 68, .72) 60%, rgba(10, 31, 68, .9) 100%); }
+  radial-gradient(ellipse 55% 45% at 50% 50%, rgba(10, 31, 68, .55) 0%, rgba(10, 31, 68, .3) 70%, rgba(10, 31, 68, .5) 100%); }
 .name, .lead-line { text-shadow: 0 2px 18px rgba(6, 16, 32, .55); }
 .center { position: relative; display: grid; justify-items: center; gap: 14px; text-align: center; max-width: 560px; }
-.mono { font-family: var(--serif); font-weight: 600; font-size: 44px; fill: #0a1f44; }
+.mono { font-family: var(--serif); font-weight: 600; font-size: 44px; fill: #ffffff; }
+.mark { filter: drop-shadow(0 10px 30px rgba(11, 61, 145, .55)); }
 
 /* ENTRADA: marca → cruz y línea base → nombre → texto → botón (escalonado) */
 .mark { animation: mark-in 520ms var(--ease-out) both; }
@@ -78,11 +81,11 @@ onMounted(() => { if (props.ready) btn.value?.focus() })
 .name em { font-style: normal; color: #f2c27a; }
 .lead-line { color: #c9d8f2; font-size: 1.02rem; line-height: 1.5; animation: rise 420ms var(--ease-out) 460ms both; }
 .cta { display: grid; justify-items: center; gap: 12px; margin-top: 10px; animation: rise 420ms var(--ease-out) 560ms both; }
-.enter { background: #fff; color: var(--navy); border: 0; border-radius: var(--radius-sm); padding: 12px 26px; font: inherit; font-weight: 600; font-size: 1rem; cursor: pointer; min-height: 46px;
+.enter { background: var(--blue); color: #fff; border: 1px solid rgba(255, 255, 255, .3); border-radius: var(--radius-sm); padding: 12px 26px; font: inherit; font-weight: 600; font-size: 1rem; cursor: pointer; min-height: 46px;
   transition: transform 140ms var(--ease-out), background-color 150ms ease, opacity 150ms ease; }
 .enter:active { transform: scale(0.97); }
 .enter:disabled { opacity: .7; cursor: progress; }
-@media (hover: hover) and (pointer: fine) { .enter:not(:disabled):hover { background: #e8eef8; } }
+@media (hover: hover) and (pointer: fine) { .enter:not(:disabled):hover { background: #1650b8; } }
 .note { font-size: 0.78rem; color: #9fb2d1; }
 
 @keyframes mark-in { from { opacity: 0; transform: scale(0.94); } to { opacity: 1; transform: scale(1); } }

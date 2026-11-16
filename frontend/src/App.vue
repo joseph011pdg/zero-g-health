@@ -2,7 +2,7 @@
   <header class="top no-print">
     <div class="mast">
       <router-link to="/" class="word" aria-label="Zero G Health, home">
-        <Logo :size="30" inverse label="" />Zero G <em>Health</em>
+        <Logo :size="30" blue label="" />Zero G <em>Health</em>
       </router-link>
 
       <nav class="nav" aria-label="Sections">

@@ -74,7 +74,7 @@ stress, D solar event (whole crew), E slow behavioral change; random intensity 0
 **Methods**
 
 - **A · Personal**: the detector above. Two levels are evaluated: *Watch* (Watch or Act) and *Act*.
-- **B · Fixed population reference**: classic reference interval — 97.5th percentile (if rising is bad) or 2.5th (if
+- **B · Fixed population reference**: classic reference interval: 97.5th percentile (if rising is bad) or 2.5th (if
   falling is bad) of healthy days in the **tuning** population. The same for everyone.
 
 **Definitions**

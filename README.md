@@ -21,7 +21,7 @@ suggested and which source supports it**, and Act alerts are routed to the crew 
 A reproducible mission simulator injects known health events so the detector can be validated: tuned on one set of
 seeds and evaluated on a separate set of 40 missions, the personal-baseline **Act** level detected **98.9%** of events
 with **0.78** false-alarm episodes per 30 astronaut-days, versus **88.9%** and **1.87** for a fixed population
-reference range — while the fixed threshold raised the alarm earlier on slow or large changes. The lab shows **when
+reference range. The fixed threshold, however, raised the alarm earlier on slow or large changes. The lab shows **when
 personalization helps and when it does not**. Everything runs locally (FastAPI + SQLite + Vue 3 PWA) with no Internet.
 
 ## Problem
@@ -39,9 +39,9 @@ tested in the Validation lab, including the cases where it does not hold.
 
 - **Home (Crew):** the headline answers "does anything need attention?". Below it: problem / solution / evidence,
   the main actions (Review alerts, Check-in, PVT test, Send report) and demo shortcuts:
-  - **Guided demo** — 9 steps that perform real actions.
-  - **Simulate blackout** — the link with Earth drops: detection and alerts keep working, reports stay queued.
-  - **See fatigue (B) / See stress (C) / See solar event (D)** — jump to the day where each injected event shows.
+  - **Guided demo:** 9 steps that perform real actions.
+  - **Simulate blackout:** the link with Earth drops: detection and alerts keep working, reports stay queued.
+  - **See fatigue (B) / See stress (C) / See solar event (D):** jump to the day where each injected event shows.
 - **Levels:** *Watch* = repeat the measurement; *Act* = notify the Medical Officer. Levels always show an icon and
   text, never color alone. An alert stays open until it is acknowledged, even if today's values are back to normal.
 - **Roles:** *Astronaut* sees their status and what to do; *Medical Officer* also sees alert management

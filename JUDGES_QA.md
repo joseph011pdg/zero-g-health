@@ -70,7 +70,7 @@ HR/HRV extraction step would be added (e.g., RapidHRV; Kirk et al., 2022).
 
 **What would be needed for operational use?**
 Real flight or analog data for validation, medical review of rules and cutoffs, certified sensors, authentication and
-encryption, auditing, a way for the Medical Officer to accept a new baseline (not built — listed as a limitation),
+encryption, auditing, a way for the Medical Officer to accept a new baseline (not built; listed as a limitation),
 integration with mission procedures and regulatory approval.
 
 **What are its limitations?**

@@ -4,7 +4,7 @@
 
     <section class="intro">
       <p class="lede">Each astronaut is compared with <b>their own baseline</b>. Zero G Health flags when a health indicator stops being
-        normal for that person, explains what changed and suggests a conservative follow-up — on board, without Internet.</p>
+        normal for that person, explains what changed and suggests a conservative follow-up, on board and without Internet.</p>
       <dl class="pitch">
         <div><dt>Problem</dt><dd>On the way to Mars a message takes up to 20 min each way and there are blackouts: Earth cannot watch crew health in real time.</dd></div>
         <div><dt>Solution</dt><dd>Personal baselines (robust z-score: median and MAD of each astronaut's own history) on six indicators, with explainable alerts and an onboard medical-officer workflow.</dd></div>
