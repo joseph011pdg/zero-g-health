@@ -24,11 +24,11 @@
       </div>
 
       <div class="hero-img">
-        <!-- Video real de NASA ("ISS Fly-Through to Cupola"): la Tierra bajo la estación, en bucle suave.
+        <!-- Video real de NASA ("ISS Fly-Through to Cupola"): acercándose a la cúpula desde dentro, en bucle suave.
              Foto fija si el sistema pide reducir movimiento. -->
-        <video v-if="!reduceMotion" class="hero-video" :class="{ out: fadeOut }" src="/img/portada.mp4" poster="/img/portada-poster.jpg"
+        <video v-if="!reduceMotion" class="hero-video" :class="{ out: fadeOut }" src="/img/cupula.mp4" poster="/img/cupula-poster.jpg"
                autoplay muted playsinline preload="auto" @timeupdate="softLoop" aria-hidden="true"></video>
-        <img v-else class="hero-video" src="/img/portada-poster.jpg" alt="" />
+        <img v-else class="hero-video" src="/img/cupula-poster.jpg" alt="" />
         <div class="txt">
           <h2>Crew health monitoring</h2>
           <p>Explained alerts and follow-up without depending on Earth.</p>
