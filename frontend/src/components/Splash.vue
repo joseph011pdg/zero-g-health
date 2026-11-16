@@ -1,7 +1,9 @@
 <template>
   <!-- Pantalla de inicio: una vez por sesión. Sirve también de pantalla de carga mientras despierta el servidor. -->
   <div class="splash" :class="{ out: leaving }" role="dialog" aria-modal="true" aria-labelledby="sp-title" @keydown.enter="enter" @keydown.esc="enter">
-    <div class="stars" aria-hidden="true"><i v-for="n in 18" :key="n" :style="star(n)"></i></div>
+    <!-- Foto de NASA (dominio público): la Tierra vista desde la ISS, bajo un velo azul marino para leer el texto -->
+    <img class="bg" src="/img/portada-poster.jpg" alt="" aria-hidden="true" />
+    <div class="veil" aria-hidden="true"></div>
     <div class="center">
       <div class="logo-wrap">
         <svg class="mark" width="104" height="104" viewBox="0 0 84 84" aria-hidden="true">
@@ -31,14 +33,6 @@ const emit = defineEmits(['done'])
 const leaving = ref(false)
 const btn = ref(null)
 
-//ESTRELLAS: posiciones fijas (deterministas) para que no cambien en cada render
-function star(n) {
-  const x = (n * 53) % 100
-  const y = (n * 37 + 11) % 100
-  const s = 1 + (n % 3)
-  return { left: x + '%', top: y + '%', width: s + 'px', height: s + 'px', animationDelay: `${(n % 6) * -1.3}s` }
-}
-
 function enter() {
   if (!props.ready || leaving.value) return
   leaving.value = true
@@ -53,7 +47,11 @@ onMounted(() => { if (props.ready) btn.value?.focus() })
 .splash { user-select: none; position: fixed; inset: 0; z-index: 100; background: var(--navy); color: #fff; display: grid; place-items: center; padding: 24px; overflow: hidden;
   transition: opacity 260ms var(--ease-out), transform 260ms var(--ease-out); }
 .splash.out { opacity: 0; transform: translateY(-8px); }
-.stars i { position: absolute; border-radius: 50%; background: #fff; opacity: .5; animation: twinkle 6s linear infinite; }
+/* FONDO: la foto entra con un acercamiento lento que se detiene (solo transform y opacidad) */
+.bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 60% 50%; animation: settle 1600ms var(--ease-out) both; }
+.veil { position: absolute; inset: 0; background:
+  radial-gradient(ellipse 70% 60% at 50% 50%, rgba(10, 31, 68, .62) 0%, rgba(10, 31, 68, .82) 60%, rgba(10, 31, 68, .94) 100%); }
+.name, .lead-line { text-shadow: 0 2px 18px rgba(6, 16, 32, .55); }
 .center { position: relative; display: grid; justify-items: center; gap: 14px; text-align: center; max-width: 560px; }
 .mono { font-family: var(--serif); font-weight: 600; font-size: 44px; fill: #0a1f44; }
 
@@ -76,12 +74,12 @@ onMounted(() => { if (props.ready) btn.value?.focus() })
 @keyframes pop { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: scale(1); } }
 @keyframes draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes twinkle { 0%, 100% { opacity: .15; } 50% { opacity: .7; } }
+@keyframes settle { from { opacity: 0; transform: scale(1.06); } to { opacity: 1; transform: scale(1); } }
 
 /* Movimiento reducido: solo aparece con opacidad, sin desplazamientos ni estrellas animadas */
 @media (prefers-reduced-motion: reduce) {
   .mark, .cross, .base, .name, .lead-line, .cta { animation: fade 300ms ease both; }
-  .stars i { animation: none; }
+  .bg { animation: fade 400ms ease both; }
   .splash.out { transform: none; }
 }
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
