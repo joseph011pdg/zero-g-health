@@ -286,7 +286,7 @@ const hhmm = (d) => d.toLocaleTimeString(LOCALE, { hour: '2-digit', minute: '2-d
 
 <style scoped>
 .page { gap: 34px; }
-.opening { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 40px; padding-top: 6px; }
+.opening { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 7fr); gap: 40px; padding-top: 6px; }
 .lead { display: grid; gap: 14px; align-content: center; }
 .tagline { margin: 0; font-size: 1rem; color: var(--text-2); line-height: 1.5; }
 .tagline b { color: var(--ink); font-weight: 600; }
