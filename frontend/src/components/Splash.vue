@@ -1,8 +1,11 @@
 <template>
   <!-- Pantalla de inicio: una vez por sesión. Sirve también de pantalla de carga mientras despierta el servidor. -->
   <div class="splash" :class="{ out: leaving }" role="dialog" aria-modal="true" aria-labelledby="sp-title" @keydown.enter="enter" @keydown.esc="enter">
-    <!-- Foto de NASA (dominio público): la Tierra vista desde la ISS, bajo un velo azul marino para leer el texto -->
-    <img class="bg" src="/img/portada-poster.jpg" alt="" aria-hidden="true" />
+    <!-- Video de NASA (dominio público, "ISS Fly-Through to Cupola"): acercándose a la cúpula desde dentro.
+         Distinto al de la portada. Bucle con fundido; foto fija si se pide reducir movimiento. -->
+    <video v-if="!reduceMotion" class="bg" :class="{ dim: fading }" src="/img/bienvenida.mp4" poster="/img/bienvenida-poster.jpg"
+           autoplay muted playsinline preload="auto" @timeupdate="softLoop" aria-hidden="true"></video>
+    <img v-else class="bg" src="/img/bienvenida-poster.jpg" alt="" aria-hidden="true" />
     <div class="veil" aria-hidden="true"></div>
     <div class="center">
       <div class="logo-wrap">
@@ -31,6 +34,17 @@ import { ref, watch, onMounted, nextTick } from 'vue'
 const props = defineProps({ ready: Boolean })
 const emit = defineEmits(['done'])
 const leaving = ref(false)
+const fading = ref(false)
+const reduceMotion = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+//BUCLE suave: fundido corto al final y vuelta al inicio (el último plano no coincide con el primero)
+function softLoop(e) {
+  const v = e.target
+  if (fading.value || !v.duration || !isFinite(v.duration)) return
+  if (v.currentTime >= v.duration - 0.7) {
+    fading.value = true
+    setTimeout(() => { v.currentTime = 0; v.play(); fading.value = false }, 450)
+  }
+}
 const btn = ref(null)
 
 function enter() {
@@ -48,9 +62,10 @@ onMounted(() => { if (props.ready) btn.value?.focus() })
   transition: opacity 260ms var(--ease-out), transform 260ms var(--ease-out); }
 .splash.out { opacity: 0; transform: translateY(-8px); }
 /* FONDO: la foto entra con un acercamiento lento que se detiene (solo transform y opacidad) */
-.bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 60% 50%; animation: settle 1600ms var(--ease-out) both; }
+.bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; animation: settle 1600ms var(--ease-out) both; transition: opacity 450ms ease; }
+.bg.dim { opacity: .2; }
 .veil { position: absolute; inset: 0; background:
-  radial-gradient(ellipse 70% 60% at 50% 50%, rgba(10, 31, 68, .62) 0%, rgba(10, 31, 68, .82) 60%, rgba(10, 31, 68, .94) 100%); }
+  radial-gradient(ellipse 70% 60% at 50% 50%, rgba(10, 31, 68, .5) 0%, rgba(10, 31, 68, .72) 60%, rgba(10, 31, 68, .9) 100%); }
 .name, .lead-line { text-shadow: 0 2px 18px rgba(6, 16, 32, .55); }
 .center { position: relative; display: grid; justify-items: center; gap: 14px; text-align: center; max-width: 560px; }
 .mono { font-family: var(--serif); font-weight: 600; font-size: 44px; fill: #0a1f44; }
