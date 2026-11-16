@@ -286,7 +286,7 @@ const hhmm = (d) => d.toLocaleTimeString(LOCALE, { hour: '2-digit', minute: '2-d
 
 <style scoped>
 .page { gap: 34px; }
-.opening { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 7fr); gap: 40px; padding-top: 6px; }
+.opening { display: grid; grid-template-columns: minmax(0, 11fr) minmax(0, 14fr); gap: 40px; padding-top: 6px; }
 .lead { display: grid; gap: 14px; align-content: center; }
 .tagline { margin: 0; font-size: 1rem; color: var(--text-2); line-height: 1.5; }
 .tagline b { color: var(--ink); font-weight: 600; }
@@ -296,7 +296,7 @@ const hhmm = (d) => d.toLocaleTimeString(LOCALE, { hour: '2-digit', minute: '2-d
 .lead h1 .hl { color: var(--blue); }
 .byline { display: flex; gap: 18px; flex-wrap: wrap; font-size: 0.82rem; color: var(--muted); }
 .byline span { display: inline-flex; align-items: center; gap: 6px; }
-.hero-img { position: relative; overflow: hidden; min-height: 360px; align-self: stretch; border-radius: 18px; background: #0b1626; }
+.hero-img { position: relative; overflow: hidden; min-height: 300px; align-self: stretch; border-radius: 18px; background: #0b1626; }
 .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity .5s ease; }
 .hero-video.out { opacity: 0.15; }
 .hero-img .txt { position: absolute; inset: 0; padding: 30px; display: grid; align-content: center; gap: 14px; max-width: 56%;
