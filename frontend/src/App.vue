@@ -15,7 +15,7 @@
       <div class="edition" v-if="s.mission">
         <div class="ed-line">
           <button class="step" @click="s.advance(-1)" :disabled="s.day <= 0" aria-label="Previous day"><Icon name="prev" :size="11" /></button>
-          <span><span class="pre">Onboard health report · </span><b>Day {{ s.day }}<span class="of"> of {{ s.mission.dias - 1 }}</span></b></span>
+          <span><span class="pre">Onboard health report: </span><b>Day {{ s.day }}<span class="of"> of {{ s.mission.dias - 1 }}</span></b></span>
           <button class="step" @click="s.advance(1)" :disabled="s.day >= s.mission.dias - 1" aria-label="Next day"><Icon name="next" :size="11" /></button>
         </div>
         <div class="ed-sub">
@@ -33,7 +33,7 @@
   </header>
 
   <div v-if="s.publico" class="public no-print" role="note">
-    <span><b>Public demo</b> · simulated data</span>
+    <span><b>Public demo</b> with simulated data</span>
     <button class="reset" @click="s.run(() => s.resetDemo(), 'Demo reset')">Reset demo</button>
   </div>
 

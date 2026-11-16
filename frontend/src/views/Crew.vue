@@ -37,7 +37,7 @@
     </section>
 
     <section aria-labelledby="t-crew">
-      <div class="sec-h"><h2 id="t-crew">Crew</h2><span class="dotkey">dots: heart rate · HRV · sleep · radiation · attention · mood</span></div>
+      <div class="sec-h"><h2 id="t-crew">Crew</h2><span class="dotkey">dots: heart rate, HRV, sleep, radiation, attention, mood</span></div>
       <router-link v-for="(p, i) in rows" :key="p.a.id" :to="`/crew/${p.a.id}`" class="person rise" :style="{ '--i': i }" @click="s.select(p.a.id)">
         <div class="who">
           <b>{{ p.a.nombre }}</b><small>{{ p.a.rol }}</small>
@@ -49,13 +49,13 @@
         <div class="reading" :class="'n-' + p.a.nivel">
           <span class="say"><LevelBadge :level="p.a.nivel" />{{ sayOf(p) }}</span>
           <span class="v num">{{ fmt(p.v.valor, s.indicators[p.k].decimales) }}</span> <span class="u">{{ s.indicators[p.k].unidad }}</span>
-          <span class="d num">Their usual {{ fmt(p.v.linea_base, s.indicators[p.k].decimales) }}<template v-if="p.v.diferencia !== null"> · {{ signed(p.v.diferencia, s.indicators[p.k].decimales) }}</template></span>
+          <span class="d num">Their usual {{ fmt(p.v.linea_base, s.indicators[p.k].decimales) }}<template v-if="p.v.diferencia !== null">, {{ signed(p.v.diferencia, s.indicators[p.k].decimales) }}</template></span>
         </div>
         <figure>
           <TrendChart v-if="series[p.a.id]" :data="series[p.a.id][p.k]" :unidad="s.indicators[p.k].unidad" :nombre="s.indicators[p.k].corto"
                       :decimales="s.indicators[p.k].decimales" :show-fixed="false" :height="74" compact />
           <div v-else class="skeleton" style="min-height: 74px" />
-          <figcaption><b>Fig. {{ i + 1 }}</b> {{ s.indicators[p.k].corto }} · 14 days</figcaption>
+          <figcaption><b>Fig. {{ i + 1 }}</b> {{ s.indicators[p.k].corto }}, 14 days</figcaption>
         </figure>
       </router-link>
     </section>
@@ -86,7 +86,7 @@
     <section class="two">
       <div id="alerts">
         <div class="sec-h"><h2>Alerts</h2></div>
-        <p class="legend"><span class="pr">ACT</span> notify the Medical Officer · <span class="pw">WATCH</span> repeat the measurement</p>
+        <p class="legend"><span class="pr">ACT</span> notify the Medical Officer <span class="pw">WATCH</span> repeat the measurement</p>
         <div v-if="loading" class="skeleton" style="min-height: 80px" />
         <p v-else-if="!high.length && !low.length" class="empty"><Icon name="check" :size="15" class="c-verde" /> No alerts in the last 7 days.</p>
         <template v-else>
@@ -106,7 +106,7 @@
           </div>
           <div v-if="low.length" class="lowlist">
             <router-link v-for="g in lowShown" :key="g.key" :to="`/crew/${g.rep.astro_id}`" class="lowitem">
-              <span class="pw">WATCH</span><span>{{ short(crewName(g.rep.astro_id)) }}: {{ g.rep.titulo }}</span><span class="muted small">{{ factText(g.rep) }} · {{ STATE_LABEL[g.rep.estado] }}</span>
+              <span class="pw">WATCH</span><span>{{ short(crewName(g.rep.astro_id)) }}: {{ g.rep.titulo }}</span><span class="muted small">{{ factText(g.rep) }}, {{ STATE_LABEL[g.rep.estado] }}</span>
             </router-link>
           </div>
           <div v-if="lowSorted.length > LOW_TOP" class="watchrow">
@@ -127,7 +127,7 @@
       </div>
     </section>
 
-    <footer class="colophon"><span>Simulated data · educational prototype, not a medical device</span><span>Runs on board with no Internet (local version) · <router-link to="/about">About Zero G Health</router-link></span></footer>
+    <footer class="colophon"><span>Simulated data. Educational prototype, not a medical device</span><span>Runs on board with no Internet (local version), <router-link to="/about">About Zero G Health</router-link></span></footer>
   </div>
 </template>
 
@@ -200,15 +200,15 @@ const blackoutText = computed(() => {
 })
 const blackoutCell = computed(() => {
   const [a, b] = s.mission.apagon
-  if (a === null || a === undefined) return '—'
+  if (a === null || a === undefined) return 'n/a'
   if (link.value.simulado) return 'when the simulated blackout is turned off'
-  if (link.value.apagon) return `day ${b + 1} · in ${plural(b - s.day + 1, 'day', 'days')}`
-  if (s.day < a) return `day ${a} · in ${plural(a - s.day, 'day', 'days')}`
+  if (link.value.apagon) return `day ${b + 1}, in ${plural(b - s.day + 1, 'day', 'days')}`
+  if (s.day < a) return `day ${a}, in ${plural(a - s.day, 'day', 'days')}`
   return 'passed'
 })
 const lastSent = computed(() => {
   const d = reports.value.map((r) => r.dia_envio).filter((x) => x !== null && x !== undefined)
-  return d.length ? `day ${Math.max(...d)}` : '—'
+  return d.length ? `day ${Math.max(...d)}` : 'n/a'
 })
 
 // Episodios de alarma (misma persona, tipo y nivel en días consecutivos); en la demo pública
@@ -228,10 +228,10 @@ function statusText(g) {
   const a = g.rep
   if (a.estado === 'pendiente') {
     const d = s.day - g.since
-    return d >= 2 ? `${d} days unacknowledged · escalate` : `Unacknowledged since day ${g.since}`
+    return d >= 2 ? `${d} days unacknowledged, escalate` : `Unacknowledged since day ${g.since}`
   }
   if (a.estado === 'pospuesta') return `Snoozed until day ${a.revisado_dia + 1}`
-  return `${STATE_LABEL[a.estado]}${a.revisor ? ` by ${a.revisor}` : ''}${a.revisado_dia != null ? ` · day ${a.revisado_dia}` : ''}`
+  return `${STATE_LABEL[a.estado]}${a.revisor ? ` by ${a.revisor}` : ''}${a.revisado_dia != null ? `, day ${a.revisado_dia}` : ''}`
 }
 const metaClass = (g) => (g.rep.estado === 'pendiente' ? 'pend' : g.rep.estado === 'pospuesta' ? 'muted' : 'ok')
 async function act(a, estado) {
@@ -246,14 +246,14 @@ function factText(a) {
   return (a.cuanto || []).map((c) => {
     const d = s.indicators[c.indicador]?.decimales ?? 1
     return `${s.indicators[c.indicador]?.corto || c.nombre}: ${fmt(c.valor, d)} ${c.unidad} vs. their usual ${fmt(c.linea_base, d)} (z = ${fmt(c.z, 1)})`
-  }).join(' · ')
+  }).join('; ')
 }
 // Episodio de alarma abierto aunque hoy los valores hayan vuelto a su normal
 function openOf(id) {
   const g = groups.value.find((x) => x.astro_id === id && x.rep.estado === 'pendiente' && x.rep.nivel === 'rojo' && x.rep.day < s.day)
   if (!g) return ''
   const a = s.crew.find((x) => x.id === id)
-  return `${a?.nivel === 'verde' ? 'Today: normal · ' : ''}Alert from day ${g.rep.day} still open (unacknowledged for ${plural(s.day - g.rep.day, 'day', 'days')})`
+  return `${a?.nivel === 'verde' ? 'Today: normal. ' : ''}Alert from day ${g.rep.day} still open (unacknowledged for ${plural(s.day - g.rep.day, 'day', 'days')})`
 }
 //ESTADO en una frase por tripulante
 function sayOf(p) {

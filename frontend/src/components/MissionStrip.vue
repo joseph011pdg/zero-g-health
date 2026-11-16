@@ -7,7 +7,7 @@
 
     <div class="track">
       <div class="top">
-        <span class="ttl">Trajectory <span class="date">{{ m.fecha }} · {{ Math.round(pct(s.day)) }}% of the journey</span></span>
+        <span class="ttl">Trajectory <span class="date">{{ m.fecha }}, {{ Math.round(pct(s.day)) }}% of the journey</span></span>
         <span class="small link" :class="m.comunicacion.apagon ? 'off' : ''">
           <Icon :name="m.comunicacion.apagon ? 'signalOff' : 'satellite'" :size="14" />
           {{ linkText }}
@@ -58,9 +58,9 @@ const milestones = computed(() => {
 const linkText = computed(() => {
   const c = m.value.comunicacion
   const [a, b] = m.value.apagon
-  if (c.simulado) return 'No link · simulated blackout'
-  if (c.apagon) return `No link · back in ${plural(b - s.day + 1, 'day', 'days')}`
-  if (hasBlackout.value && s.day < a) return `Messages take ${fmt(c.retraso_min, 1)} min · blackout in ${plural(a - s.day, 'day', 'days')}`
+  if (c.simulado) return 'No link, simulated blackout'
+  if (c.apagon) return `No link, back in ${plural(b - s.day + 1, 'day', 'days')}`
+  if (hasBlackout.value && s.day < a) return `Messages take ${fmt(c.retraso_min, 1)} min, blackout in ${plural(a - s.day, 'day', 'days')}`
   return `Messages take ${fmt(c.retraso_min, 1)} min`
 })
 </script>

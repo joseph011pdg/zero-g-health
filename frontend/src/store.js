@@ -190,10 +190,10 @@ export const STATE_LABEL = { pendiente: 'Unacknowledged', reconocida: 'Acknowled
 //NÚMEROS en inglés: punto decimal y coma de miles
 export const LOCALE = 'en-US'
 const nf = (v, d) => Number(v).toLocaleString(LOCALE, { minimumFractionDigits: d, maximumFractionDigits: d })
-export const fmt = (v, d = 1) => (v === null || v === undefined || Number.isNaN(v) ? '—' : nf(v, d))
+export const fmt = (v, d = 1) => (v === null || v === undefined || Number.isNaN(v) ? 'n/a' : nf(v, d))
 //NÚMERO sin fijar decimales (cifras de validación)
-export const nn = (v, max = 2) => (v === null || v === undefined || Number.isNaN(Number(v)) ? '—' : Number(v).toLocaleString(LOCALE, { maximumFractionDigits: max }))
-export const signed = (v, d = 1) => (v === null || v === undefined ? '—' : `${v > 0 ? '+' : v < 0 ? '−' : ''}${nf(Math.abs(v), d)}`)
+export const nn = (v, max = 2) => (v === null || v === undefined || Number.isNaN(Number(v)) ? 'n/a' : Number(v).toLocaleString(LOCALE, { maximumFractionDigits: max }))
+export const signed = (v, d = 1) => (v === null || v === undefined ? 'n/a' : `${v > 0 ? '+' : v < 0 ? '−' : ''}${nf(Math.abs(v), d)}`)
 
 export function download(name, content, type = 'application/json') {
   const blob = new Blob([content], { type })

@@ -23,7 +23,7 @@ from .config import VALIDATION_PATH
 from .indicators import INDICATORS
 from .simulator import EVENT_SCENARIOS, SCENARIOS
 
-app = FastAPI(title="Zero G Health · Autonomous crew health monitoring", version="2.0",
+app = FastAPI(title="Zero G Health: autonomous crew health monitoring", version="2.0",
               description="Educational prototype with simulated data. Not a medical device.")
 app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
                    allow_methods=["*"], allow_headers=["*"])

@@ -29,8 +29,8 @@ from .indicators import INDICATORS, INDICATOR_KEYS
 from .simulator import SCENARIOS, random_assignments, simulate_mission
 
 DAYS = 120
-METHODS = {"A_vigilar": "Personal · Watch (Watch or Act)",
-           "A_actuar": "Personal · Act",
+METHODS = {"A_vigilar": "Personal, Watch (Watch or Act)",
+           "A_actuar": "Personal, Act",
            "B_fijo": "Fixed population reference"}
 YELLOW_GRID = [2.0, 2.5, 3.0]
 RED_GRID = [3.0, 3.5, 4.0, 4.5]

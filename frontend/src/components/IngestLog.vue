@@ -8,13 +8,13 @@
     <p class="tiny muted">Includes the invalid records from scenario G (incomplete data) rejected when the mission was loaded.</p>
     <div class="table-wrap scroll">
       <table class="table">
-        <thead><tr><th>Astro · day</th><th>Indicator</th><th>Value</th><th>Status</th><th>Reason</th></tr></thead>
+        <thead><tr><th>Astro, day</th><th>Indicator</th><th>Value</th><th>Status</th><th>Reason</th></tr></thead>
         <tbody>
           <tr v-for="r in rows" :key="r.id">
-            <td class="mono tiny">{{ r.astro_id }} · D{{ r.day }}</td><td class="tiny">{{ r.indicator }}</td>
+            <td class="mono tiny">{{ r.astro_id }}, D{{ r.day }}</td><td class="tiny">{{ r.indicator }}</td>
             <td class="mono tiny">{{ r.value }}</td>
             <td class="tiny" :class="r.estado === 'rechazado' || r.estado === 'duplicado' ? 'c-amarillo' : 'c-verde'">{{ ING_STATE[r.estado] || r.estado }}</td>
-            <td class="tiny muted">{{ r.motivo || '—' }}</td>
+            <td class="tiny muted">{{ r.motivo || 'n/a' }}</td>
           </tr>
           <tr v-if="!rows.length"><td colspan="5" class="small muted">No records.</td></tr>
         </tbody>

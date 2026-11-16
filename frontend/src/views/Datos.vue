@@ -21,7 +21,7 @@
 
       <div class="panel grid">
         <h2>Import CSV</h2>
-        <p class="tiny muted"><code>astro_id,day,indicator,value,unit[,source]</code> · indicators: {{ Object.keys(s.indicators).join(', ') }}</p>
+        <p class="tiny muted"><code>astro_id,day,indicator,value,unit[,source]</code>, indicators: {{ Object.keys(s.indicators).join(', ') }}</p>
         <div class="row wrap">
           <label class="btn"><Icon name="upload" :size="14" /> Choose file<input type="file" accept=".csv,text/csv" hidden @change="readFile" /></label>
           <button class="btn ghost" @click="example">Example with errors</button>
@@ -33,7 +33,7 @@
           <div class="row wrap small"><span class="c-verde strong">{{ csvRes.insertados }} new</span>
             <span>{{ csvRes.reemplazados }} replaced</span><span class="c-amarillo strong">{{ csvRes.rechazados.length }} rejected</span></div>
           <ul v-if="csvRes.rechazados.length" class="rej tiny">
-            <li v-for="(r, i) in csvRes.rechazados" :key="i"><span class="mono">{{ r.astro_id }} · {{ r.day }} · {{ r.indicator }} · {{ r.value }}</span>: {{ r.motivo }}</li>
+            <li v-for="(r, i) in csvRes.rechazados" :key="i"><span class="mono">{{ r.astro_id }}, {{ r.day }}, {{ r.indicator }}, {{ r.value }}</span>: {{ r.motivo }}</li>
           </ul>
         </div>
       </div>
@@ -48,8 +48,8 @@
           <label class="field"><span>Role</span><input class="input" v-model="np.rol" required minlength="2" /></label>
           <label class="field"><span>Initial data</span>
             <select class="input" v-model="np.generar_datos">
-              <option value="ninguno">None</option><option value="A">Simulated · stable</option>
-              <option value="B">Simulated · fatigue</option><option value="C">Simulated · stress</option><option value="E">Simulated · behavioral</option>
+              <option value="ninguno">None</option><option value="A">Simulated: stable</option>
+              <option value="B">Simulated: fatigue</option><option value="C">Simulated: stress</option><option value="E">Simulated: behavioral</option>
             </select></label>
         </div>
         <button class="btn primary" type="submit" :disabled="s.publico">Create profile</button>

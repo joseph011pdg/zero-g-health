@@ -13,29 +13,29 @@ Spanish version: `DEMO_SCRIPT_ES.md`.
 
 ---
 
-**0:00 – 0:25 · Problem**
+**0:00 – 0:25, Problem**
 "On the way to Mars, a message to Earth takes up to 20 minutes to arrive, and sometimes it does not arrive at all.
 Astronauts change gradually (sleep, heart, attention, mood) and every person is different. One threshold for
 everyone can miss an important change in someone whose usual value is low… or alarm someone who is always high."
 
-**0:25 – 0:45 · Proposal** · *Crew (guided demo step 1)*
-"BASAL compares each astronaut **with themselves**. It learns their 14-day baseline and alerts when they stop behaving
+**0:25 – 0:45, Proposal**, *Crew (guided demo step 1)*
+"Zero G Health compares each astronaut **with themselves**. It learns their 14-day baseline and alerts when they stop behaving
 as usual. Here: four fictional crew members, six indicators, all computed on this laptop, with no network."
 
-**0:45 – 1:30 · Demo** · *Steps 2 to 4 (Cmdr. Rivera)*
+**0:45 – 1:30, Demo**, *Steps 2 to 4 (Cmdr. Rivera)*
 - Day 40: "Everything within the usual range. Each indicator shows its value and 'their usual'; the chart compares
   the personal range with the population threshold."
-- Day 54: "The simulator injected progressive fatigue from day 44. BASAL fires **Act: fatigue**. The alert says in one
+- Day 54: "The simulator injected progressive fatigue from day 44. Zero G Health fires **Act: fatigue**. The alert says in one
   sentence what is going on and what to do; under 'Why?' it answers: what changed (sleep 6 h vs. their usual 6.8 h and
   more PVT-B lapses), by how much (z = 3 and 5.5), how it was detected (the formula with its numbers), what to do
   (postpone critical tasks, rest, repeat the test, notify the Medical Officer) and which source and level of evidence
   supports it."
 
-**1:30 – 1:50 · Where the fixed threshold is blind** · *Step 5 (Eng. Lindqvist, day 72)*
+**1:30 – 1:50, Where the fixed threshold is blind**, *Step 5 (Eng. Lindqvist, day 72)*
 "His resting heart rate rose from 53 to 60 bpm and his variability fell. For a population threshold, 60 is normal.
-For him it is not: z = 4.7. BASAL flags it; the fixed threshold does not."
+For him it is not: z = 4.7. Zero G Health flags it; the fixed threshold does not."
 
-**1:50 – 2:15 · Without Earth** · *Steps 6 to 8*
+**1:50 – 2:15, Without Earth**, *Steps 6 to 8*
 - Day 97 (or the **Simulate blackout** button on the home page, on any day): "Communication blackout. The system keeps
   monitoring and showing alerts; reports stay queued."
 - Switch to the **Medical Officer** role: "Alerts are sorted by priority. *Act* means notify the Medical Officer,
@@ -45,15 +45,15 @@ For him it is not: z = 4.7. BASAL flags it; the fixed threshold does not."
 - "We generate the report for Earth: it stays **queued**. *(optional: move to day 105 and press 'Send queue';
   simulated transmission)*."
 
-**2:15 – 2:45 · Science** · *Step 9 (Validation lab)*
+**2:15 – 2:45, Science**, *Step 9 (Validation lab)*
 "How do we know it works? We tuned the cutoffs on 20 simulated missions and evaluated on **40 different ones**. The
 *Act* level detected 98.9% of events with 0.78 false alarms per 30 astronaut-days; the fixed threshold, 88.9% with
 1.87. But we are honest: on slow or large changes **the fixed threshold alerts earlier**, and if people are very
 similar to each other, personalization adds nothing. This chart shows exactly **under which conditions** each method
 wins."
 
-**2:45 – 3:00 · Impact and close**
-"The same applies to Antarctica, submarines or Andean and Amazonian communities without a doctor. BASAL does not
+**2:45 – 3:00, Impact and close**
+"The same applies to Antarctica, submarines or Andean and Amazonian communities without a doctor. Zero G Health does not
 diagnose: it tells each person, in plain words, what changed in *their* body and what follow-up to do, when Earth is
 too far away."
 

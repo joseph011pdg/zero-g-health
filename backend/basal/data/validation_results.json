@@ -34,8 +34,8 @@
     "origen": "tuned with seeds 1000–1019 (20 missions)"
   },
   "metodos": {
-    "A_vigilar": "Personal · Watch (Watch or Act)",
-    "A_actuar": "Personal · Act",
+    "A_vigilar": "Personal, Watch (Watch or Act)",
+    "A_actuar": "Personal, Act",
     "B_fijo": "Fixed population reference"
   },
   "escenarios": {

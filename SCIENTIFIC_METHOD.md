@@ -1,4 +1,4 @@
-# Scientific method · BASAL
+# Scientific method: Zero G Health
 
 > Educational and research prototype. **Statistical** detection of deviations, not medical diagnosis.
 > Every number in this document comes from `backend/basal/data/validation_results.json`, generated with
@@ -48,7 +48,7 @@ Design choices and why:
 
 **Traffic light** (parameters in `backend/basal/data/config.json`, loaded by `config.py`):
 
-- Normal: z < 2.5 · **Watch**: 2.5 ≤ z < 4.5 · **Act**: z ≥ 4.5 **or** 3 consecutive valid days at Watch.
+- Normal: z < 2.5, **Watch**: 2.5 ≤ z < 4.5, **Act**: z ≥ 4.5 **or** 3 consecutive valid days at Watch.
 - The proposal started from 2 / 3; the first MVP used 2.5 / 3.5. Current values come from the **tuning** in §5.
 - They are experimental prototype parameters, **not medical limits**.
 
@@ -73,8 +73,8 @@ stress, D solar event (whole crew), E slow behavioral change; random intensity 0
 
 **Methods**
 
-- **A · Personal**: the detector above. Two levels are evaluated: *Watch* (Watch or Act) and *Act*.
-- **B · Fixed population reference**: classic reference interval: 97.5th percentile (if rising is bad) or 2.5th (if
+- **A, Personal**: the detector above. Two levels are evaluated: *Watch* (Watch or Act) and *Act*.
+- **B, Fixed population reference**: classic reference interval: 97.5th percentile (if rising is bad) or 2.5th (if
   falling is bad) of healthy days in the **tuning** population. The same for everyone.
 
 **Definitions**
@@ -94,13 +94,13 @@ Grid: Watch ∈ {2, 2.5, 3}, Act ∈ {3, 3.5, 4, 4.5}.
 
 | Method | Sensitivity | Mean delay (median) | False alarms / 30 astronaut-days | % healthy days with an alert |
 |---|---|---|---|---|
-| A · Watch | 100% | 1.53 d (0) | 5.04 | 26.8% |
-| A · Act | 98.9% | 4.34 d (1) | 0.78 | 3.5% |
-| B · fixed | 88.9% | 3.16 d (0) | 1.87 | 13.4% |
+| A, Watch | 100% | 1.53 d (0) | 5.04 | 26.8% |
+| A, Act | 98.9% | 4.34 d (1) | 0.78 | 3.5% |
+| B, fixed | 88.9% | 3.16 d (0) | 1.87 | 13.4% |
 
-By scenario (sensitivity / mean delay, A·Act vs B):
+By scenario (sensitivity / mean delay, A Act vs. B):
 
-| Scenario | A · Act | B · fixed | Reading |
+| Scenario | A, Act | B, fixed | Reading |
 |---|---|---|---|
 | B progressive fatigue | 98.3% / 5.6 d | 100% / 4.3 d | **B equal or better**: short sleep crosses the fixed threshold early. |
 | C physiological stress | 100% / 1.1 d | 49.1% / 1.2 d | **A much better**: +8 bpm does not cross a fixed threshold if resting HR is low. |
@@ -114,7 +114,7 @@ that B misses (B detects 3 that *Act* misses).
 **Key condition: heterogeneity between people** (between-person SD × factor; B re-estimated for each population with
 tuning seeds; 20 evaluation missions per condition, so the 1× row differs slightly from the 40-mission main table):
 
-| Heterogeneity | A · Act (sens. / FA) | B · fixed (sens. / FA) |
+| Heterogeneity | A, Act (sens. / FA) | B, fixed (sens. / FA) |
 |---|---|---|
 | 0.25× | 99.3% / 0.74 | 100% / 2.16 |
 | 0.5× | 96.6% / 0.76 | 97.3% / 2.23 |
@@ -126,7 +126,7 @@ people differ a lot from each other and the changes are small relative to those 
 population is homogeneous or the change is large or slow, the fixed threshold is just as sensitive and often **alerts
 earlier**. Personalization is not a universal advantage.
 
-**Ablation** (A · Act): without excluding alert days 97.8% / 0.63 FA; without mission-start baseline 82.1% / 0.42 FA;
+**Ablation** (A, Act): without excluding alert days 97.8% / 0.63 FA; without mission-start baseline 82.1% / 0.42 FA;
 rolling window only 77.1% / 0.25 FA. The mission-start baseline provides almost all the detection of slow drifts, at
 the cost of more notices.
 

@@ -2,7 +2,7 @@
   <aside class="guided panel no-print" role="dialog" aria-label="Guided demo">
     <div class="row between">
       <div>
-        <div class="label">Guided demo · step {{ i + 1 }} of {{ STEPS.length }}</div>
+        <div class="label">Guided demo, step {{ i + 1 }} of {{ STEPS.length }}</div>
         <h3>{{ step.title }}</h3>
       </div>
       <button class="btn sm ghost" @click="$emit('close')" aria-label="Close"><Icon name="close" :size="14" /></button>

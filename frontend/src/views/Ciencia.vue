@@ -8,7 +8,7 @@
       <div class="grid">
         <h2>Each astronaut is compared with themselves</h2>
         <div class="formula mono">z = (today's value − median of their previous 14 days) / (1.4826 × MAD)</div>
-        <p class="small">Watch if z ≥ {{ nn(p.yellow) }} · Act if z ≥ {{ nn(p.red) }} or {{ p.persist }} days in a row at Watch. These are experimental
+        <p class="small">Watch if z ≥ {{ nn(p.yellow) }}. Act if z ≥ {{ nn(p.red) }} or {{ p.persist }} days in a row at Watch. These are experimental
           parameters ({{ p.origen }}), not medical limits.</p>
       </div>
     </section>
@@ -50,7 +50,7 @@
       <div class="panel">
         <h2 class="mb">Sources</h2>
         <ul class="refs small">
-          <li v-for="e in ev" :key="e.id">{{ e.cita }} <span class="tiny muted">· {{ e.tipo }}{{ e.en_propuesta ? '' : ' · added' }}</span></li>
+          <li v-for="e in ev" :key="e.id">{{ e.cita }} <span class="tiny muted">({{ e.tipo }}{{ e.en_propuesta ? '' : ', added' }})</span></li>
         </ul>
       </div>
       <div class="panel">
@@ -66,7 +66,7 @@
           public domain; video “ISS Fly-Through to Cupola (8K)” (NASA); maps “Blue Marble Next Generation” (NASA) and “Mars Viking MDIM21” (NASA/JPL/USGS); all public domain, via Wikimedia Commons. Zero G Health is not affiliated with or endorsed by NASA.</p>
       </div>
     </section>
-    <p class="tiny muted">Simulated data · educational prototype, not a medical device.</p>
+    <p class="tiny muted">Simulated data. Educational prototype, not a medical device.</p>
   </div>
 </template>
 

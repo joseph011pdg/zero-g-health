@@ -22,7 +22,7 @@
         <button ref="btn" class="enter" @click="enter" :disabled="!ready">
           {{ ready ? 'Enter mission' : 'Waking up the server…' }}
         </button>
-        <p class="note">NASA Space Apps Challenge 2026 · simulated data · not a medical device</p>
+        <p class="note">NASA Space Apps Challenge 2026. Simulated data, not a medical device.</p>
       </div>
     </div>
   </div>
@@ -70,12 +70,12 @@ onMounted(() => { if (props.ready) btn.value?.focus() })
   radial-gradient(ellipse 55% 45% at 50% 50%, rgba(10, 31, 68, .55) 0%, rgba(10, 31, 68, .3) 70%, rgba(10, 31, 68, .5) 100%); }
 .name { text-shadow: 0 2px 18px rgba(6, 16, 32, .55); }
 .lead-line { text-shadow: 0 1px 10px rgba(6, 16, 32, .8); }
-/* RECUADRO de vidrio: blanco translúcido con desenfoque, para leer logo y texto sobre el video */
-.center { position: relative; display: grid; justify-items: center; gap: 14px; text-align: center; max-width: 680px;
-  padding: 34px 44px 28px; border-radius: 18px; background: linear-gradient(rgba(10, 31, 68, .28), rgba(10, 31, 68, .28)), rgba(255, 255, 255, .12); border: 1px solid rgba(255, 255, 255, .32);
+/* RECUADRO de vidrio: negro translúcido con desenfoque, para que logo y texto contrasten sobre el video */
+.center { position: relative; display: grid; justify-items: center; align-content: center; gap: 14px; text-align: center; width: min(640px, 100%); margin: 0 auto;
+  padding: 36px 48px; border-radius: 18px; background: rgba(4, 8, 16, .52); border: 1px solid rgba(255, 255, 255, .18);
   -webkit-backdrop-filter: blur(12px) saturate(1.15); backdrop-filter: blur(12px) saturate(1.15);
   box-shadow: 0 24px 60px rgba(6, 16, 32, .35); animation: mark-in 520ms var(--ease-out) both; }
-@media (max-width: 640px) { .center { padding: 26px 20px 22px; border-radius: 14px; } }
+@media (max-width: 640px) { .center { padding: 28px 20px; border-radius: 14px; } }
 .mono { font-family: var(--serif); font-weight: 600; font-size: 44px; fill: #ffffff; }
 .mark { filter: drop-shadow(0 10px 30px rgba(6, 16, 32, .6)); }
 
@@ -83,9 +83,9 @@ onMounted(() => { if (props.ready) btn.value?.focus() })
 .mark { animation: mark-in 520ms var(--ease-out) both; }
 .cross { transform-box: fill-box; transform-origin: center; animation: pop 360ms var(--ease-out) 380ms both; }
 .base { transform-box: fill-box; transform-origin: left center; animation: draw 480ms var(--ease-out) 260ms both; }
-.name { font-family: var(--serif); font-size: clamp(2.2rem, 7vw, 3.6rem); color: #fff; letter-spacing: -0.02em; margin-top: 8px; animation: rise 420ms var(--ease-out) 360ms both; }
+.name { font-family: var(--serif); font-size: clamp(2.2rem, 7vw, 3.6rem); color: #fff; letter-spacing: -0.02em; margin-top: 4px; animation: rise 420ms var(--ease-out) 360ms both; }
 .name em { font-style: normal; color: #f2c27a; }
-.lead-line { color: #ffffff; font-weight: 500; font-size: 1.06rem; line-height: 1.5; animation: rise 420ms var(--ease-out) 460ms both; }
+.lead-line { color: #ffffff; font-weight: 500; font-size: 1.06rem; line-height: 1.5; text-wrap: balance; max-width: 46ch; animation: rise 420ms var(--ease-out) 460ms both; }
 .cta { display: grid; justify-items: center; gap: 12px; margin-top: 10px; animation: rise 420ms var(--ease-out) 560ms both; }
 .enter { background: var(--navy); color: #fff; border: 1px solid rgba(255, 255, 255, .55); border-radius: var(--radius-sm); padding: 12px 26px; font: inherit; font-weight: 600; font-size: 1rem; cursor: pointer; min-height: 46px;
   transition: transform 140ms var(--ease-out), background-color 150ms ease, opacity 150ms ease; }

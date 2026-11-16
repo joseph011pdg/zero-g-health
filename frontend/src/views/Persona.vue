@@ -8,7 +8,7 @@
           <div class="ring" :class="a.nivel"><Avatar :id="a.id" :name="a.nombre" :size="64" /></div>
           <div>
             <div class="row wrap"><h1>{{ a.nombre }}</h1><LevelBadge :level="a.nivel" /></div>
-            <div class="muted small">{{ a.rol }} · day {{ a.dia }}<span v-if="a.indice !== null"> · stability {{ a.indice }}/100</span></div>
+            <div class="muted small">{{ a.rol }}, day {{ a.dia }}<span v-if="a.indice !== null">, stability {{ a.indice }}/100</span></div>
           </div>
         </div>
         <div class="row wrap actions">
@@ -29,7 +29,7 @@
           <Icon :name="openEps.length ? 'clock' : 'check'" :size="22" :class="openEps.length ? 'c-rojo' : 'c-verde'" />
           <div v-if="!openEps.length"><strong>Today: everything within their usual range</strong>
             <p class="small muted">No indicator is away from their usual values. An indicator with no data shows “No data”, never normal.</p></div>
-          <div v-else><strong>Today: values within their usual range · {{ openEps.length === 1 ? 'one alert is still open' : `${openEps.length} alerts are still open` }}</strong>
+          <div v-else><strong>Today: values within their usual range, but {{ openEps.length === 1 ? 'one alert is still open' : `${openEps.length} alerts are still open` }}</strong>
             <p class="small muted">An alert does not close by itself when the value returns to normal: the Medical Officer must acknowledge or resolve it.</p></div>
         </div>
         <AlertCard v-for="al in todayAlerts" :key="al.id" :a="al" :since="sinceOf(al)" @changed="load" />
@@ -79,7 +79,7 @@
           <h2 class="mb"><Icon name="radiation" :size="18" /> Cumulative radiation</h2>
           <div class="kpi"><span class="v">{{ fmt(a.radiacion.acumulada_medida_mgy, 1) }} <small>mGy</small></span></div>
           <div class="bar"><div :style="{ width: Math.min(a.radiacion.porcentaje_del_presupuesto, 150) / 1.5 + '%' }" :class="{ over: a.radiacion.porcentaje_del_presupuesto > 110 }" /></div>
-          <p class="small"><b class="num">{{ fmt(a.radiacion.porcentaje_del_presupuesto, 0) }}%</b> of what is expected to date ({{ fmt(a.radiacion.presupuesto_escenario_mgy, 1) }} mGy) · {{ plural(a.radiacion.dias_sin_lectura, 'day', 'days') }} without a reading</p>
+          <p class="small"><b class="num">{{ fmt(a.radiacion.porcentaje_del_presupuesto, 0) }}%</b> of what is expected to date ({{ fmt(a.radiacion.presupuesto_escenario_mgy, 1) }} mGy), {{ plural(a.radiacion.dias_sin_lectura, 'day', 'days') }} without a reading</p>
           <p class="tiny muted">{{ a.radiacion.supuesto }} The alert watches the daily rate against each person's usual values.</p>
         </div>
         <div class="panel">
@@ -162,7 +162,7 @@ const freshness = computed(() => {
   const last = [...pts].reverse().find((p) => p.valor !== null)
   const q = a.value.indicadores[ind.value].calidad_14d_pct
   const when = !last ? 'no measurements' : last.day === a.value.dia ? 'last measurement: today' : `last measurement: ${plural(a.value.dia - last.day, 'day', 'days')} ago`
-  return `${when} · data in 14 days: ${q ?? 0}%${q !== null && q < 70 ? ' · low reliability' : ''}`
+  return `${when}, data in 14 days: ${q ?? 0}%${q !== null && q < 70 ? ', low reliability' : ''}`
 })
 const chartData = computed(() => (a.value ? a.value.series[ind.value].slice(-range.value) : []))
 function trendIcon(k, t) {

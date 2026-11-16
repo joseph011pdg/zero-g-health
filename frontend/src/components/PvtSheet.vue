@@ -1,5 +1,5 @@
 <template>
-  <Sheet :title="`Attention test · ${astro.nombre}`" @close="close">
+  <Sheet :title="`Attention test: ${astro.nombre}`" @close="close">
     <div v-if="phase === 'idle'" class="grid">
       <div class="tabs">
         <button :class="{ on: mode === 'pvtb_3min' }" @click="mode = 'pvtb_3min'">3 minutes</button>
@@ -67,7 +67,7 @@ const lapses = computed(() => rts.value.filter((r) => r >= LAPSE).length + noRes
 const fastCount = computed(() => rts.value.filter((r) => r < FAST).length)
 const medianRt = computed(() => {
   const v = rts.value.filter((r) => r >= FAST).sort((a, b) => a - b)
-  return v.length ? Math.round(v[Math.floor(v.length / 2)]) : '—'
+  return v.length ? Math.round(v[Math.floor(v.length / 2)]) : 'n/a'
 })
 
 function stop() { clearTimeout(timer); cancelAnimationFrame(raf) }

@@ -1,11 +1,11 @@
-# Zero G Health · Autonomous health monitoring for astronauts
+# Zero G Health: autonomous health monitoring for astronauts
 
-**NASA Space Apps Challenge 2026 · Create Health Monitoring Software for Astronauts on Space Missions**
+**NASA Space Apps Challenge 2026: Create Health Monitoring Software for Astronauts on Space Missions**
 
 > Educational and research prototype with **simulated data**. It is not a medical device, does not diagnose and is
 > not clinically validated. It does not represent and is not endorsed by NASA.
 
-**Live demo:** https://basal-pxyn.onrender.com · **Code:** https://github.com/joseph011pdg/zero-g-health ·
+**Live demo:** https://basal-pxyn.onrender.com, **Code:** https://github.com/joseph011pdg/zero-g-health,
 Spanish versions of the docs: `*_ES.md`. Project codename: BASAL (internal code and file names keep it).
 
 ## Summary
@@ -53,25 +53,25 @@ tested in the Validation lab, including the cases where it does not hold.
 
 | | Feature | Where |
 |---|---|---|
-| F1 | Fictional profiles (4 preloaded, illustrated portraits), create profile, records and baseline per person | Crew · Laboratory → Data |
+| F1 | Fictional profiles (4 preloaded, illustrated portraits), create profile, records and baseline per person | Crew, Laboratory → Data |
 | F2 | Validated ingestion: simulator, form, CSV (unit, range, day, duplicates, missing values); source of every value; rejection log | Laboratory → Data |
 | F3 | 3-min PVT-B (and a clearly marked 60-s demo), monotonic clock, false starts, lapses, interruptions | Profile → "PVT test" |
 | F4 | Check-in in < 1 min: mood, perceived sleep quality, notes; history | Profile → "Check-in" |
 | F5 | Personal baseline: median, MAD, n, window, difference; calibration; alert days excluded | Profile ("Their usual" and "Why?") |
 | F6 | Robust z, traffic light with persistence, mission-start baseline for slow drifts, trend, data quality, radiation rate vs. cumulative | Profile |
-| F7 | Explainable alerts (sentence + actions; detail and source under "Why?"); alert management by priority: acknowledge or snooze 24 h per episode, log of who and when, escalation after 2 days | Profile · Crew → Alerts (Medical Officer role) |
+| F7 | Explainable alerts (sentence + actions; detail and source under "Why?"); alert management by priority: acknowledge or snooze 24 h per episode, log of who and when, escalation after 2 days | Profile, Crew → Alerts (Medical Officer role) |
 | F8 | Charts: value over the personal usual-range band, optional population threshold, alert onset marked, data freshness and quality | Profile |
-| F9 | Seeded simulator: scenarios A–G, play/pause/step/restart, configurable blackout, ground truth vs. detector | Laboratory → Simulator · Earth–Mars strip |
+| F9 | Seeded simulator: scenarios A–G, play/pause/step/restart, configurable blackout, ground truth vs. detector | Laboratory → Simulator, Earth–Mars strip |
 | F10 | Report per astronaut or crew, delayed-transmission queue that respects the blackout, JSON/CSV/PDF (print) | Reports |
 
 ## Architecture (5 layers, all local)
 
 ```
-1 Acquisition   simulator.py · forms · CSV · PVT-B (Vue)               ─┐
+1 Acquisition   simulator.py, forms, CSV, PVT-B (Vue)               ─┐
 2 Data          ingest.py (validation) → SQLite (db.py)                 │  backend/basal (Python, FastAPI)
-3 Analysis      detector.py (baseline + robust z) · config.py           │  the science does not depend on HTTP
+3 Analysis      detector.py (baseline + robust z), config.py           │  the science does not depend on HTTP
 4 Decision      recommender.py + recomendaciones.json + evidence.json   │
-   Services     services.py (joins layers) · main.py (routes, OpenAPI) ─┘
+   Services     services.py (joins layers), main.py (routes, OpenAPI) ─┘
 5 Presentation  frontend/ (Vue 3, Pinia, Vue Router, ECharts, PWA) served by FastAPI from one origin
 ```
 
@@ -146,9 +146,9 @@ transmission to Earth. Details in [SCIENTIFIC_METHOD.md](SCIENTIFIC_METHOD.md).
 
 ## Documentation
 
-[SCIENTIFIC_METHOD.md](SCIENTIFIC_METHOD.md) · [DEMO_SCRIPT.md](DEMO_SCRIPT.md) · [JUDGES_QA.md](JUDGES_QA.md) ·
-[PROGRESS.md](PROGRESS.md) (team log, Spanish) · Spanish versions: [README_ES.md](README_ES.md),
-[SCIENTIFIC_METHOD_ES.md](SCIENTIFIC_METHOD_ES.md), [DEMO_SCRIPT_ES.md](DEMO_SCRIPT_ES.md), [JUDGES_QA_ES.md](JUDGES_QA_ES.md) ·
+[SCIENTIFIC_METHOD.md](SCIENTIFIC_METHOD.md), [DEMO_SCRIPT.md](DEMO_SCRIPT.md), [JUDGES_QA.md](JUDGES_QA.md),
+[PROGRESS.md](PROGRESS.md) (team log, Spanish), Spanish versions: [README_ES.md](README_ES.md),
+[SCIENTIFIC_METHOD_ES.md](SCIENTIFIC_METHOD_ES.md), [DEMO_SCRIPT_ES.md](DEMO_SCRIPT_ES.md), [JUDGES_QA_ES.md](JUDGES_QA_ES.md),
 original proposal in `docs/propuesta.pdf`.
 
 ## Main references

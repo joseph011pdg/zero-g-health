@@ -1,5 +1,5 @@
 <template>
-  <Sheet :title="`Check-in · ${astro.nombre}`" @close="$emit('close')">
+  <Sheet :title="`Check-in: ${astro.nombre}`" @close="$emit('close')">
     <form class="grid" @submit.prevent="save" @input="start">
       <label class="field"><span>How is your mood? <strong class="num big">{{ animo }}</strong>/10</span>
         <input type="range" min="1" max="10" step="0.5" v-model.number="animo" aria-label="Mood from 1 to 10" />

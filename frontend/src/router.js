@@ -25,10 +25,10 @@ const router = createRouter({
   scrollBehavior: (to) => (to.hash ? { el: to.hash, top: 110, behavior: 'smooth' } : { top: 0 })
 })
 
-//TÍTULO de pestaña por vista ("BASAL · Alerts")
+//TÍTULO de pestaña por vista ("BASAL, Alerts")
 router.afterEach((to) => {
   const t = to.path === '/' && to.hash === '#alerts' ? 'Alerts' : to.meta.title
-  document.title = t ? `Zero G Health · ${t}` : 'Zero G Health'
+  document.title = t ? `${t} | Zero G Health` : 'Zero G Health'
 })
 
 export default router

@@ -27,7 +27,7 @@
         </form>
         <div class="panel list">
           <button v-for="r in reports" :key="r.id" class="ritem" :class="{ sel: cur?.id === r.id }" @click="open(r.id)">
-            <span class="strong small">#{{ r.id }} · {{ r.astro_id ? crewName(r.astro_id) : 'Crew' }}</span>
+            <span class="strong small">#{{ r.id }}, {{ r.astro_id ? crewName(r.astro_id) : 'Crew' }}</span>
             <span class="tag" :class="r.estado === 'pendiente' ? '' : 'manual'">{{ r.estado === 'pendiente' ? 'queued' : repState(r.estado) }}</span>
             <span class="tiny muted">Days {{ r.desde }}–{{ r.hasta }}</span>
           </button>
@@ -37,7 +37,7 @@
 
       <article v-if="cur" class="panel report">
         <div class="row between wrap no-print">
-          <span class="tag">{{ cur.estado === 'pendiente' ? 'queued · will be sent when the link is available' : repState(cur.estado) }}</span>
+          <span class="tag">{{ cur.estado === 'pendiente' ? 'queued, will be sent when the link is available' : repState(cur.estado) }}</span>
           <div class="row wrap">
             <button class="btn sm" @click="exportJson"><Icon name="download" :size="13" /> JSON</button>
             <button v-if="cur.id" class="btn sm" @click="exportCsv"><Icon name="download" :size="13" /> CSV</button>
@@ -46,12 +46,12 @@
         </div>
         <header>
           <h2>{{ c.mision }}</h2>
-          <p class="small muted">{{ cur.id ? `Report #${cur.id}` : 'Preview (public demo: not saved)' }} · days {{ c.periodo.desde }}–{{ c.periodo.hasta }} · generated on day {{ c.generado_dia }}</p>
+          <p class="small muted">{{ cur.id ? `Report #${cur.id}` : 'Preview (public demo: not saved)' }}, days {{ c.periodo.desde }}–{{ c.periodo.hasta }}, generated on day {{ c.generado_dia }}</p>
         </header>
         <section v-for="(p, pi) in c.tripulantes" :key="p.astronauta.id" class="person rise" :style="{ '--i': pi }">
           <div class="row wrap phead" :class="'n-' + p.nivel_final">
             <Avatar :id="p.astronauta.id" :name="p.astronauta.nombre" :size="40" />
-            <h3 class="grow">{{ p.astronauta.nombre }} <span class="muted small">· {{ p.astronauta.rol }}</span></h3>
+            <h3 class="grow">{{ p.astronauta.nombre }} <span class="muted small">({{ p.astronauta.rol }})</span></h3>
             <LevelBadge :level="p.nivel_final" />
           </div>
           <div class="table-wrap"><table class="table">

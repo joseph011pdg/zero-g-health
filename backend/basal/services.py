@@ -19,7 +19,7 @@ from .indicators import INDICATORS, INDICATOR_KEYS
 from .recommender import EVIDENCE, alerts_for_day, change
 from .simulator import CREW, DEMO_ASSIGNMENTS, DEMO_CREW_EVENTS, POP, SCENARIOS, simulate_mission
 
-MISSION_NAME = "ZGH-1 · Mars transit (simulated mission)"
+MISSION_NAME = "ZGH-1: Mars transit (simulated mission)"
 START_DATE = date(2035, 6, 1)
 DAYS = 120
 DEMO_DAY = 40  # la alarma del día 32 de A4 es un falso positivo del ruido: fuera de la ventana de 7 días

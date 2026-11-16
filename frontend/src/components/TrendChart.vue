@@ -85,9 +85,9 @@ const option = computed(() => {
         if (!p) return ''
         const i = ps[0].dataIndex
         const v = p.valor === null ? 'no data' : `${fmt(p.valor, nd)} ${props.unidad}`
-        const range = lower[i] === null ? '—' : `${fmt(lower[i], nd)}–${fmt(lower[i] + width[i], nd)}`
+        const range = lower[i] === null ? 'n/a' : `${fmt(lower[i], nd)}–${fmt(lower[i] + width[i], nd)}`
         return `<b>Day ${p.day}</b><br/>${props.nombre}: <b>${v}</b><br/>Their usual range: ${range}<br/>` +
-          `<b style="color:${LEVEL_COLOR[p.nivel]}">${LABEL[p.nivel]}</b>${p.z !== null ? ` · z ${fmt(p.z, 1)}` : ''}` +
+          `<b style="color:${LEVEL_COLOR[p.nivel]}">${LABEL[p.nivel]}</b>${p.z !== null ? `, z ${fmt(p.z, 1)}` : ''}` +
           (p.fijo ? '<br/><span style="color:#c8623a">Outside the population threshold</span>' : '')
       }
     },

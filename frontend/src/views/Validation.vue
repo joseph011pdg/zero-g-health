@@ -11,12 +11,12 @@
     <div v-if="!v && !err" class="skeleton" style="height: 300px" />
     <template v-if="v">
       <section class="panel proto">
-        <div><span class="label">Tuning</span><div class="small">seeds {{ v.protocolo.semillas_ajuste.join('–') }} · 20 missions</div></div>
-        <div><span class="label">Evaluation (independent)</span><div class="small">seeds {{ v.protocolo.semillas_evaluacion.join('–') }} ·
+        <div><span class="label">Tuning</span><div class="small">seeds {{ v.protocolo.semillas_ajuste.join('–') }}, 20 missions</div></div>
+        <div><span class="label">Evaluation (independent)</span><div class="small">seeds {{ v.protocolo.semillas_evaluacion.join('–') }},
           {{ v.protocolo.misiones_evaluacion }} missions × {{ v.protocolo.astronautas_por_mision }} astronauts × {{ v.protocolo.dias_por_mision }} days</div></div>
-        <div><span class="label">Chosen cutoffs</span><div class="small mono">Watch |z| ≥ {{ nn(v.parametros.yellow) }} · Act ≥ {{ nn(v.parametros.red) }} or {{ v.parametros.persist }} days</div></div>
+        <div><span class="label">Chosen cutoffs</span><div class="small mono">Watch |z| ≥ {{ nn(v.parametros.yellow) }}, Act ≥ {{ nn(v.parametros.red) }} or {{ v.parametros.persist }} days</div></div>
         <div><span class="label">Tuning criterion</span><div class="small">{{ v.protocolo.restriccion_ajuste }}; maximum "Act" sensitivity</div></div>
-        <div><span class="label">Events evaluated</span><div class="small">{{ g.B_fijo.eventos }} events · {{ nn(g.B_fijo.dias_sanos, 0) }} healthy days</div></div>
+        <div><span class="label">Events evaluated</span><div class="small">{{ g.B_fijo.eventos }} events, {{ nn(g.B_fijo.dias_sanos, 0) }} healthy days</div></div>
       </section>
 
       <section class="cols-3">
@@ -24,7 +24,7 @@
           <div class="label">{{ label }}</div>
           <div class="kpis">
             <div class="kpi"><span class="v">{{ nn(g[m].sensibilidad_pct) }} <small>%</small></span><span class="tiny muted">sensitivity (events)</span></div>
-            <div class="kpi"><span class="v">{{ nn(g[m].retraso_medio_dias) }} <small>d</small></span><span class="tiny muted">mean delay · median {{ nn(g[m].retraso_mediano_dias) }} d</span></div>
+            <div class="kpi"><span class="v">{{ nn(g[m].retraso_medio_dias) }} <small>d</small></span><span class="tiny muted">mean delay, median {{ nn(g[m].retraso_mediano_dias) }} d</span></div>
             <div class="kpi"><span class="v">{{ nn(g[m].episodios_falsos_por_30_dias) }}</span><span class="tiny muted">false alarms / 30 astronaut-days</span></div>
             <div class="kpi"><span class="v">{{ nn(g[m].falsas_alarmas_dias_pct) }} <small>%</small></span><span class="tiny muted">healthy days with an alert</span></div>
           </div>
@@ -67,7 +67,7 @@
 
       <section class="cols-2">
         <div class="panel">
-          <div class="panel-head"><h2>Results by indicator</h2><span class="tiny muted">indicator sensitivity on the events that affect it · false alarms (% of days)</span></div>
+          <div class="panel-head"><h2>Results by indicator</h2><span class="tiny muted">indicator sensitivity on the events that affect it, false alarms (% of days)</span></div>
           <div class="table-wrap"><table class="table">
             <thead><tr><th>Indicator</th><th>Events</th><th>A Watch</th><th>A Act</th><th>B fixed</th><th>FA A Act</th><th>FA B</th></tr></thead>
             <tbody><tr v-for="(x, k) in v.evaluacion.por_indicador.B_fijo" :key="k">
@@ -111,8 +111,8 @@
             <label class="field"><span>Missions (1–30)</span><input class="input" type="number" min="1" max="30" v-model.number="ex.n_misiones" /></label>
             <label class="field"><span>Starting seed</span><input class="input" type="number" min="0" v-model.number="ex.semilla_inicial" /></label>
             <label class="field"><span>Scenario</span><select class="input" v-model="ex.escenario">
-              <option :value="null">Mixed</option><option value="B">B · progressive fatigue</option><option value="C">C · physiological stress</option>
-              <option value="D">D · solar event</option><option value="E">E · behavioral change</option></select></label>
+              <option :value="null">Mixed</option><option value="B">B: progressive fatigue</option><option value="C">C: physiological stress</option>
+              <option value="D">D: solar event</option><option value="E">E: behavioral change</option></select></label>
             <label class="field"><span>Heterogeneity ({{ nn(ex.heterogeneidad) }}×)</span><input type="range" min="0.25" max="2.5" step="0.25" v-model.number="ex.heterogeneidad" /></label>
             <label class="field"><span>Missing data ({{ Math.round(ex.faltantes * 100) }}%)</span><input type="range" min="0" max="0.4" step="0.05" v-model.number="ex.faltantes" /></label>
             <label class="field"><span>Watch / Act cutoffs</span>
@@ -125,8 +125,8 @@
           <h2>Experiment result</h2>
           <p v-if="!exRes" class="small muted">Run an experiment to see the results here.</p>
           <template v-else>
-            <p class="tiny muted mono">seeds {{ exRes.semillas.join('–') }} · {{ exRes.astronautas }} astronauts · scenario {{ exRes.escenario }} ·
-              heterogeneity {{ nn(exRes.heterogeneidad) }}× · missing {{ Math.round(exRes.faltantes * 100) }}% · cutoffs {{ nn(exRes.parametros.yellow) }}/{{ nn(exRes.parametros.red) }} · {{ nn(exRes.segundos) }} s</p>
+            <p class="tiny muted mono">seeds {{ exRes.semillas.join('–') }}, {{ exRes.astronautas }} astronauts, scenario {{ exRes.escenario }},
+              heterogeneity {{ nn(exRes.heterogeneidad) }}×, missing {{ Math.round(exRes.faltantes * 100) }}%, cutoffs {{ nn(exRes.parametros.yellow) }}/{{ nn(exRes.parametros.red) }}, {{ nn(exRes.segundos) }} s</p>
             <div class="table-wrap"><table class="table">
               <thead><tr><th>Method</th><th>Events</th><th>Sens.</th><th>Delay</th><th>FA/30 d</th><th>FA % days</th></tr></thead>
               <tbody><tr v-for="(x, m) in exRes.resultados.global" :key="m"><td class="small">{{ v.metodos[m] }}</td>
@@ -138,14 +138,14 @@
       </section>
 
       <section class="panel" v-if="demo">
-        <div class="panel-head"><h2>Per astronaut · loaded demo mission</h2><span class="tiny muted">{{ demo.nota }}</span></div>
+        <div class="panel-head"><h2>Per astronaut in the loaded demo mission</h2><span class="tiny muted">{{ demo.nota }}</span></div>
         <div class="table-wrap"><table class="table">
-          <thead><tr><th>Astronaut</th><th>Events</th><th>A Act: detected · FA/30 d</th><th>A Watch: detected · FA/30 d</th><th>B fixed: detected · FA/30 d</th></tr></thead>
+          <thead><tr><th>Astronaut</th><th>Events</th><th>A Act: detected, FA/30 d</th><th>A Watch: detected, FA/30 d</th><th>B fixed: detected, FA/30 d</th></tr></thead>
           <tbody><tr v-for="(x, id) in demo.por_astronauta" :key="id">
-            <td>{{ id }} · {{ x.nombre }}</td><td class="small">{{ x.eventos.map((e) => `${e.escenario} (D${e.start}–${e.end})`).join(', ') || '—' }}</td>
-            <td class="num">{{ x.metodos.A_actuar.detectados }}/{{ x.metodos.A_actuar.eventos }} · {{ nn(x.metodos.A_actuar.episodios_falsos_por_30_dias) }}</td>
-            <td class="num">{{ x.metodos.A_vigilar.detectados }}/{{ x.metodos.A_vigilar.eventos }} · {{ nn(x.metodos.A_vigilar.episodios_falsos_por_30_dias) }}</td>
-            <td class="num">{{ x.metodos.B_fijo.detectados }}/{{ x.metodos.B_fijo.eventos }} · {{ nn(x.metodos.B_fijo.episodios_falsos_por_30_dias) }}</td></tr></tbody>
+            <td>{{ id }}: {{ x.nombre }}</td><td class="small">{{ x.eventos.map((e) => `${e.escenario} (D${e.start}–${e.end})`).join(', ') || 'n/a' }}</td>
+            <td class="num">{{ x.metodos.A_actuar.detectados }}/{{ x.metodos.A_actuar.eventos }}, {{ nn(x.metodos.A_actuar.episodios_falsos_por_30_dias) }}</td>
+            <td class="num">{{ x.metodos.A_vigilar.detectados }}/{{ x.metodos.A_vigilar.eventos }}, {{ nn(x.metodos.A_vigilar.episodios_falsos_por_30_dias) }}</td>
+            <td class="num">{{ x.metodos.B_fijo.detectados }}/{{ x.metodos.B_fijo.eventos }}, {{ nn(x.metodos.B_fijo.episodios_falsos_por_30_dias) }}</td></tr></tbody>
         </table></div>
       </section>
 
@@ -197,7 +197,7 @@ const ANT = [{ k: 'eventos_detectados_por_ambos', l: 'Events detected by both' }
 
 const g = computed(() => v.value.evaluacion.global)
 const fixedTxt = computed(() => Object.entries(v.value.parametros.fixed)
-  .map(([k, x]) => `${s.indicators[k]?.corto || k} ${nn(x, Math.max(1, s.indicators[k]?.decimales ?? 1))} ${s.indicators[k]?.unidad || ''}`).join(' · '))
+  .map(([k, x]) => `${s.indicators[k]?.corto || k} ${nn(x, Math.max(1, s.indicators[k]?.decimales ?? 1))} ${s.indicators[k]?.unidad || ''}`).join(', '))
 
 onMounted(async () => {
   try {
@@ -213,8 +213,8 @@ function scenOpt(field, unit) {
   return {
     animation: true, tooltip: { ...baseTooltip, trigger: 'axis', valueFormatter: (x) => `${nn(x)} ${unit}` },
     legend: { top: 0, textStyle: { color: C.muted, fontSize: 11 } }, grid: { left: 40, right: 10, top: 34, bottom: 30 },
-    xAxis: { type: 'category', data: scs.map((k) => `${k} · ${v.value.escenarios[k]}`), ...axis({ splitLine: { show: false } }),
-      axisLabel: { color: C.muted, fontSize: 10, interval: 0, formatter: (x) => x.split(' · ')[1].replace(' (solar event)', '') } },
+    xAxis: { type: 'category', data: scs.map((k) => `${k}: ${v.value.escenarios[k]}`), ...axis({ splitLine: { show: false } }),
+      axisLabel: { color: C.muted, fontSize: 10, interval: 0, formatter: (x) => x.split(': ')[1].replace(' (solar event)', '') } },
     yAxis: { type: 'value', ...axis() },
     series: Object.keys(v.value.metodos).map((m) => ({ name: v.value.metodos[m], type: 'bar', barGap: '10%',
       data: scs.map((k) => ps[m][k][field]), itemStyle: { color: COL[m], borderRadius: [3, 3, 0, 0] },

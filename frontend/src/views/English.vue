@@ -1,6 +1,6 @@
 <template>
   <div class="page en" lang="en">
-    <header class="page-head"><h1>Zero G Health · Autonomous crew health monitoring</h1></header>
+    <header class="page-head"><h1>Zero G Health: autonomous crew health monitoring</h1></header>
 
     <section class="intro">
       <p class="lede">Each astronaut is compared with <b>their own baseline</b>. Zero G Health flags when a health indicator stops being

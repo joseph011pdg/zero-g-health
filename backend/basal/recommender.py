@@ -25,7 +25,7 @@ REASON_TXT = {"corte_rojo": "crossed the Act cutoff", "corte_amarillo": "crossed
 def es(x, nd=1) -> str:
     """#NÚMERO: punto decimal (interfaz en inglés)."""
     if x is None:
-        return "—"
+        return "n/a"
     return f"{x:.{nd}f}"
 
 

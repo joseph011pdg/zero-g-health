@@ -10,7 +10,7 @@
 
     <p class="facts small">
       <span v-for="c in a.cuanto" :key="c.indicador"><b>{{ s.indicators[c.indicador]?.corto || c.nombre }}:</b> {{ fmt(c.valor, dec(c)) }} {{ c.unidad }} vs. their usual {{ fmt(c.linea_base, dec(c)) }} (z = {{ fmt(c.z, 1) }})</span>
-      <span class="muted">Day {{ a.day }}<template v-if="since !== null && since < a.day"> · open since day {{ since }} ({{ a.day - since + 1 }} days)</template></span>
+      <span class="muted">Day {{ a.day }}<template v-if="since !== null && since < a.day">, open since day {{ since }} ({{ a.day - since + 1 }} days)</template></span>
     </p>
     <ul class="todo">
       <li v-for="(x, i) in a.acciones" :key="i" :class="{ esc: x.includes('Medical Officer') }">
@@ -38,7 +38,7 @@
         </div>
         <p class="tiny muted how">{{ a.como }}</p>
         <ul class="ev">
-          <li v-for="e in a.evidencia" :key="e.id" class="tiny"><span>{{ e.cita }}</span> <span class="muted">· {{ e.tipo }}. {{ e.nivel }}.</span></li>
+          <li v-for="e in a.evidencia" :key="e.id" class="tiny"><span>{{ e.cita }}</span> <span class="muted">{{ e.tipo }}. {{ e.nivel }}.</span></li>
         </ul>
         <p v-if="a.fiabilidad !== 'normal'" class="tiny c-amarillo">Reliability {{ a.fiabilidad }} ({{ a.calidad_datos_pct }}% of data in 14 days).</p>
         <p class="tiny faint">{{ a.aviso }}</p>
@@ -48,11 +48,11 @@
     <p v-if="!canReview" class="ack small" :class="a.estado === 'pendiente' ? 'pend' : 'done'">
       <Icon :name="a.estado === 'pendiente' ? 'clock' : 'check'" :size="14" />
       <template v-if="a.estado === 'pendiente'">{{ a.nivel === 'rojo' ? 'The Medical Officer has been notified.' : 'Watch notice: repeat the measurement.' }}</template>
-      <template v-else>{{ STATE_LABEL[a.estado] }}<span v-if="a.revisor"> by {{ a.revisor }}</span><span v-if="a.revisado_dia !== null && a.revisado_dia !== undefined"> · day {{ a.revisado_dia }}</span><span v-if="a.nota">: “{{ a.nota }}”</span></template>
+      <template v-else>{{ STATE_LABEL[a.estado] }}<span v-if="a.revisor"> by {{ a.revisor }}</span><span v-if="a.revisado_dia !== null && a.revisado_dia !== undefined">, day {{ a.revisado_dia }}</span><span v-if="a.nota">: “{{ a.nota }}”</span></template>
     </p>
 
     <footer v-if="canReview" class="review no-print">
-      <p v-if="a.estado !== 'pendiente'" class="tiny muted">{{ STATE_LABEL[a.estado] }}<span v-if="a.revisor"> by {{ a.revisor }}</span><span v-if="a.revisado_dia !== null && a.revisado_dia !== undefined"> · day {{ a.revisado_dia }}</span><span v-if="a.nota"> · “{{ a.nota }}”</span></p>
+      <p v-if="a.estado !== 'pendiente'" class="tiny muted">{{ STATE_LABEL[a.estado] }}<span v-if="a.revisor"> by {{ a.revisor }}</span><span v-if="a.revisado_dia !== null && a.revisado_dia !== undefined">, day {{ a.revisado_dia }}</span><span v-if="a.nota">: “{{ a.nota }}”</span></p>
       <input class="input" v-model="nota" placeholder="Note (optional)" maxlength="500" aria-label="Medical Officer note" />
       <div class="row wrap">
         <button class="btn sm primary" @click="review('reconocida')"><Icon name="check" :size="14" /> Acknowledge</button>

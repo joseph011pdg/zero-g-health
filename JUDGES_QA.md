@@ -1,4 +1,4 @@
-# Judges' questions · short answers
+# Judges' questions, short answers
 
 Spanish version: `JUDGES_QA_ES.md`. All figures come from `backend/basal/data/validation_results.json`
 (40 evaluation missions, simulated data).

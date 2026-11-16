@@ -28,10 +28,10 @@
         <h2><Icon name="cpu" /> Scenario per astronaut</h2>
         <div class="cols-2">
           <label class="field"><span>Astronaut</span>
-            <select class="input" v-model="sa.astro_id"><option v-for="c in s.crew" :key="c.id" :value="c.id">{{ c.id }} · {{ c.nombre }}</option></select></label>
+            <select class="input" v-model="sa.astro_id"><option v-for="c in s.crew" :key="c.id" :value="c.id">{{ c.id }}: {{ c.nombre }}</option></select></label>
           <label class="field"><span>Scenario</span>
             <select class="input" v-model="sa.escenario">
-              <option v-for="(v, k) in scen.escenarios" :key="k" :value="k">{{ k }} · {{ v.nombre }}</option></select></label>
+              <option v-for="(v, k) in scen.escenarios" :key="k" :value="k">{{ k }}: {{ v.nombre }}</option></select></label>
           <label class="field"><span>Start day</span><input class="input" type="number" min="15" max="115" v-model.number="sa.inicio" :disabled="!scen.con_evento?.includes(sa.escenario)" /></label>
           <label class="field"><span>Intensity ({{ fmt(sa.intensidad, 1) }}×)</span><input type="range" min="0.3" max="2" step="0.1" v-model.number="sa.intensidad" :disabled="!scen.con_evento?.includes(sa.escenario)" /></label>
         </div>
@@ -42,7 +42,7 @@
       </div>
 
       <div class="panel grid">
-        <h2><Icon name="signalOff" /> Scenario F · communication outage</h2>
+        <h2><Icon name="signalOff" /> Scenario F: communication outage</h2>
         <div class="cols-2">
           <label class="field"><span>Blackout start</span><input class="input" type="number" min="0" max="119" v-model.number="bo.inicio" /></label>
           <label class="field"><span>Blackout end</span><input class="input" type="number" min="0" max="119" v-model.number="bo.fin" /></label>
@@ -53,8 +53,8 @@
         </div>
         <div class="notice small" :class="s.mission.comunicacion.apagon ? 'err' : 'info'">
           <Icon :name="s.mission.comunicacion.apagon ? 'signalOff' : 'satellite'" />
-          <span>Today: <strong>{{ s.mission.comunicacion.estado }}</strong>{{ s.mission.comunicacion.apagon ? '' : ` · ${fmt(s.mission.comunicacion.retraso_min, 1)} min each way (${fmt(s.mission.comunicacion.ida_vuelta_min, 1)} min round trip)` }}.
-            Current window: {{ s.mission.apagon[0] ?? '—' }}–{{ s.mission.apagon[1] ?? '—' }}. During the blackout the detector keeps
+          <span>Today: <strong>{{ s.mission.comunicacion.estado }}</strong>{{ s.mission.comunicacion.apagon ? '' : `, ${fmt(s.mission.comunicacion.retraso_min, 1)} min each way (${fmt(s.mission.comunicacion.ida_vuelta_min, 1)} min round trip)` }}.
+            Current window: {{ s.mission.apagon[0] ?? 'n/a' }}–{{ s.mission.apagon[1] ?? 'n/a' }}. During the blackout the detector keeps
             running and reports stay queued.</span></div>
         <p class="tiny faint">Simplified delay model (3 → 20 min each way). No real integration with
           space communications.</p>
@@ -65,7 +65,7 @@
       <div class="panel-head">
         <h2><Icon name="activity" /> Detector response vs. simulated ground truth</h2>
         <div class="row wrap">
-          <select class="input sm" v-model="viewId"><option v-for="c in s.crew" :key="c.id" :value="c.id">{{ c.id }} · {{ c.nombre }}</option></select>
+          <select class="input sm" v-model="viewId"><option v-for="c in s.crew" :key="c.id" :value="c.id">{{ c.id }}: {{ c.nombre }}</option></select>
           <select class="input sm" v-model="viewInd"><option v-for="(c, k) in s.indicators" :key="k" :value="k">{{ c.corto }}</option></select>
         </div>
       </div>
@@ -79,7 +79,7 @@
             </rect>
             <circle v-for="d in r.dots" :key="d.i" :cx="d.cx" :cy="r.y" :r="d.r" :class="['dm-dot', d.lv, { pick: d.lv !== 'future' }]"
                     :tabindex="d.lv !== 'future' ? 0 : -1" @click="pick(r.k, d.i)" @keydown.enter="pick(r.k, d.i)">
-              <title>Day {{ d.i }}: {{ CELL[d.lv] || d.lv }}{{ d.z !== null ? ` · z ${fmt(d.z, 1)}` : '' }}</title>
+              <title>Day {{ d.i }}: {{ CELL[d.lv] || d.lv }}{{ d.z !== null ? `, z ${fmt(d.z, 1)}` : '' }}</title>
             </circle>
           </g>
           <circle v-if="selDot" :cx="selDot.cx" :cy="selDot.cy" :r="selDot.r + 5" class="dm-sel" />
@@ -99,7 +99,7 @@
               <span class="dm-badge">{{ info.badge }}</span>
               <div>
                 <strong>{{ info.title }}</strong>
-                <span class="dm-meta">{{ s.indicators[sel.k].corto }} · day {{ sel.d }}</span>
+                <span class="dm-meta">{{ s.indicators[sel.k].corto }}, day {{ sel.d }}</span>
               </div>
             </div>
             <dl v-if="info.p" class="dm-facts">
