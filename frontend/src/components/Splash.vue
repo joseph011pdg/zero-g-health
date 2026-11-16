@@ -1,7 +1,7 @@
 <template>
   <!-- Pantalla de inicio: una vez por sesión. Sirve también de pantalla de carga mientras despierta el servidor. -->
   <div class="splash" :class="{ out: leaving }" role="dialog" aria-modal="true" aria-labelledby="sp-title" @keydown.enter="enter" @keydown.esc="enter">
-    <!-- Video de NASA (dominio público, "ISS Fly-Through to Cupola"): la Tierra en órbita junto al panel solar.
+    <!-- Video de NASA (dominio público, "ISS Fly-Through to Cupola"): acercándose a la cúpula desde dentro.
          Distinto al de la portada. Bucle con fundido; foto fija si se pide reducir movimiento. -->
     <video v-if="!reduceMotion" class="bg" :class="{ dim: fading }" :src="videoSrc" poster="/img/bienvenida-poster.jpg"
            autoplay muted playsinline preload="auto" @timeupdate="softLoop" aria-hidden="true"></video>
