@@ -64,9 +64,7 @@ p { margin: 0; }
 .page { max-width: 1240px; margin: 0 auto; padding: 28px 40px 72px; display: grid; gap: 22px; }
 .page-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; background: var(--navy); color: #fff; padding: 12px 18px; border-radius: var(--radius-sm); }
 .page-head h1, .page-head h2 { color: #fff; }
-.page-head .tabs button { color: #c9d8f2; }
-.page-head .tabs button:hover { color: #fff; }
-.page-head .tabs button.on { color: #fff; border-bottom-color: #fff; }
+.page-head .tabs { background: rgba(255, 255, 255, .08); }
 .page-head p { color: #d5e2f3; max-width: 70ch; margin-top: 4px; }
 
 /* Panel = sección con reglas, no tarjeta flotante */
@@ -74,6 +72,8 @@ p { margin: 0; }
 .panel.flat { background: var(--surface); }
 .panel-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
 .panel-head h2 { display: flex; align-items: center; gap: 8px; }
+.panel h2 > svg, .panel-head h2 > svg { color: var(--blue); }
+.panel > h2:first-child, .panel-head { position: relative; }
 .sub { background: var(--surface-2); border: 1px solid var(--line-soft); border-radius: var(--radius-sm); padding: 12px 14px; }
 
 /* Encabezado de sección de informe */
@@ -135,10 +135,11 @@ input[type=range] { width: 100%; accent-color: var(--blue); }
 input[type=checkbox] { accent-color: var(--blue); }
 
 /* Pestañas: texto subrayado */
-.tabs { display: inline-flex; gap: 18px; flex-wrap: wrap; }
-.tabs button { background: transparent; border: 0; padding: 6px 0; color: var(--text-2); font-weight: 500; font-size: 0.9rem; cursor: pointer; display: inline-flex; gap: 6px; align-items: center; border-bottom: 2px solid transparent; }
-.tabs button:hover { color: var(--blue); }
-.tabs button.on { color: var(--ink); border-bottom-color: var(--ink); font-weight: 600; }
+/* Menús de pestañas: barra azul marino, la opción activa en blanco */
+.tabs { display: inline-flex; gap: 4px; flex-wrap: wrap; background: var(--navy); padding: 4px; border-radius: var(--radius); }
+.tabs button { background: transparent; border: 0; padding: 6px 12px; color: #c9d8f2; font-weight: 500; font-size: 0.88rem; cursor: pointer; display: inline-flex; gap: 6px; align-items: center; border-radius: var(--radius-sm); transition: background .15s, color .15s; }
+.tabs button:hover { color: #fff; background: rgba(255, 255, 255, .1); }
+.tabs button.on { color: var(--navy); background: #fff; font-weight: 600; }
 
 /* Niveles: nunca solo color -> icono + texto */
 .lvl { display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px 2px 6px; border-radius: 2px; font-size: 0.76rem; font-weight: 600; white-space: nowrap; }
@@ -152,9 +153,11 @@ input[type=checkbox] { accent-color: var(--blue); }
 
 /* Tablas */
 .table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
-.table th { text-align: left; font-size: 0.78rem; color: var(--text-2); font-weight: 500; padding: 9px 10px; border-bottom: 1px solid var(--ink); }
+.table th { text-align: left; font-size: 0.78rem; color: var(--navy); font-weight: 600; padding: 9px 10px; background: var(--blue-soft); border-bottom: 2px solid var(--blue); }
+.table tbody tr:nth-child(even) td { background: #f8fafd; }
+.table tbody tr:hover td { background: #eef3fb; }
 .table td { padding: 9px 10px; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
-.table tr.hl td { background: var(--blue-soft); }
+.table tr.hl td { background: #fff4e0 !important; font-weight: 600; }
 .table-wrap { overflow-x: auto; }
 
 .notice { display: flex; gap: 10px; align-items: flex-start; padding: 11px 14px; border-radius: var(--radius-sm); border: 1px solid var(--line-soft); background: var(--surface-2); font-size: 0.88rem; color: var(--text-2); }

@@ -33,7 +33,7 @@
   </header>
 
   <div v-if="s.publico" class="public no-print" role="note">
-    <span>Public demo · simulated data<span class="more"> · what you do here stays in this browser</span></span>
+    <span><b>Public demo</b> · simulated data</span>
     <button class="reset" @click="s.run(() => s.resetDemo(), 'Demo reset')">Reset demo</button>
   </div>
 
@@ -99,8 +99,10 @@ onMounted(() => s.init())
 .role .ico { display: none; }
 .demo-btn { border: 0; background: none; color: #fff; font-weight: 600; font-size: 0.86rem; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
 .top :focus-visible { outline-color: #fff; }
-.public { max-width: 1160px; margin: 12px auto 0; padding: 6px 12px; font-size: 0.8rem; color: var(--navy); background: var(--blue-soft); display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
-.public .reset { background: none; border: 0; color: var(--blue); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 4px 0; font: inherit; font-weight: 600; }
+/* Franja de demo: continúa el azul marino de la cabecera */
+.public { background: #13306a; color: #d5e2f3; padding: 5px max(16px, calc((100% - 1160px) / 2)); font-size: 0.8rem; display: flex; gap: 12px; align-items: center; justify-content: space-between; }
+.public b { color: #fff; font-weight: 600; }
+.public .reset { background: none; border: 0; color: #fff; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 2px 0; font: inherit; font-weight: 600; }
 .waking p { text-align: center; }
 .toasts { position: fixed; bottom: 18px; right: 18px; display: grid; gap: 8px; z-index: 70; }
 .toast { background: #fff; border: 1px solid var(--ink); padding: 10px 14px; font-size: 0.88rem; max-width: 380px; box-shadow: 0 8px 24px rgba(11, 27, 51, .14); }
@@ -124,7 +126,6 @@ code { font-family: var(--mono); background: #fff; padding: 1px 6px; }
   .role button { padding: 6px 10px; min-height: 32px; }
   .nav { gap: 12px; justify-content: space-between; }
   .nav a { font-size: 0.88rem; }
-  .public { margin: 0; padding: 4px 16px; flex-wrap: nowrap; font-size: 0.76rem; }
-  .public .more { display: none; }
+  .public { font-size: 0.76rem; }
 }
 </style>

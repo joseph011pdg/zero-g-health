@@ -177,7 +177,8 @@ onBeforeUnmount(() => clearTimeout(timer))
 </script>
 
 <style scoped>
-.ctl { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; align-items: center; }
+.ctl { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; align-items: center; background: var(--blue-soft); border-color: #cfdcf0; }
+.daybig { color: var(--navy); font-weight: 600; }
 .input.sm { width: auto; padding: 5px 8px; }
 .daybig { font-size: 1.5rem; font-weight: 700; margin-left: 8px; }
 .strip-wrap { display: grid; gap: 4px; margin-bottom: 12px; }

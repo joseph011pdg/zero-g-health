@@ -296,7 +296,7 @@ const hhmm = (d) => d.toLocaleTimeString(LOCALE, { hour: '2-digit', minute: '2-d
 .lead h1 .hl { color: var(--blue); }
 .byline { display: flex; gap: 18px; flex-wrap: wrap; font-size: 0.82rem; color: var(--muted); }
 .byline span { display: inline-flex; align-items: center; gap: 6px; }
-.hero-img { position: relative; overflow: hidden; min-height: 210px; border-radius: 18px; background: #0b1626; }
+.hero-img { position: relative; overflow: hidden; min-height: 360px; align-self: stretch; border-radius: 18px; background: #0b1626; }
 .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity .5s ease; }
 .hero-video.out { opacity: 0.15; }
 .hero-img .txt { position: absolute; inset: 0; padding: 30px; display: grid; align-content: center; gap: 14px; max-width: 56%;
@@ -383,7 +383,7 @@ figure { margin: 0; }
   .who { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; }
   .who .dots { margin-top: 0; }
   .who .openep { flex-basis: 100%; }
-  .hero-img { min-height: 120px; }
+  .hero-img { min-height: 190px; }
   .hero-img p { display: none; }
   .person figure { grid-column: 1 / -1; }
   .reading .v { font-size: 1.5rem; }

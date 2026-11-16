@@ -81,7 +81,10 @@ onMounted(async () => { ev.value = await api('/evidence') })
 </script>
 
 <style scoped>
-.hero { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+.hero { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; background: var(--navy); border-color: var(--navy); color: #fff; }
+.hero h2 { color: #fff; }
+.hero p { color: #d5e2f3; }
+.hero .formula { background: rgba(255, 255, 255, .1); color: #fff; }
 .pics { display: flex; align-items: center; gap: 10px; }
 .planet { border-radius: 50%; object-fit: cover; clip-path: circle(47%); }
 .formula { background: var(--blue-soft); color: var(--blue); padding: 12px 14px; border-radius: 10px; font-size: 0.9rem; }

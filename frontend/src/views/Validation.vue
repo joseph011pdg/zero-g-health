@@ -246,8 +246,12 @@ async function runEx() {
 
 <style scoped>
 .proto { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
-.method { border-top: 3px solid var(--line); }
-.method.A_vigilar { border-top-color: var(--blue); } .method.A_actuar { border-top-color: var(--ok); } .method.B_fijo { border-top-color: var(--mars); }
+.method { border-top: 4px solid var(--line); }
+.method.A_vigilar { border-top-color: var(--blue); background: #f2f6fc; } .method.A_actuar { border-top-color: var(--ok); background: #f1f8f4; } .method.B_fijo { border-top-color: var(--mars); background: #fbf3ee; }
+.method.A_actuar .kpi .v { color: var(--ok); } .method.B_fijo .kpi .v { color: var(--mars); }
+.method > .label { font-size: 0.86rem; font-weight: 600; color: var(--ink); }
+.proto { background: var(--blue-soft); border-color: #cfdcf0; }
+.proto .label { color: var(--blue); font-weight: 600; }
 .kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
 .ch { height: 280px; width: 100%; }
 .defs { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 7px; line-height: 1.5; }

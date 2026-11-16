@@ -49,7 +49,7 @@
           <p class="small muted">{{ cur.id ? `Report #${cur.id}` : 'Preview (public demo: not saved)' }} · days {{ c.periodo.desde }}–{{ c.periodo.hasta }} · generated on day {{ c.generado_dia }}</p>
         </header>
         <section v-for="p in c.tripulantes" :key="p.astronauta.id" class="person">
-          <div class="row wrap">
+          <div class="row wrap phead" :class="'n-' + p.nivel_final">
             <Avatar :id="p.astronauta.id" :name="p.astronauta.nombre" :size="40" />
             <h3 class="grow">{{ p.astronauta.nombre }} <span class="muted small">· {{ p.astronauta.rol }}</span></h3>
             <LevelBadge :level="p.nivel_final" />
@@ -58,11 +58,17 @@
             <thead><tr><th>Indicator</th><th class="right">Mean</th><th class="right">Latest</th><th class="right">Their usual</th><th class="right">Days Watch / Act</th><th class="right">Data</th></tr></thead>
             <tbody><tr v-for="(x, k) in p.indicadores" :key="k"><td>{{ x.nombre }}</td><td class="num right">{{ fmt(x.media, 2) }}</td>
               <td class="num right">{{ fmt(x.ultimo_valor, 2) }}</td><td class="num right">{{ fmt(x.linea_base_final, 2) }}</td>
-              <td class="num right">{{ x.dias_amarillo }} / {{ x.dias_rojo }}</td><td class="num right">{{ nn(x.completitud_pct) }}%</td></tr></tbody>
+              <td class="num right"><span class="dchip" :class="{ w: x.dias_amarillo }">{{ x.dias_amarillo }}</span> <span class="dchip" :class="{ a: x.dias_rojo }">{{ x.dias_rojo }}</span></td>
+              <td class="num right"><span class="dbar"><i :style="{ width: Math.min(100, x.completitud_pct || 0) + '%' }" :class="{ low: (x.completitud_pct || 0) < 70 }"></i></span> {{ nn(x.completitud_pct) }}%</td></tr></tbody>
           </table></div>
-          <p class="small muted">{{ p.seguimiento.alertas_revisadas }} alerts reviewed, {{ p.seguimiento.alertas_pendientes }} unacknowledged ·
-            {{ p.seguimiento.checkins }} check-ins · {{ p.seguimiento.pruebas_pvt }} PVT tests · {{ p.calidad_datos.registros_rechazados }} rejected records ·
-            radiation {{ fmt(p.radiacion.acumulada_medida_mgy, 1) }} mGy</p>
+          <div class="chips">
+            <span class="chip ok">{{ p.seguimiento.alertas_revisadas }} alerts reviewed</span>
+            <span class="chip" :class="p.seguimiento.alertas_pendientes ? 'warn' : 'ok'">{{ p.seguimiento.alertas_pendientes }} unacknowledged</span>
+            <span class="chip">{{ p.seguimiento.checkins }} check-ins</span>
+            <span class="chip">{{ p.seguimiento.pruebas_pvt }} PVT tests</span>
+            <span class="chip" :class="{ warn: p.calidad_datos.registros_rechazados }">{{ p.calidad_datos.registros_rechazados }} rejected records</span>
+            <span class="chip rad">radiation {{ fmt(p.radiacion.acumulada_medida_mgy, 1) }} mGy</span>
+          </div>
         </section>
       </article>
       <div v-else class="panel muted small">Generate a report to see it here.</div>
@@ -122,7 +128,23 @@ function print() { window.print() }
 @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
 .list { display: grid; gap: 6px; }
 .ritem { text-align: left; background: var(--surface-2); border: 1px solid var(--line-soft); border-radius: 10px; padding: 9px 11px; cursor: pointer; color: var(--text); display: grid; grid-template-columns: 1fr auto; gap: 3px 8px; }
-.ritem.sel { border-color: var(--blue); background: var(--blue-soft); }
+.ritem.sel { border-color: var(--navy); background: var(--navy); color: #fff; }
+.ritem.sel .muted { color: #c9d8f2; }
+.phead { background: var(--blue-soft); border-left: 4px solid var(--blue); padding: 8px 12px; border-radius: 0; }
+.phead.n-amarillo { background: var(--warn-soft); border-left-color: #c08a00; }
+.phead.n-rojo { background: var(--red-soft); border-left-color: var(--red); }
+.phead.n-verde { background: var(--ok-soft); border-left-color: var(--ok); }
+.dchip { display: inline-block; min-width: 24px; text-align: center; padding: 1px 6px; border-radius: 3px; background: #eef1f5; color: var(--muted); font-weight: 500; }
+.dchip.w { background: var(--warn-soft); color: var(--warn); font-weight: 700; }
+.dchip.a { background: var(--red-soft); color: var(--red); font-weight: 700; }
+.dbar { display: inline-block; width: 46px; height: 6px; background: #e4e9f1; border-radius: 3px; vertical-align: middle; margin-right: 6px; overflow: hidden; }
+.dbar i { display: block; height: 100%; background: var(--ok); }
+.dbar i.low { background: #c08a00; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-size: 0.78rem; padding: 3px 9px; border-radius: 3px; background: var(--blue-soft); color: var(--blue); font-weight: 500; }
+.chip.ok { background: var(--ok-soft); color: var(--ok); }
+.chip.warn { background: var(--warn-soft); color: var(--warn); }
+.chip.rad { background: #efecfa; color: #4a3a8c; }
 .report { display: grid; gap: 16px; }
 .person { display: grid; gap: 10px; border-top: 1px solid var(--line-soft); padding-top: 14px; }
 @media print { .layout { display: block; } }
