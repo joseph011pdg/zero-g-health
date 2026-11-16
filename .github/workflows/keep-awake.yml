@@ -1,0 +1,17 @@
+#KEEP AWAKE: pings the public demo so Render's free instance does not sleep while judges review it
+name: keep-awake
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping demo
+        run: |
+          for i in 1 2 3; do
+            curl -fsS --max-time 60 https://basal-pxyn.onrender.com/api/health && exit 0
+            sleep 20
+          done
+          exit 1

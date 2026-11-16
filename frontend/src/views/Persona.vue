@@ -98,6 +98,7 @@
           </div>
         </div>
       </section>
+      <p class="tiny muted" style="margin-top:12px">AI-generated portraits of fictional crew. Simulated data, not a medical device.</p>
     </template>
 
     <CheckinSheet v-if="sheet === 'checkin' && a" :astro="a" @close="sheet = null" @saved="load" />

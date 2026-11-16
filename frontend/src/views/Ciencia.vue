@@ -30,7 +30,7 @@
           <li><strong>Simulated:</strong> all measurements, the (fictional) crew, the events, the blackout and the transmission to Earth.</li>
           <li><strong>From the literature:</strong> dose ~0.4 mGy/day (Patel et al., 2020), PVT-B lapse ≥ 355 ms (Basner et al., 2011), sleep ≥ 7 h (Watson et al., 2015).</li>
           <li><strong>NASA data:</strong> the prototype includes no individual NASA measurements; it accepts real data via CSV.</li>
-          <li><strong>Images:</strong> NASA public-domain photos and video (credits below); our own illustrated portraits.</li>
+          <li><strong>Images:</strong> NASA public-domain photos and video (credits below); <strong>AI-generated portraits of fictional crew</strong> (illustrations made with Claude, Anthropic).</li>
         </ul>
       </div>
     </section>
