@@ -35,8 +35,8 @@ const props = defineProps({ ready: Boolean })
 const emit = defineEmits(['done'])
 const leaving = ref(false)
 const fading = ref(false)
-//CALIDAD: 1080p en pantallas grandes, 720p en celulares (carga más rápida)
-const videoSrc = typeof window !== 'undefined' && window.innerWidth >= 900 ? '/img/bienvenida-1080.mp4' : '/img/bienvenida.mp4'
+//CALIDAD: 2560×1280 (desde el original 8K) en pantallas grandes, 1280×640 en celulares
+const videoSrc = typeof window !== 'undefined' && window.innerWidth >= 900 ? '/img/bienvenida-hd.mp4' : '/img/bienvenida.mp4'
 const reduceMotion = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
 //BUCLE suave: fundido corto al final y vuelta al inicio (el último plano no coincide con el primero)
 function softLoop(e) {
