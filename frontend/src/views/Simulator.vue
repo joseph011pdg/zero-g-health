@@ -69,18 +69,56 @@
           <select class="input sm" v-model="viewInd"><option v-for="(c, k) in s.indicators" :key="k" :value="k">{{ c.corto }}</option></select>
         </div>
       </div>
-      <div v-if="astro" class="strip-wrap">
-        <div class="strip" v-for="(c, k) in s.indicators" :key="k">
-          <span class="tiny muted name">{{ c.corto }}</span>
-          <div class="cells" :style="{ gridTemplateColumns: `repeat(${s.mission.dias}, 1fr)` }">
-            <span v-for="d in s.mission.dias" :key="d" class="cellx"
-                  :class="[cellLevel(k, d - 1), { truth: inEvent(k, d - 1) }]" :title="`Day ${d - 1}: ${CELL[cellLevel(k, d - 1)] || cellLevel(k, d - 1)}`" />
-          </div>
+      <!-- MATRIZ DE PUNTOS: cada día es un punto; el tamaño crece con la desviación (z) y el color es el nivel -->
+      <div v-if="astro" class="dotmap">
+        <div class="dm-scroll"><svg :viewBox="`0 0 ${DM.W} ${dm.h}`" width="100%" role="img" :aria-label="`Day map for ${astro.nombre}: dot size grows with deviation`">
+          <g v-for="r in dm.rows" :key="r.k">
+            <text x="0" :y="r.y + 4" class="dm-lab">{{ r.label }}</text>
+            <rect v-for="(e, ei) in r.evs" :key="'e' + ei" :x="e.x" :y="r.y - 15" :width="e.w" height="30" rx="15" class="dm-ev">
+              <title>Injected event {{ e.code }}: days {{ e.start }}–{{ e.end }}</title>
+            </rect>
+            <circle v-for="d in r.dots" :key="d.i" :cx="d.cx" :cy="r.y" :r="d.r" :class="['dm-dot', d.lv, { pick: d.lv !== 'future' }]"
+                    :tabindex="d.lv !== 'future' ? 0 : -1" @click="pick(r.k, d.i)" @keydown.enter="pick(r.k, d.i)">
+              <title>Day {{ d.i }}: {{ CELL[d.lv] || d.lv }}{{ d.z !== null ? ` · z ${fmt(d.z, 1)}` : '' }}</title>
+            </circle>
+          </g>
+          <circle v-if="selDot" :cx="selDot.cx" :cy="selDot.cy" :r="selDot.r + 5" class="dm-sel" />
+          <line :x1="dm.tx" :x2="dm.tx" y1="4" :y2="dm.axisY - 8" class="dm-now" />
+          <text v-for="t in dm.ticks" :key="t.v" :x="t.x" :y="dm.axisY + 8" class="dm-tick">{{ t.v }}</text>
+          <rect :x="dm.tx - 36" :y="dm.axisY - 6" width="72" height="20" rx="10" class="dm-pill" />
+          <text :x="dm.tx" :y="dm.axisY + 8" class="dm-pill-t">Day {{ s.day }}</text>
+        </svg></div>
+        <!-- DETALLE: al hacer clic en un punto, dice si ese día hubo anomalía y si coincide con la verdad simulada -->
+        <div class="dm-info" :class="info ? info.tone : 'idle'" aria-live="polite">
+          <template v-if="!info">
+            <span class="dm-hint">Click any dot to check that day for an anomaly.</span>
+            <button class="btn sm" @click="pickLatest">Show the latest anomaly</button>
+          </template>
+          <template v-else>
+            <div class="dm-info-main">
+              <span class="dm-badge">{{ info.badge }}</span>
+              <div>
+                <strong>{{ info.title }}</strong>
+                <span class="dm-meta">{{ s.indicators[sel.k].corto }} · day {{ sel.d }}</span>
+              </div>
+            </div>
+            <dl v-if="info.p" class="dm-facts">
+              <div><dt>Value</dt><dd>{{ fmt(info.p.valor, info.dec) }} {{ info.unit }}</dd></div>
+              <div><dt>Their usual</dt><dd>{{ fmt(info.p.normal, info.dec) }} {{ info.unit }}</dd></div>
+              <div><dt>Deviation (z)</dt><dd>{{ fmt(info.p.z, 1) }}</dd></div>
+              <div><dt>Watch from</dt><dd>z ≥ {{ fmt(s.mission.parametros.yellow, 1) }}</dd></div>
+            </dl>
+            <p class="dm-truth"><b>Ground truth:</b> {{ info.truth }} <span class="dm-verdict">{{ info.verdict }}</span></p>
+            <div class="row wrap">
+              <router-link class="btn sm" :to="`/crew/${viewId}`">Open profile</router-link>
+              <button class="btn sm ghost" @click="sel = null">Close</button>
+            </div>
+          </template>
         </div>
-        <div class="row wrap tiny muted legend">
-          <span><i class="sw verde" />normal</span><span><i class="sw amarillo" />Watch</span><span><i class="sw rojo" />Act</span>
-          <span><i class="sw sin_dato" />no data / calibrating</span><span><i class="sw future" />future (not revealed yet)</span>
-          <span><i class="sw truthsw" />injected event (ground truth)</span>
+        <div class="dm-legend">
+          <span><i class="sw verde" />Normal</span><span><i class="sw amarillo" />Watch</span><span><i class="sw rojo" />Act</span>
+          <span><i class="sw sin_dato" />No data / calibrating</span><span><i class="sw future" />Not revealed yet</span>
+          <span><i class="sw truthsw" />Injected event</span><span class="dm-note">Dot size grows with z (distance from their usual)</span>
         </div>
       </div>
       <TrendChart v-if="astro" :data="astro.series[viewInd]" :unidad="s.indicators[viewInd].unidad" :nombre="s.indicators[viewInd].corto"
@@ -109,7 +147,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch, onBeforeUnmount } from 'vue'
+import { computed, ref, reactive, watch, onBeforeUnmount } from 'vue'
 import { api, useStore, fmt } from '../store.js'
 const CELL = { verde: 'normal', amarillo: 'Watch', rojo: 'Act', sin_dato: 'no data', calibrando: 'calibrating', future: 'future' }
 import Icon from '../components/Icon.vue'
@@ -170,6 +208,65 @@ function cellLevel(k, d) {
   if (d > s.day) return 'future'
   return astro.value?.series[k][d]?.nivel || 'sin_dato'
 }
+//MATRIZ DE PUNTOS: geometría en un lienzo SVG de 1000 de ancho
+const DM = { W: 1000, L: 118, R: 10, row: 40, top: 24 }
+const dm = computed(() => {
+  const n = s.mission.dias, dx = (DM.W - DM.L - DM.R) / n, keys = Object.keys(s.indicators)
+  const xOf = (d) => DM.L + d * dx + dx / 2
+  const rows = keys.map((k, i) => {
+    const y = DM.top + i * DM.row
+    const dots = []
+    for (let d = 0; d < n; d++) {
+      if (d > s.day) { dots.push({ i: d, cx: xOf(d), r: 1.4, lv: 'future', z: null }); continue }
+      const p = astro.value?.series[k]?.[d]
+      const z = p?.z ?? null
+      dots.push({ i: d, cx: xOf(d), r: Math.max(2.2, Math.min(13, 2.2 + Math.abs(z ?? 0) * 2.3)), lv: p?.nivel || 'sin_dato', z })
+    }
+    const evs = events.value.filter((e) => e.astro_id === viewId.value && e.afecta.split(',').includes(k))
+      .map((e) => ({ x: DM.L + e.start * dx, w: (e.end - e.start + 1) * dx, start: e.start, end: e.end, code: e.escenario }))
+    return { k, label: s.indicators[k].corto, y, dots, evs }
+  })
+  const axisY = DM.top + keys.length * DM.row
+  const tx = DM.L + (s.day + 1) * dx
+  const ticks = [0, 30, 60, 90, n - 1].filter((v) => Math.abs(v - s.day) > 7).map((v) => ({ v, x: xOf(v) }))
+  return { rows, axisY, tx, ticks, h: axisY + 22 }
+})
+//DETALLE DE UN DÍA: ¿hubo anomalía? y ¿coincide con un evento inyectado?
+const sel = ref(null)
+function pick(k, d) { if (d <= s.day) sel.value = { k, d } }
+function pickLatest() {
+  let best = null
+  for (const k of Object.keys(s.indicators)) {
+    (astro.value?.series[k] || []).forEach((p, d) => {
+      if (d <= s.day && (p?.nivel === 'amarillo' || p?.nivel === 'rojo') && (!best || d > best.d || (d === best.d && p.nivel === 'rojo'))) best = { k, d }
+    })
+  }
+  sel.value = best || { k: Object.keys(s.indicators)[0], d: s.day }
+}
+watch(viewId, () => { sel.value = null })
+const selDot = computed(() => {
+  if (!sel.value) return null
+  const row = dm.value.rows.find((r) => r.k === sel.value.k)
+  const dot = row?.dots[sel.value.d]
+  return dot ? { cx: dot.cx, cy: row.y, r: dot.r } : null
+})
+const info = computed(() => {
+  if (!sel.value || !astro.value) return null
+  const { k, d } = sel.value
+  const p = astro.value.series[k]?.[d]
+  const lv = p?.nivel || 'sin_dato'
+  const ev = events.value.find((e) => e.astro_id === viewId.value && e.afecta.split(',').includes(k) && d >= e.start && d <= e.end)
+  const anomaly = lv === 'amarillo' || lv === 'rojo'
+  const base = { p: p && p.valor !== null && p.valor !== undefined ? p : null, dec: s.indicators[k].decimales, unit: s.indicators[k].unidad }
+  const truth = ev ? `inside injected event ${ev.escenario} (${ev.nombre}, days ${ev.start}–${ev.end}).` : 'no injected event on this day.'
+  if (lv === 'sin_dato' || lv === 'calibrando') {
+    return { ...base, tone: 'muted', badge: lv === 'calibrando' ? 'Calibrating' : 'No data', title: lv === 'calibrando' ? 'Not enough days yet to judge this indicator' : 'No measurement this day: never read as normal', truth, verdict: '' }
+  }
+  const verdict = anomaly ? (ev ? 'Correct detection.' : 'False alarm (no event behind it).') : (ev ? 'Not flagged on this day.' : 'Correct: nothing to flag.')
+  if (lv === 'rojo') return { ...base, tone: 'act', badge: 'Act', title: 'Anomaly detected: notify the Medical Officer', truth, verdict }
+  if (lv === 'amarillo') return { ...base, tone: 'watch', badge: 'Watch', title: 'Anomaly detected: repeat the measurement', truth, verdict }
+  return { ...base, tone: 'ok', badge: 'Normal', title: 'No anomaly: within their usual range', truth, verdict }
+})
 function inEvent(k, d) {
   return events.value.some((e) => e.astro_id === viewId.value && e.afecta.split(',').includes(k) && d >= e.start && d <= e.end)
 }
@@ -181,21 +278,54 @@ onBeforeUnmount(() => clearTimeout(timer))
 .daybig { color: var(--navy); font-weight: 600; }
 .input.sm { width: auto; padding: 5px 8px; }
 .daybig { font-size: 1.5rem; font-weight: 700; margin-left: 8px; }
-/* MAPA de días: panel azul marino con colores vivos (normal verde, vigilar amarillo, actuar naranja, sin rojo) */
-.strip-wrap { display: grid; gap: 5px; margin-bottom: 14px; background: var(--navy); padding: 14px 16px 12px; border-radius: var(--radius); }
-.strip { display: grid; grid-template-columns: 96px 1fr; align-items: center; gap: 10px; }
-.strip .name { color: #c9d8f2 !important; font-weight: 500; }
-.cells { display: grid; gap: 2px; height: 20px; }
-.cellx { display: block; height: 100%; border-radius: 2px; background: #1fb57a; position: relative; transition: transform 150ms var(--ease-out); }
-.cellx.amarillo { background: #ffc233; }
-.cellx.rojo { background: #ff7a1a; }
-.cellx.sin_dato, .cellx.calibrando { background: repeating-linear-gradient(135deg, #4a5f85 0 3px, #2c3f63 3px 6px); }
-.cellx.future { background: rgba(255, 255, 255, .08); }
-.cellx.truth { box-shadow: inset 0 -5px 0 #b48cff, 0 0 6px rgba(180, 140, 255, .55); }
-@media (hover: hover) and (pointer: fine) { .cellx:hover { transform: scaleY(1.25); } }
-.legend { gap: 16px; margin-top: 8px; color: #c9d8f2 !important; }
-.sw { display: inline-block; width: 11px; height: 11px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
-.sw.verde { background: #1fb57a; } .sw.amarillo { background: #ffc233; } .sw.rojo { background: #ff7a1a; }
-.sw.sin_dato { background: repeating-linear-gradient(135deg, #4a5f85 0 3px, #2c3f63 3px 6px); } .sw.future { background: rgba(255, 255, 255, .15); } .sw.truthsw { background: #b48cff; }
-@media (prefers-reduced-motion: reduce) { .cellx:hover { transform: none; } }
+/* MATRIZ DE PUNTOS: fondo blanco, puntos por nivel, eventos en cápsula morada, hoy en línea marino */
+.dotmap { margin-bottom: 14px; padding: 6px 4px 10px; }
+.dotmap svg { display: block; overflow: visible; }
+/* En pantallas estrechas el mapa conserva un ancho legible y se desplaza en horizontal */
+.dm-scroll { overflow-x: auto; }
+@media (max-width: 720px) { .dotmap svg { min-width: 680px; } }
+.dm-lab { font-size: 13px; font-weight: 500; fill: var(--ink); font-family: var(--sans); }
+.dm-ev { fill: rgba(124, 92, 255, .12); stroke: #7c5cff; stroke-width: 1.2; }
+.dm-dot { fill: #22a06b; fill-opacity: .78; transition: transform 150ms var(--ease-out); transform-box: fill-box; transform-origin: center; }
+.dm-dot.amarillo { fill: #f2b632; fill-opacity: .95; }
+.dm-dot.rojo { fill: #f07a1a; fill-opacity: .95; }
+.dm-dot.sin_dato, .dm-dot.calibrando { fill: #c3cddd; fill-opacity: 1; }
+.dm-dot.future { fill: #d3dbe7; fill-opacity: 1; }
+@media (hover: hover) and (pointer: fine) { .dm-dot:hover { transform: scale(1.35); } }
+.dm-dot.pick { cursor: pointer; }
+.dm-dot.pick:focus { outline: none; stroke: var(--navy); stroke-width: 2; }
+.dm-sel { fill: none; stroke: var(--navy); stroke-width: 2; pointer-events: none; }
+/* PANEL DE DETALLE */
+.dm-info { margin-top: 10px; border: 1px solid var(--line-soft); border-radius: var(--radius); padding: 12px 14px; display: grid; gap: 10px; background: #f8fafd; }
+.dm-info.idle { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+/* Tono del panel según el resultado: fondo suave del mismo color que el nivel */
+.dm-info.ok { background: #f1f8f4; border-color: #cfe7da; } .dm-info.watch { background: #fdf8ea; border-color: #f0e0b0; }
+.dm-info.act { background: #fdf3ea; border-color: #f2d2b4; } .dm-info.muted { background: #f5f7fa; }
+.dm-hint { font-size: 0.88rem; color: var(--text-2); }
+.dm-info-main { display: flex; align-items: center; gap: 12px; }
+.dm-info-main strong { display: block; font-size: 1rem; color: var(--ink); }
+.dm-meta { font-size: 0.8rem; color: var(--muted); }
+.dm-badge { font-size: 0.74rem; font-weight: 700; padding: 4px 9px; border-radius: 3px; background: #e4e9f1; color: var(--text-2); white-space: nowrap; }
+.ok .dm-badge { background: var(--ok-soft); color: var(--ok); }
+.watch .dm-badge { background: var(--warn-soft); color: var(--warn); }
+.act .dm-badge { background: var(--red-soft); color: var(--red); }
+.dm-facts { margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.dm-facts div { background: #fff; border: 1px solid var(--line-soft); border-radius: var(--radius-sm); padding: 6px 10px; }
+.dm-facts dt { font-size: 0.72rem; color: var(--muted); }
+.dm-facts dd { margin: 0; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+.dm-truth { font-size: 0.86rem; color: var(--text-2); margin: 0; }
+.dm-verdict { font-weight: 600; color: var(--navy); }
+@media (max-width: 640px) { .dm-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.dm-now { stroke: var(--navy); stroke-width: 2; stroke-dasharray: 4 3; }
+.dm-tick { font-size: 11px; fill: var(--muted); text-anchor: middle; font-family: var(--sans); }
+.dm-pill { fill: var(--navy); }
+.dm-pill-t { font-size: 11px; font-weight: 600; fill: #fff; text-anchor: middle; font-family: var(--sans); }
+.dm-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 0.78rem; color: var(--text-2); margin-top: 6px; }
+.dm-legend span { display: inline-flex; align-items: center; }
+.dm-note { color: var(--muted); }
+.sw { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
+.sw.verde { background: #22a06b; } .sw.amarillo { background: #f2b632; } .sw.rojo { background: #f07a1a; }
+.sw.sin_dato { background: #c3cddd; } .sw.future { background: #d3dbe7; width: 5px; height: 5px; }
+.sw.truthsw { background: rgba(124, 92, 255, .12); border: 1.5px solid #7c5cff; border-radius: 6px; width: 16px; }
+@media (prefers-reduced-motion: reduce) { .dm-dot:hover { transform: none; } }
 </style>
