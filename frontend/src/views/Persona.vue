@@ -198,17 +198,24 @@ function trendClass(k, t) {
 .tiles { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
 @media (max-width: 1100px) { .tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 560px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } .val { font-size: 1.4rem; } }
-.tile { text-align: left; cursor: pointer; display: grid; gap: 6px; padding: 14px 16px; color: var(--text); transition: border-color .15s; }
+.tile { text-align: left; cursor: pointer; display: grid; gap: 6px; padding: 14px 16px; color: var(--text); transition: border-color .15s, transform 150ms var(--ease-out), box-shadow .15s;
+  background: linear-gradient(180deg, #eef3fb 0%, #ffffff 70%); }
+.tile.verde { background: linear-gradient(180deg, #e3f4ea 0%, #ffffff 72%); }
+.tile.amarillo { background: linear-gradient(180deg, #fcefc9 0%, #fffaf0 55%, #ffffff 100%); border-color: #efd590; }
+.tile.rojo { background: linear-gradient(180deg, #fbdcc2 0%, #fff4ec 55%, #ffffff 100%); border-color: #eebc93; }
+@media (hover: hover) and (pointer: fine) { .tile:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(11, 27, 51, .08); } }
 .tile:hover { border-color: #b8c7e3; }
 .tile.sel { border: 2px solid var(--blue); padding: 13px 15px; }
 .end { align-items: flex-end; }
 .val { font-size: 1.7rem; font-weight: 600; letter-spacing: -0.02em; }
+.val.c-none { background: linear-gradient(90deg, #0a1f44, #1f6fe0); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.val.c-none small { -webkit-text-fill-color: var(--muted); }
 .val small { font-size: 0.8rem; color: var(--muted); margin-left: 1px; font-weight: 500; }
 .fresh { margin-top: 2px; }
 .mb { margin-bottom: 10px; display: flex; gap: 8px; align-items: center; }
 .bar { height: 8px; background: var(--surface-2); border-radius: 4px; overflow: hidden; margin: 8px 0; }
-.bar div { height: 100%; background: var(--blue); }
-.bar div.over { background: #d99100; }
+.bar div { height: 100%; background: linear-gradient(90deg, #22a06b, #1f6fe0); border-radius: 4px; }
+.bar div.over { background: linear-gradient(90deg, #22a06b, #f2b632 70%, #f07a1a); }
 .hist { display: grid; gap: 4px; }
 .hrow { display: flex; gap: 10px; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--line-soft); }
 .grow { flex: 1; }

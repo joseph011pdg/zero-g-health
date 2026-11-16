@@ -314,9 +314,10 @@ const hhmm = (d) => d.toLocaleTimeString(LOCALE, { hour: '2-digit', minute: '2-d
 .who b { font-family: var(--serif); font-size: 1.4rem; font-weight: 600; letter-spacing: -0.01em; display: block; }
 .who small { display: block; color: var(--muted); font-size: 0.86rem; }
 .who .st { margin-top: 8px; }
-.reading .v { font-size: 1.7rem; font-weight: 500; letter-spacing: -0.03em; line-height: 1; color: var(--blue); }
-.reading.n-rojo .v { color: var(--red); }
-.reading.n-amarillo .v { color: var(--warn); }
+.reading .v { font-size: 1.9rem; font-weight: 600; letter-spacing: -0.03em; line-height: 1;
+  background: linear-gradient(90deg, #0a1f44, #1f6fe0); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.reading.n-rojo .v { background-image: linear-gradient(90deg, #8a3f00, #f07a1a); }
+.reading.n-amarillo .v { background-image: linear-gradient(90deg, #7a5600, #e0a400); }
 .reading .u { font-size: 0.92rem; color: var(--muted); margin-left: 1px; }
 .reading .d { display: block; font-size: 0.82rem; color: var(--text-2); margin-top: 6px; }
 figure { margin: 0; }

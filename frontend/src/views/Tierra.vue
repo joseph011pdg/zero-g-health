@@ -130,10 +130,10 @@ function print() { window.print() }
 .ritem { text-align: left; background: var(--surface-2); border: 1px solid var(--line-soft); border-radius: 10px; padding: 9px 11px; cursor: pointer; color: var(--text); display: grid; grid-template-columns: 1fr auto; gap: 3px 8px; }
 .ritem.sel { border-color: var(--navy); background: var(--navy); color: #fff; }
 .ritem.sel .muted { color: #c9d8f2; }
-.phead { background: var(--blue-soft); border-left: 4px solid var(--blue); padding: 8px 12px; border-radius: 0; }
-.phead.n-amarillo { background: var(--warn-soft); border-left-color: #c08a00; }
-.phead.n-rojo { background: var(--red-soft); border-left-color: var(--red); }
-.phead.n-verde { background: var(--ok-soft); border-left-color: var(--ok); }
+.phead { background: linear-gradient(90deg, #dfe9fb 0%, #ffffff 85%); border-left: 4px solid var(--blue); padding: 8px 12px; border-radius: 0; }
+.phead.n-amarillo { background: linear-gradient(90deg, #fcefc9 0%, #ffffff 85%); border-left-color: #c08a00; }
+.phead.n-rojo { background: linear-gradient(90deg, #fbdcc2 0%, #ffffff 85%); border-left-color: var(--red); }
+.phead.n-verde { background: linear-gradient(90deg, #d9f0e3 0%, #ffffff 85%); border-left-color: var(--ok); }
 .dchip { display: inline-block; min-width: 24px; text-align: center; padding: 1px 6px; border-radius: 3px; background: #eef1f5; color: var(--muted); font-weight: 500; }
 .dchip.w { background: var(--warn-soft); color: var(--warn); font-weight: 700; }
 .dchip.a { background: var(--red-soft); color: var(--red); font-weight: 700; }

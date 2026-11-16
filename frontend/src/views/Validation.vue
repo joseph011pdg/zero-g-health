@@ -246,12 +246,20 @@ async function runEx() {
 
 <style scoped>
 .proto { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
-.method { border-top: 4px solid var(--line); }
-.method.A_vigilar { border-top-color: var(--blue); background: #f2f6fc; } .method.A_actuar { border-top-color: var(--ok); background: #f1f8f4; } .method.B_fijo { border-top-color: var(--mars); background: #fbf3ee; }
-.method.A_actuar .kpi .v { color: var(--ok); } .method.B_fijo .kpi .v { color: var(--mars); }
+/* DEGRADADOS en las cifras clave: cada método con su color, la tarjeta se desvanece a blanco */
+.method { border: 0; box-shadow: 0 1px 2px rgba(11, 27, 51, .06), 0 8px 24px rgba(11, 27, 51, .08); }
+.method.A_vigilar { background: linear-gradient(160deg, #dfe9fb 0%, #f4f8fe 45%, #ffffff 100%); }
+.method.A_actuar { background: linear-gradient(160deg, #d9f0e3 0%, #f2faf5 45%, #ffffff 100%); }
+.method.B_fijo { background: linear-gradient(160deg, #f8e3d6 0%, #fcf4ef 45%, #ffffff 100%); }
+.method .kpi .v { -webkit-background-clip: text; background-clip: text; color: transparent; font-size: 2rem; font-weight: 600; }
+.method.A_vigilar .kpi .v { background-image: linear-gradient(90deg, #0a1f44, #1f6fe0); }
+.method.A_actuar .kpi .v { background-image: linear-gradient(90deg, #11512f, #22a06b); }
+.method.B_fijo .kpi .v { background-image: linear-gradient(90deg, #7a3d17, #d0763f); }
+.method .kpi .v small { -webkit-text-fill-color: var(--muted); }
 .method > .label { font-size: 0.86rem; font-weight: 600; color: var(--ink); }
-.proto { background: var(--blue-soft); border-color: #cfdcf0; }
-.proto .label { color: var(--blue); font-weight: 600; }
+.proto { background: linear-gradient(110deg, #0a1f44 0%, #0b3d91 60%, #1f6fe0 100%); border: 0; color: #e4ecf8; }
+.proto .label { color: #9fc3ff; font-weight: 600; }
+.proto .small { color: #fff; }
 .kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
 .ch { height: 280px; width: 100%; }
 .defs { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 7px; line-height: 1.5; }
